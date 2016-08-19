@@ -1,0 +1,6 @@
+<Install heroku toolbelt>
+$ heroku login
+$ conda create -n nfldash python=3.5 flask
+$ source activate nfldash
+$ conda list -e > conda-requirements.txt
+$ heroku create --buildpack https://github.com/kennethreitz/conda-buildpack.git nfldash
