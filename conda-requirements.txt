@@ -7,7 +7,6 @@ gunicorn=19.1.0=py35_0
 itsdangerous=0.24=py35_0
 jinja2=2.8=py35_1
 markupsafe=0.23=py35_2
-openssl=1.0.2h=2
 pastedeploy=1.5.2=py35_1
 pip=8.1.2=py35_0
 python=3.5.2=0
