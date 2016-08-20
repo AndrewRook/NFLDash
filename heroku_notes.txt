@@ -4,3 +4,5 @@ $ conda create -n nfldash python=3.5 flask
 $ source activate nfldash
 $ conda list -e > conda-requirements.txt
 $ heroku create --buildpack https://github.com/kennethreitz/conda-buildpack.git nfldash
+$ git push heroku master
+<local deploy> $ gunicorn --log-file - views:app
