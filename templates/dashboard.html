@@ -23,61 +23,55 @@
 		<div id="chart_line_hitsperday"></div>
 		
 		<script type="text/javascript">
-		
-		var data = [
-			{date: "12/27/2012", http_404: 2, http_200: 190, http_302: 100},
-			{date: "12/28/2012", http_404: 2, http_200: 10, http_302: 100},
-			{date: "12/29/2012", http_404: 1, http_200: 300, http_302: 200},
-			{date: "12/30/2012", http_404: 2, http_200: 90, http_302: 0},
-			{date: "12/31/2012", http_404: 2, http_200: 90, http_302: 0},
-			{date: "01/01/2013", http_404: 2, http_200: 90, http_302: 0},
-			{date: "01/02/2013", http_404: 1, http_200: 10, http_302: 1},
-			{date: "01/03/2013", http_404: 2, http_200: 90, http_302: 0},
-			{date: "01/04/2013", http_404: 2, http_200: 90, http_302: 0},
-			{date: "01/05/2013", http_404: 2, http_200: 90, http_302: 0},
-			{date: "01/06/2013", http_404: 2, http_200: 200, http_302: 1},
-			{date: "01/07/2013", http_404: 1, http_200: 200, http_302: 100}
-		];
+		d3.csv("{{ url_for('static', filename='test.csv') }}", function(data)
+			{
+				data.forEach(function(d)
+					{
+						d.http_404 = +d.http_404;
+						d.http_200 = +d.http_200;
+						d.http_302 = +d.http_302;
+					});
 
-		var ndx = crossfilter(data);
-
-		var parse_date = d3.time.format("%m/%d/%Y").parse;
-		
-		data.forEach(function(d) {
-			d.date = parse_date(d.date);
-			d.total = d.http_404 + d.http_200 + d.http_302;
-			
-			d.year = d.date.getFullYear();
-		});
-		
-		var date_dim = ndx.dimension(function(d) {return d.date;});
-		var hits = date_dim.group().reduceSum(function(d) {return d.total;});
-
-		var min_date = date_dim.bottom(1)[0].date;
-		var max_date = date_dim.top(1)[0].date;
-
-		var hits_line_chart = dc.lineChart("#chart_line_hitsperday");
-		hits_line_chart
-			.width(500).height(200)
-			.dimension(date_dim)
-			.group(hits)
-			.x(d3.time.scale().domain([min_date, max_date]))
-			.brushOn(false)
-			.yAxisLabel("Hits per day");
-		
-		var year_ring_chart = dc.pieChart("#chart_ring_year");
-		var year_dim = ndx.dimension(function(d) {return + d.year;});
-		var year_total = year_dim.group().reduceSum(function(d) {
-			return d.http_200 + d.http_302;
-		});
-		
-		year_ring_chart
-			.width(150).height(150)
-			.dimension(year_dim)
-			.group(year_total)
-			.innerRadius(30);
-		
-		dc.renderAll();
+				var ndx = crossfilter(data);
+				
+				var parse_date = d3.time.format("%m/%d/%Y").parse;
+				
+				data.forEach(function(d) {
+					d.date = parse_date(d.date);
+					d.total = d.http_404 + d.http_200 + d.http_302;
+					
+					d.year = d.date.getFullYear();
+				});
+				
+				var date_dim = ndx.dimension(function(d) {return d.date;});
+				var hits = date_dim.group().reduceSum(function(d) {return d.total;});
+				
+				var min_date = date_dim.bottom(1)[0].date;
+				var max_date = date_dim.top(1)[0].date;
+				
+				var hits_line_chart = dc.lineChart("#chart_line_hitsperday");
+				hits_line_chart
+					.width(500).height(200)
+					.dimension(date_dim)
+					.group(hits)
+					.x(d3.time.scale().domain([min_date, max_date]))
+					.brushOn(false)
+					.yAxisLabel("Hits per day");
+				
+				var year_ring_chart = dc.pieChart("#chart_ring_year");
+				var year_dim = ndx.dimension(function(d) {return + d.year;});
+				var year_total = year_dim.group().reduceSum(function(d) {
+					return d.http_200 + d.http_302;
+				});
+				
+				year_ring_chart
+					.width(150).height(150)
+					.dimension(year_dim)
+					.group(year_total)
+					.innerRadius(30);
+				
+				dc.renderAll();
+			});
 		</script>
 	</body>
 </html>
