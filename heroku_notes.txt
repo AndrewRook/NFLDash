@@ -1,3 +1,4 @@
+#To set up and update app:
 <Install heroku toolbelt>
 $ heroku login
 $ conda create -n nfldash python=2.7 flask pandas scikit-learn
@@ -7,3 +8,9 @@ $ conda list -e > conda-requirements.txt
 $ heroku create --buildpack https://github.com/kennethreitz/conda-buildpack.git nfldash
 $ git push heroku master
 <local deploy> $ gunicorn --log-file - views:app
+<also local deploy> $ python views.py
+
+#To update data:
+>>> import utilities
+>>> data = utilities.get_nfldb_play_data(season_years=[2015], season_types=["Regular", "Postseason"])
+>>> data.to_csv("static/data.csv", index=False)

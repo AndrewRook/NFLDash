@@ -2,7 +2,10 @@
 	<head>
 		<title>NFLDash</title>
 
-		<meta http-equiv="content-type" content="text/html; charset=UTF8"> 
+		<meta http-equiv="content-type" content="text/html; charset=UTF8">
+
+		
+		<script type="text/javascript" src="{{ url_for('static', filename='jquery/jquery-3.1.0.min.js') }}"></script>
 
 		<!-- <script src="https://d3js.org/d3.v4.min.js"></script> -->
 		<script type="text/javascript" src="{{ url_for('static', filename='d3/d3.js') }}"></script>
@@ -16,61 +19,92 @@
 		
 		<script type="text/javascript" src="{{ url_for('static', filename='dc/dc.js') }}"></script>
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dc/dc.css') }}" media="screen" />
+
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" />
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap-theme.min.css') }}" />
+		<script type="text/javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
 	</head>
 	
 	<body>
-		<div id="chart_ring_year"></div>
-		<div id="chart_line_hitsperday"></div>
+		<div class="container theme-showcase" role="main">
+			<div class="jumbotron">
+				<div class="row">
+					<div class="span4">
+						<div id="quarter-chart">
+							Quarter: <a class='reset'
+								href='javascript:quarter_chart.filterAll();dc.redrawAll();'
+								style='display: none;'>reset</a>
+						</div>
+						<div id="yards-to-go-chart">
+							Yards to Go: <a class='reset'
+								href='javascript:yards_to_go_chart.filterAll();dc.redrawAll();'
+								style='display: none;'>reset</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		
 		<script type="text/javascript">
-		d3.csv("{{ url_for('static', filename='test.csv') }}", function(data)
-			{
-				data.forEach(function(d)
-					{
-						d.http_404 = +d.http_404;
-						d.http_200 = +d.http_200;
-						d.http_302 = +d.http_302;
-					});
 
+		d3.csv("{{ url_for('static', filename='data.csv') }}", function(d)
+			{
+				return {
+					drive_id : +d.drive_id,
+					offense_team : d.offense_team,
+					yardline : +d.yardline,
+					down : +d.down,
+					yards_to_go : +d.yards_to_go,
+					home_team : d.home_team,
+					away_team : d.away_team,
+					quarter : d.quarter
+					}
+			}, function(data)
+			{
+				console.log(data[0]);
+				
 				var ndx = crossfilter(data);
-				
-				var parse_date = d3.time.format("%m/%d/%Y").parse;
-				
-				data.forEach(function(d) {
-					d.date = parse_date(d.date);
-					d.total = d.http_404 + d.http_200 + d.http_302;
-					
-					d.year = d.date.getFullYear();
+
+				var yards_to_go_dim = ndx.dimension(function(d) {return d.yards_to_go;});
+				var yards_to_go_group = yards_to_go_dim.group();
+				var yards_to_go_chart = dc.barChart("#yards-to-go-chart");
+				yards_to_go_chart
+					.width(500)
+					.height(200)
+					.margins({top: 10, right: 10, bottom: 30, left: 40})
+					.dimension(yards_to_go_dim)
+					.group(yards_to_go_group)
+					.elasticY(true)
+					.centerBar(true)
+					.x(d3.scale.linear().domain([0, 40]))
+					.xAxisLabel("Yards to Go");
+
+				var quarter_dim = ndx.dimension(function(d) {
+					return d.quarter;
 				});
-				
-				var date_dim = ndx.dimension(function(d) {return d.date;});
-				var hits = date_dim.group().reduceSum(function(d) {return d.total;});
-				
-				var min_date = date_dim.bottom(1)[0].date;
-				var max_date = date_dim.top(1)[0].date;
-				
-				var hits_line_chart = dc.lineChart("#chart_line_hitsperday");
-				hits_line_chart
-					.width(500).height(200)
-					.dimension(date_dim)
-					.group(hits)
-					.x(d3.time.scale().domain([min_date, max_date]))
-					.brushOn(false)
-					.yAxisLabel("Hits per day");
-				
-				var year_ring_chart = dc.pieChart("#chart_ring_year");
-				var year_dim = ndx.dimension(function(d) {return + d.year;});
-				var year_total = year_dim.group().reduceSum(function(d) {
-					return d.http_200 + d.http_302;
-				});
-				
-				year_ring_chart
-					.width(150).height(150)
-					.dimension(year_dim)
-					.group(year_total)
+				var quarter_group = quarter_dim.group();
+				var quarter_chart = dc.pieChart("#quarter-chart");
+				quarter_chart
+					.width(150)
+					.height(150)
+					.dimension(quarter_dim)
+					.group(quarter_group)
 					.innerRadius(30);
 				
-				dc.renderAll();
+				/* 
+				   var year_ring_chart = dc.pieChart("#chart_ring_year");
+				   var year_dim = ndx.dimension(function(d) {return + d.year;});
+				   var year_total = year_dim.group().reduceSum(function(d) {
+				   return d.http_200 + d.http_302;
+				   });
+				   
+				   year_ring_chart
+				   .width(150).height(150)
+				   .dimension(year_dim)
+				   .group(year_total)
+				   .innerRadius(30);*/
+				   
+				   dc.renderAll();
 			});
 		</script>
 	</body>
