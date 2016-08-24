@@ -33,6 +33,16 @@ from play_player pp
 inner join play on pp.gsis_id = play.gsis_id and pp.drive_id = play.drive_id and pp.play_id = play.play_id
 group by (pp.gsis_id, pp.drive_id, pp.play_id) limit 10;
 
+/* oh hey, a subquery is a little cleaner looking. could be slow though... */
+select play.drive_id, (play.time).phase as quarter, (play.time).elapsed as seconds_elapsed, (play.yardline).pos as yardline, play.yards_to_go, agg_player.player_ids
+from play
+inner join (select gsis_id, drive_id, play_id, array_agg(player_id) as player_ids
+      	   from play_player
+	   group by (play_player.gsis_id, play_player.drive_id, play_player.play_id)
+	   ) agg_player
+on play.gsis_id = agg_player.gsis_id and play.drive_id = agg_player.drive_id and play.play_id = agg_player.play_id
+limit 10;
+
 /* Full production query. Contains:
 yardline (-50 to 50)
 time (quarter, second tuple, needs to be broken up)
@@ -75,11 +85,3 @@ and play.description not like 'Timeout at%'
 and play.description not like '(_:__)'
 and play.description not like '(__:__)'
 
-
-SELECT n.nspname AS "schema", t.typname
-     , string_agg(e.enumlabel, '|' ORDER BY e.enumsortorder) AS enum_labels
-FROM   pg_catalog.pg_type t 
-JOIN   pg_catalog.pg_namespace n ON n.oid = t.typnamespace 
-JOIN   pg_catalog.pg_enum e ON t.oid = e.enumtypid  
-WHERE  t.typname = 'field_pos'
-GROUP  BY 1,2;
