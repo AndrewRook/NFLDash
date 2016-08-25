@@ -47,6 +47,17 @@
 		
 		<script type="text/javascript">
 
+		d3.csv("{{ url_for('static', filename='wooo.csv') }}", function(row)
+			{
+				//console.log(row.player_ids, row.player_ids.length);
+				row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
+				return row;
+			},
+			function(data)
+			{
+				console.log(data[0]);
+			});
+
 		d3.csv("{{ url_for('static', filename='data.csv') }}", function(d)
 			{
 				return {
@@ -61,7 +72,7 @@
 					}
 			}, function(data)
 			{
-				console.log(data[0]);
+				//console.log(data[0]);
 				
 				var ndx = crossfilter(data);
 

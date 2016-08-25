@@ -34,7 +34,7 @@ inner join play on pp.gsis_id = play.gsis_id and pp.drive_id = play.drive_id and
 group by (pp.gsis_id, pp.drive_id, pp.play_id) limit 10;
 
 /* oh hey, a subquery is a little cleaner looking. could be slow though... */
-select play.drive_id, (play.time).phase as quarter, (play.time).elapsed as seconds_elapsed, (play.yardline).pos as yardline, play.yards_to_go, agg_player.player_ids
+select play.drive_id, (play.time).phase as quarter, (play.time).elapsed as seconds_elapsed, (play.yardline).pos as yardline, play.yards_to_go, play.description, agg_player.player_ids
 from play
 inner join (select gsis_id, drive_id, play_id, array_agg(player_id) as player_ids
       	   from play_player
