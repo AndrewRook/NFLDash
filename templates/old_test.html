@@ -1,0 +1,147 @@
+
+<html>
+	<head>
+		<title></title>
+
+		<meta http-equiv="content-type" content="text/html; charset=UTF8">
+
+		<script type="text/javascript" src="{{ url_for('static', filename='jquery/jquery-3.1.0.min.js') }}"></script>
+
+		<script type="text/javascript" src="{{ url_for('static', filename='d3/d3.js') }}"></script>
+		
+		<script type="text/javascript" src="{{ url_for('static', filename='crossfilter/crossfilter.js') }}"></script>
+
+		
+		<script type="text/javascript" src="{{ url_for('static', filename='dc/dc.js') }}"></script>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dc/dc.css') }}" media="screen" />
+
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" />
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap-theme.min.css') }}" />
+		<script type="text/javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+
+	</head>
+	
+	<body>
+		
+		<span>
+			<!-- <div id="ytg-chart"></div> -->
+			<!-- <div id="player-chart"></div> -->
+			<div class="list-group" id="player-list">
+			</div>
+		</span>
+
+		<script>
+		$(document).ready(function()
+			{
+				d3.csv("{{ url_for('static', filename='wooo.csv') }}", function(row)
+					{
+						//console.log(row.player_ids, row.player_ids.length);
+						row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
+						return row;
+					},
+					function(data)
+					{
+						console.log(data[0]);
+						unique_players = {};
+						for (var i = 0; i < data.length; i++)
+						{
+							for (var j = 0; j < data[i].player_ids.length; j++)
+							{
+								unique_players[data[i].player_ids[j]] = true;
+							}
+						}
+						for (player in unique_players)
+						{
+							$("#player-list").append("<a href=\"#\" class=\"list-group-item\" id=\""+player+"\">"+player+"</a>");
+							console.log(player);
+						}
+					});
+			});
+		
+		/* d3.csv("{{ url_for('static', filename='wooo.csv') }}", function(row)
+		   {
+		   //console.log(row.player_ids, row.player_ids.length);
+		   row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
+		   return row;
+		   },
+		   function(data)
+		   {
+		   console.log(data[0]);
+		   
+		   
+		   function reduceAdd(p, v) {
+		   v.player_ids.forEach (function(val, idx) {
+		   p[val] = (p[val] || 0) + 1; //increment counts
+		   });
+		   return p;
+		   }
+		   
+		   function reduceRemove(p, v) {
+		   v.player_ids.forEach (function(val, idx) {
+		   p[val] = (p[val] || 0) - 1; //decrement counts
+		   });
+		   return p; 
+		   }
+		   
+		   function reduceInitial() { return {}; }
+		   
+		   var cf = crossfilter(data);
+		   
+		   // YARDS TO GO PIE
+		   var ytg_dim = cf.dimension(function(d){ return d.yards_to_go;});
+		   var ytg_group = ytg_dim.group();
+		   var ytg_chart = dc.pieChart("#ytg-chart");
+		   
+		   ytg_chart
+		   .dimension(ytg_dim)
+		   .group(ytg_group)
+		   .width(200).height(200).innerRadius(50);
+		   
+		   // PLAYER BAR (FREQUENCY)
+		   var player_dim = cf.dimension(function(d){ return d.player_ids;});
+		   var player_group = player_dim.groupAll().reduce(reduceAdd, reduceRemove, reduceInitial).value();
+		   
+		   // hack to make dc.js charts work
+		   player_group.all = function() {
+		   var newObject = [];
+		   console.log("DEBUG");
+		   for (var key in this) {
+		   console.log("   ", key, this.hasOwnProperty(key));
+		   if (this.hasOwnProperty(key) && key != "all") {
+		   newObject.push({
+		   key: key,
+		   value: this[key]
+		   });
+		   }
+		   }
+		   return newObject;
+		   }
+		   
+		   player_chart = dc.rowChart("#player-chart");
+		   
+		   player_chart
+		   .dimension(player_dim)
+		   .group(player_group)
+		   .filterHandler (function (dimension, filters) {
+		   dimension.filter(null);   
+		   if (filters.length === 0)
+		   dimension.filter(null);
+		   else
+		   dimension.filterFunction(function (d) {
+		   for (var i=0; i < d.length; i++) {
+		   if (filters.indexOf(d[i]) >= 0) return true;
+		   }
+		   return false;
+		   });
+		   return filters; 
+		   }
+		   )
+		   .width(300).height(250)
+		   .colors(['#1f77b4']).colorAccessor(function(d, i){ return i; })
+		   .xAxis().ticks(1);
+		   
+		   dc.renderAll();
+		   }); */
+		</script>
+	</body>
+</html>
