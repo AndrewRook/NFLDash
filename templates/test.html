@@ -12,12 +12,19 @@
 		<script type="text/javascript" src="{{ url_for('static', filename='crossfilter-1.4.0-alpha.06/crossfilter.js') }}"></script>
 
 		
-		<script type="text/javascript" src="{{ url_for('static', filename='dc/dc.js') }}"></script>
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dc/dc.css') }}" media="screen" />
+		<script type="text/javascript" src="{{ url_for('static', filename='dc.js-develop/dc.js') }}"></script>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dc.js-develop/dc.css') }}" media="screen" />
 
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" />
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap-theme.min.css') }}" />
 		<script type="text/javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+
+		<!-- Latest compiled and minified CSS -->
+		<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.0/css/bootstrap-select.min.css"> -->
+		<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-select-1.11.0/dist/css/bootstrap-select.min.css') }}" />
+		<!-- Latest compiled and minified JavaScript -->
+		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.0/js/bootstrap-select.min.js"></script>-->
+		<script type="text/javascript" src="{{ url_for('static', filename='bootstrap-select-1.11.0/dist/js/bootstrap-select.js') }}"></script>
 
 	</head>
 	
@@ -28,6 +35,9 @@
 			<div id="player-chart"></div>
 			<div class="list-group" id="player-list">
 			</div>
+			<br>
+
+			<div id="player-select"></div>
 		</span>
 
 		<script>
@@ -41,7 +51,7 @@
 					},
 					function(data)
 					{
-						console.log(data[0]);
+						//console.log(data[0]);
 						
 						
 						function reduceAdd(p, v) {
@@ -74,17 +84,28 @@
 
 						var player_dim = cf.dimension(function(d){ return d.player_ids;}, true);
 						var player_group = player_dim.group();
-						console.log(player_group.top(5)[0]);
-						var player_chart = dc.rowChart("#player-chart");
-						player_chart
+						/* console.log(player_group.top(5)[0]);
+						   var player_chart = dc.rowChart("#player-chart");
+						   player_chart
+						   .dimension(player_dim)
+						   .group(player_group)
+						   .width(300).height(250)
+						   .colors(['#1f77b4']).colorAccessor(function(d, i){ return i; })
+						   .xAxis().ticks(1); */
+
+						var player_select = dc.selectMenu("#player-select");
+						player_select
 							.dimension(player_dim)
 							.group(player_group)
-							.width(300).height(250)
-							.colors(['#1f77b4']).colorAccessor(function(d, i){ return i; })
-							.xAxis().ticks(1);
-						
+							.filterDisplayed(function () { return true; })
+							.multiple(true)
+							;
 						
 						dc.renderAll();
+						var player_selector = $("#player-select").children("select")[0];
+						$(player_selector).addClass("selectpicker");
+						$(player_selector).attr("data-live-search", "true");
+						$(player_selector).selectpicker('refresh');
 					});
 				
 			});
