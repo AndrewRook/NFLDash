@@ -32,6 +32,7 @@
 		
 		<span>
 			<div id="ytg-chart"></div>
+			<div id="yardline-chart"></div>
 			<div id="player-chart"></div>
 			<div class="list-group" id="player-list">
 			</div>
@@ -43,71 +44,66 @@
 		<script>
 		$(document).ready(function()
 			{
-				d3.csv("{{ url_for('static', filename='wooo.csv') }}", function(row)
+				$.get("{{ url_for('static', filename='players.csv') }}", function(player_string)
 					{
-						//console.log(row.player_ids, row.player_ids.length);
-						row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
-						return row;
-					},
-					function(data)
-					{
-						//console.log(data[0]);
-						
-						
-						function reduceAdd(p, v) {
-							v.player_ids.forEach (function(val, idx) {
-								p[val] = (p[val] || 0) + 1; //increment counts
-							});
-							return p;
+						players = player_string.split(/\r\n|\r|\n/g);
+						player_dict = {};
+						for (var i = 0; i < players.length; i++)
+						{
+							var player_info = players[i].split(",");
+							player_dict[player_info[0]] = {"name": player_info[1],
+								                       "position": player_info[2]};
 						}
 						
-						function reduceRemove(p, v) {
-							v.player_ids.forEach (function(val, idx) {
-								p[val] = (p[val] || 0) - 1; //decrement counts
+						d3.csv("{{ url_for('static', filename='wooo.csv') }}", function(row)
+							{
+								//console.log(row.player_ids, row.player_ids.length);
+								row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
+								return row;
+							},
+							function(data)
+							{
+								
+								var cf = crossfilter(data);
+								//Yardline bar
+								var yardline_dim = cf.dimension(function(d) {return d.yardline;});
+								var yardline_group = yardline_dim.group();
+								var yardline_chart = dc.barChart("#yardline-chart");
+								yardline_chart
+									.dimension(yardline_dim)
+									.group(yardline_group)
+									.x(d3.scale.linear().domain([-50, 50]))
+									.elasticY(true)
+									.width(500).height(200);
+								
+								// YARDS TO GO PIE
+								var ytg_dim = cf.dimension(function(d){ return d.yards_to_go;});
+								var ytg_group = ytg_dim.group();
+								var ytg_chart = dc.pieChart("#ytg-chart");
+								ytg_chart
+									.dimension(ytg_dim)
+									.group(ytg_group)
+									.width(200).height(200).innerRadius(50);
+								
+								var player_dim = cf.dimension(function(d){ return d.player_ids;}, true);
+								var player_group = player_dim.group();
+								var player_select = dc.selectMenu("#player-select");
+								player_select
+									.dimension(player_dim)
+									.group(player_group)
+									.filterDisplayed(function () { return true; })
+									.multiple(true)
+									.title(function(d) {return player_dict[d.key]["name"] + ": " + d.value; })
+									;
+								
+								dc.renderAll();
+								var player_selector = $("#player-select").children("select")[0];
+								$(player_selector).addClass("selectpicker");
+								$(player_selector).attr("data-live-search", "true");
+								$(player_selector).selectpicker('refresh'); 
 							});
-							return p; 
-						}
 						
-						function reduceInitial() { return {}; }
-						
-						var cf = crossfilter(data);
-						
-						// YARDS TO GO PIE
-						var ytg_dim = cf.dimension(function(d){ return d.yards_to_go;});
-						var ytg_group = ytg_dim.group();
-						var ytg_chart = dc.pieChart("#ytg-chart");
-						
-						ytg_chart
-							.dimension(ytg_dim)
-							.group(ytg_group)
-							.width(200).height(200).innerRadius(50);
-
-						var player_dim = cf.dimension(function(d){ return d.player_ids;}, true);
-						var player_group = player_dim.group();
-						/* console.log(player_group.top(5)[0]);
-						   var player_chart = dc.rowChart("#player-chart");
-						   player_chart
-						   .dimension(player_dim)
-						   .group(player_group)
-						   .width(300).height(250)
-						   .colors(['#1f77b4']).colorAccessor(function(d, i){ return i; })
-						   .xAxis().ticks(1); */
-
-						var player_select = dc.selectMenu("#player-select");
-						player_select
-							.dimension(player_dim)
-							.group(player_group)
-							.filterDisplayed(function () { return true; })
-							.multiple(true)
-							;
-						
-						dc.renderAll();
-						var player_selector = $("#player-select").children("select")[0];
-						$(player_selector).addClass("selectpicker");
-						$(player_selector).attr("data-live-search", "true");
-						$(player_selector).selectpicker('refresh');
 					});
-				
 			});
 		</script>
 	</body>
