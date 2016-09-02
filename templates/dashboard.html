@@ -1,121 +1,115 @@
+
 <html>
 	<head>
-		<title>NFLDash</title>
+		<title></title>
 
 		<meta http-equiv="content-type" content="text/html; charset=UTF8">
 
-		
 		<script type="text/javascript" src="{{ url_for('static', filename='jquery/jquery-3.1.0.min.js') }}"></script>
 
-		<!-- <script src="https://d3js.org/d3.v4.min.js"></script> -->
 		<script type="text/javascript" src="{{ url_for('static', filename='d3/d3.js') }}"></script>
-		<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.0.0/d3.min.js"></script> -->
 		
-		<!-- <script type="text/javascript" src="https://rawgithub.com/NickQiZhu/dc.js/master/web/js/crossfilter.js"></script> -->
-		<script type="text/javascript" src="{{ url_for('static', filename='crossfilter/crossfilter.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='crossfilter-1.4.0-alpha.06/crossfilter.js') }}"></script>
 
-		<!-- <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/dc/1.7.5/dc.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/dc/1.7.5/dc.min.css"/> -->
 		
-		<script type="text/javascript" src="{{ url_for('static', filename='dc/dc.js') }}"></script>
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dc/dc.css') }}" media="screen" />
+		<script type="text/javascript" src="{{ url_for('static', filename='dc.js-develop/dc.js') }}"></script>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dc.js-develop/dc.css') }}" media="screen" />
 
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" />
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap-theme.min.css') }}" />
 		<script type="text/javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+
+		<!-- Latest compiled and minified CSS -->
+		<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.0/css/bootstrap-select.min.css"> -->
+		<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-select-1.11.0/dist/css/bootstrap-select.min.css') }}" />
+		<!-- Latest compiled and minified JavaScript -->
+		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.0/js/bootstrap-select.min.js"></script>-->
+		<script type="text/javascript" src="{{ url_for('static', filename='bootstrap-select-1.11.0/dist/js/bootstrap-select.js') }}"></script>
+
+		<script type="text/javascript" src="{{ url_for('static', filename='js/utilities.js') }}"></script>
+
 	</head>
 	
 	<body>
-		<div class="container theme-showcase" role="main">
-			<div class="jumbotron">
-				<div class="row">
-					<div class="span4">
-						<div id="quarter-chart">
-							Quarter: <a class='reset'
-								href='javascript:quarter_chart.filterAll();dc.redrawAll();'
-								style='display: none;'>reset</a>
-						</div>
-						<div id="yards-to-go-chart">
-							Yards to Go: <a class='reset'
-								href='javascript:yards_to_go_chart.filterAll();dc.redrawAll();'
-								style='display: none;'>reset</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 		
-		<script type="text/javascript">
+		<span>
+			<div id="ytg-chart"></div>
+			<div id="yardline-chart"></div>
+			<!-- <div id="player-chart"></div> -->
+			<!-- <div class="list-group" id="player-list"> -->
+			</div>
+			<br>
 
-		d3.csv("{{ url_for('static', filename='wooo.csv') }}", function(row)
-			{
-				//console.log(row.player_ids, row.player_ids.length);
-				row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
-				return row;
-			},
-			function(data)
-			{
-				console.log(data[0]);
-			});
+			<div id="qb-select"></div>
+			<div id="rb-select"></div>
+			<br>
+			<div id="wr-select"></div>
+			<div id="te-select"></div>
+			<br>
+			<div id="ol-select"></div>
+			<div id="d-select"></div>
+			
+			
+		</span>
 
-		d3.csv("{{ url_for('static', filename='data.csv') }}", function(d)
+		<script>
+		$(document).ready(function()
 			{
-				return {
-					drive_id : +d.drive_id,
-					offense_team : d.offense_team,
-					yardline : +d.yardline,
-					down : +d.down,
-					yards_to_go : +d.yards_to_go,
-					home_team : d.home_team,
-					away_team : d.away_team,
-					quarter : d.quarter
-					}
-			}, function(data)
-			{
-				//console.log(data[0]);
-				
-				var ndx = crossfilter(data);
+				$.get("{{ url_for('static', filename='players.csv') }}", function(player_string)
+					{
+						players = player_string.split(/\r\n|\r|\n/g);
+						player_dict = {};
+						for (var i = 0; i < players.length; i++)
+						{
+							var player_info = players[i].split(",");
+							player_dict[player_info[0]] = {"name": player_info[1],
+								                       "position": player_info[2]};
+						}
+						
+						d3.csv("{{ url_for('static', filename='plays.csv') }}", function(row)
+							{
+								//console.log(row.player_ids, row.player_ids.length);
+								row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
+								return row;
+							},
+							function(data)
+							{
 
-				var yards_to_go_dim = ndx.dimension(function(d) {return d.yards_to_go;});
-				var yards_to_go_group = yards_to_go_dim.group();
-				var yards_to_go_chart = dc.barChart("#yards-to-go-chart");
-				yards_to_go_chart
-					.width(500)
-					.height(200)
-					.margins({top: 10, right: 10, bottom: 30, left: 40})
-					.dimension(yards_to_go_dim)
-					.group(yards_to_go_group)
-					.elasticY(true)
-					.centerBar(true)
-					.x(d3.scale.linear().domain([0, 40]))
-					.xAxisLabel("Yards to Go");
+								
+								var cf = crossfilter(data);
+								//Yardline bar
+								var yardline_dim = cf.dimension(function(d) {return d.yardline;});
+								var yardline_group = yardline_dim.group();
+								var yardline_chart = dc.barChart("#yardline-chart");
+								yardline_chart
+									.dimension(yardline_dim)
+									.group(yardline_group)
+									.x(d3.scale.linear().domain([-50, 50]))
+									.elasticY(true)
+									.width(500).height(200);
+								
+								// YARDS TO GO PIE
+								var ytg_dim = cf.dimension(function(d){ return d.yards_to_go;});
+								var ytg_group = ytg_dim.group();
+								var ytg_chart = dc.pieChart("#ytg-chart");
+								ytg_chart
+									.dimension(ytg_dim)
+									.group(ytg_group)
+									.width(200).height(200).innerRadius(50);
 
-				var quarter_dim = ndx.dimension(function(d) {
-					return d.quarter;
-				});
-				var quarter_group = quarter_dim.group();
-				var quarter_chart = dc.pieChart("#quarter-chart");
-				quarter_chart
-					.width(150)
-					.height(150)
-					.dimension(quarter_dim)
-					.group(quarter_group)
-					.innerRadius(30);
-				
-				/* 
-				   var year_ring_chart = dc.pieChart("#chart_ring_year");
-				   var year_dim = ndx.dimension(function(d) {return + d.year;});
-				   var year_total = year_dim.group().reduceSum(function(d) {
-				   return d.http_200 + d.http_302;
-				   });
-				   
-				   year_ring_chart
-				   .width(150).height(150)
-				   .dimension(year_dim)
-				   .group(year_total)
-				   .innerRadius(30);*/
-				   
-				   dc.renderAll();
+								make_selector(cf, "QB", "#qb-select");
+								make_selector(cf, "RB", "#rb-select");
+								make_selector(cf, "WR", "#wr-select");
+								make_selector(cf, "TE", "#te-select");
+								make_selector(cf, ["T", "OG", "C"], "#ol-select");
+								make_selector(cf, ["DE", "DT", "LB", "CB", "MLB", "NT"], "#d-select");
+								
+								dc.renderAll();
+								render_selectors(["#qb-select", "#rb-select", "#wr-select", "#te-select", "#ol-select", "#d-select"],
+									["QBs", "RBs", "WRs", "TEs", "OLs", "Defense"]);
+							});
+						
+					});
 			});
 		</script>
 	</body>
