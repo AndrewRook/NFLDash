@@ -1,4 +1,22 @@
-function make_selector (ndx, position, div_id)
+function make_barchart (ndx, colname, div_id, width, height)
+{    
+    var dim = ndx.dimension(function(d){ return d[colname];});
+    var group = dim.group();
+    var chart = dc.barChart(div_id);
+    var min_x = dim.bottom(1)[0][colname];
+    var max_x = dim.top(1)[0][colname];
+    chart
+	.dimension(dim)
+	.group(group)
+    //.margins({top: 10, right: 50, bottom: 30, left: 40})
+	.centerBar(true)
+	.x(d3.scale.linear().domain([min_x, max_x]))
+	.elasticY(true)
+	.width(width).height(height);
+    return chart;
+}
+
+function make_player_selector (ndx, position, div_id)
 {
     var dim = ndx.dimension(function(d){ return d.player_ids;}, true);
     var group = dim.group();
@@ -46,6 +64,7 @@ function make_selector (ndx, position, div_id)
 	    {return d.key + ": " + d.value;}
 	})
     ;
+    return select;
 }
 
 function render_selectors(selector_list, titles_list)

@@ -14,6 +14,8 @@
 		
 		<script type="text/javascript" src="{{ url_for('static', filename='dc.js-develop/dc.js') }}"></script>
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dc.js-develop/dc.css') }}" media="screen" />
+		<!-- <script type="text/javascript" src="{{ url_for('static', filename='dc/dc.js') }}"></script>
+		     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dc/dc.css') }}" media="screen" /> -->
 
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" />
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap-theme.min.css') }}" />
@@ -31,28 +33,58 @@
 	</head>
 	
 	<body>
-		
-		<span>
-			<div id="ytg-chart"></div>
-			<div id="yardline-chart"></div>
-			<!-- <div id="player-chart"></div> -->
-			<!-- <div class="list-group" id="player-list"> -->
+		<div class ="container" role="main">
+		<div class="jumbotron dc-data-count" style="float:left;">
+			<span class="filter-count"></span>
+			selected out of <span class="total-count"></span>
+			<a href="javascript:dc.filterAll(); dc.redrawAll();">Reset</a>
+			<div class="row">
+				<div class="col-md-6" id="ytg-chart">
+				<h4>
+					Yards to Go
+					<span class="reset_span">
+						<a class="reset" href="javascript:ytg_chart.filterAll(); dc.redrawAll();" style="display:none">
+							reset</a>
+					</span>
+				</h4>
+				</div>
+				<div class="col-md-6" id="yardline-chart">
+				<h4>
+					Yardline 
+					<span class="reset_span">
+						<a class="reset" href="javascript:yardline_chart.filterAll(); dc.redrawAll();" style="display:none">
+							reset</a>
+					</span>
+				</h4>
+				</div>
 			</div>
-			<br>
-
-			<div id="qb-select"></div>
-			<div id="rb-select"></div>
-			<br>
-			<div id="wr-select"></div>
-			<div id="te-select"></div>
-			<br>
-			<div id="ol-select"></div>
-			<div id="d-select"></div>
-			
-			
-		</span>
+			<div class="row">
+				<div class="row col-md-4">
+					<div class=""id="qb-select"></div>
+					<div id="rb-select"></div>
+				</div>
+				<div class="row col-md-4">
+					<div id="wr-select"></div>
+					<div id="te-select"></div>
+				</div>
+				<div class="row col-md-4">
+					<div id="ol-select"></div>
+					<div id="d-select"></div>
+				</div>
+				
+			</div>
+			</div>
+		</div>
 
 		<script>
+		var ytg_chart = null;
+		var yardline_chart = null;
+		var qb_chart = null;
+		var wr_chart = null;
+		var rb_chart = null;
+		var te_chart = null;
+		var ol_chart = null;
+		var d_chart = null;
 		$(document).ready(function()
 			{
 				$.get("{{ url_for('static', filename='players.csv') }}", function(player_string)
@@ -66,45 +98,45 @@
 								                       "position": player_info[2]};
 						}
 						
-						d3.csv("{{ url_for('static', filename='plays.csv') }}", function(row)
+						d3.csv("{{ url_for('static', filename='plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
 							{
 								//console.log(row.player_ids, row.player_ids.length);
 								row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
+								row.drive_id = +row.drive_id;
+								row.yardline = +row.yardline;
+								row.yards_to_go = +row.yards_to_go;
+								row.seconds_elapsed = +row.seconds_elapsed;
+								//console.log(row);
 								return row;
 							},
 							function(data)
 							{
 
-								
+								console.log(data.length);
+								console.log(data[0]);
 								var cf = crossfilter(data);
-								//Yardline bar
-								var yardline_dim = cf.dimension(function(d) {return d.yardline;});
-								var yardline_group = yardline_dim.group();
-								var yardline_chart = dc.barChart("#yardline-chart");
-								yardline_chart
-									.dimension(yardline_dim)
-									.group(yardline_group)
-									.x(d3.scale.linear().domain([-50, 50]))
-									.elasticY(true)
-									.width(500).height(200);
-								
-								// YARDS TO GO PIE
-								var ytg_dim = cf.dimension(function(d){ return d.yards_to_go;});
-								var ytg_group = ytg_dim.group();
-								var ytg_chart = dc.pieChart("#ytg-chart");
-								ytg_chart
-									.dimension(ytg_dim)
-									.group(ytg_group)
-									.width(200).height(200).innerRadius(50);
 
-								make_selector(cf, "QB", "#qb-select");
-								make_selector(cf, "RB", "#rb-select");
-								make_selector(cf, "WR", "#wr-select");
-								make_selector(cf, "TE", "#te-select");
-								make_selector(cf, ["T", "OG", "C"], "#ol-select");
-								make_selector(cf, ["DE", "DT", "LB", "CB", "MLB", "NT"], "#d-select");
+								var all_grp = cf.groupAll();
+								dc.dataCount('.dc-data-count')
+									.dimension(cf)
+									.group(all_grp);
+								
+								// Yards to go bar
+								ytg_chart = make_barchart(cf, "yards_to_go", "#ytg-chart", 500, 200);
+								
+								//Yardline bar
+								yardline_chart = make_barchart(cf, "yardline", "#yardline-chart", 500, 200);
+								
+								
+								qb_chart = make_player_selector(cf, "QB", "#qb-select");
+								rb_chart = make_player_selector(cf, "RB", "#rb-select");
+								wr_chart = make_player_selector(cf, "WR", "#wr-select");
+								te_chart = make_player_selector(cf, "TE", "#te-select");
+								ol_chart = make_player_selector(cf, ["T", "OG", "C"], "#ol-select");
+								d_chart = make_player_selector(cf, ["DE", "DT", "LB", "CB", "MLB", "NT"], "#d-select");
 								
 								dc.renderAll();
+								
 								render_selectors(["#qb-select", "#rb-select", "#wr-select", "#te-select", "#ol-select", "#d-select"],
 									["QBs", "RBs", "WRs", "TEs", "OLs", "Defense"]);
 							});

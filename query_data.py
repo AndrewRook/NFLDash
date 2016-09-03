@@ -39,7 +39,7 @@ def query_db_plays():
                    "and play.drive_id = agg_player.drive_id "
                    "and play.play_id = agg_player.play_id"
                    )
-    sql_string += " limit 100"
+    sql_string += " limit 10000"
     sql_string += ";"
 
     plays_df = pd.read_sql(sql_string, engine)
