@@ -37,30 +37,62 @@
 		<div class="jumbotron dc-data-count" style="float:left;">
 			<span class="filter-count"></span>
 			selected out of <span class="total-count"></span>
-			<a href="javascript:dc.filterAll(); dc.redrawAll();">Reset</a>
+			<a href="javascript:dc.filterAll(); dc.redrawAll();">Reset All</a>
 			<div class="row">
 				<div class="col-md-6" id="ytg-chart">
 				<h4>
 					Yards to Go
-					<span class="reset_span">
+					<span class="reset_span" style="font-size:10px; font-weight: normal;">
 						<a class="reset" href="javascript:ytg_chart.filterAll(); dc.redrawAll();" style="display:none">
-							reset</a>
+							reset chart</a>
 					</span>
 				</h4>
 				</div>
 				<div class="col-md-6" id="yardline-chart">
 				<h4>
-					Yardline 
-					<span class="reset_span">
+					Yard Line (-1 = own 1-yard line)
+					<span class="reset_span" style="font-size:10px; font-weight: normal;">
 						<a class="reset" href="javascript:yardline_chart.filterAll(); dc.redrawAll();" style="display:none">
-							reset</a>
+							reset chart</a>
 					</span>
 				</h4>
 				</div>
 			</div>
 			<div class="row">
+				<div class="col-md-5" id="drive-chart">
+				<h4>
+					Drive Number
+					<span class="reset_span" style="font-size:10px; font-weight: normal;">
+						<a class="reset" href="javascript:drive_chart.filterAll(); dc.redrawAll();" style="display:none">
+							reset chart</a>
+					</span>
+				</h4>
+				</div>
+				<div class="col-md-2" id="quarter-chart">
+				<h4>
+					Quarter
+					<span class="reset_span" style="font-size:10px; font-weight: normal;">
+						<a class="reset" href="javascript:quarter_chart.filterAll(); dc.redrawAll();" style="display:none">
+							reset chart</a>
+					</span>
+				</h4>
+				</div>
+				<div class="col-md-5" id="time-left-chart">
+				<h4>
+					Time Left in Quarter
+					<span class="reset_span" style="font-size:10px; font-weight: normal;">
+						<a class="reset" href="javascript:time_left_chart.filterAll(); dc.redrawAll();" style="display:none">
+							reset chart</a>
+					</span>
+				</h4>
+				</div>
+				
+			</div>
+			<div class="row">
+				<h4>Players</h4>
 				<div class="row col-md-4">
-					<div class=""id="qb-select"></div>
+					<div id="qb-select">
+					</div>
 					<div id="rb-select"></div>
 				</div>
 				<div class="row col-md-4">
@@ -79,12 +111,16 @@
 		<script>
 		var ytg_chart = null;
 		var yardline_chart = null;
+		var drive_chart = null;
+		var quarter_chart = null;
+		var time_left_chart = null;
 		var qb_chart = null;
 		var wr_chart = null;
 		var rb_chart = null;
 		var te_chart = null;
 		var ol_chart = null;
 		var d_chart = null;
+		
 		$(document).ready(function()
 			{
 				$.get("{{ url_for('static', filename='players.csv') }}", function(player_string)
@@ -106,6 +142,7 @@
 								row.yardline = +row.yardline;
 								row.yards_to_go = +row.yards_to_go;
 								row.seconds_elapsed = +row.seconds_elapsed;
+								row.seconds_left = 900 - row.seconds_elapsed;
 								//console.log(row);
 								return row;
 							},
@@ -126,6 +163,15 @@
 								
 								//Yardline bar
 								yardline_chart = make_barchart(cf, "yardline", "#yardline-chart", 500, 200);
+
+								//Drive bar
+								drive_chart = make_barchart(cf, "drive_id", "#drive-chart", 400, 200);
+
+								//quarter chart
+								quarter_chart = make_piechart(cf, "quarter", "#quarter-chart", 80, 10);
+
+								//time left bar
+								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 400, 200);
 								
 								
 								qb_chart = make_player_selector(cf, "QB", "#qb-select");
@@ -138,6 +184,7 @@
 								dc.renderAll();
 								
 								render_selectors(["#qb-select", "#rb-select", "#wr-select", "#te-select", "#ol-select", "#d-select"],
+									["qb_chart", "rb_chart", "wr_chart", "te_chart", "ol_chart", "d_chart"],
 									["QBs", "RBs", "WRs", "TEs", "OLs", "Defense"]);
 							});
 						

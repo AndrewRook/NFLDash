@@ -8,12 +8,27 @@ function make_barchart (ndx, colname, div_id, width, height)
     chart
 	.dimension(dim)
 	.group(group)
-    //.margins({top: 10, right: 50, bottom: 30, left: 40})
+	.margins({top: 10, right: 40, bottom: 30, left: 40})
 	.centerBar(true)
 	.x(d3.scale.linear().domain([min_x, max_x]))
 	.elasticY(true)
 	.width(width).height(height);
     return chart;
+}
+
+function make_piechart (ndx, colname, div_id, outer_radius, inner_radius)
+{
+    var dim = ndx.dimension(function(d){ return d[colname];});
+    var group = dim.group();
+    var chart = dc.pieChart(div_id);
+    chart
+	.dimension(dim)
+	.group(group)
+	.radius(outer_radius)
+	.innerRadius(inner_radius);
+
+    return chart;
+    
 }
 
 function make_player_selector (ndx, position, div_id)
@@ -67,7 +82,7 @@ function make_player_selector (ndx, position, div_id)
     return select;
 }
 
-function render_selectors(selector_list, titles_list)
+function render_selectors(selector_list, chart_list, titles_list)
 {
     for (var i = 0; i < selector_list.length; i++)
     {
@@ -76,5 +91,9 @@ function render_selectors(selector_list, titles_list)
 	$(selector).attr("data-live-search", "true");
 	$(selector).attr("title", titles_list[i]);
 	$(selector).selectpicker('refresh'); 
+	$(selector_list[i]).append('<span class="reset_span" style="font-size:10px; font-weight: normal;">' +
+                                   '<a class="reset" href="javascript:' + chart_list[i] + '.filterAll(); dc.redrawAll();" style="display:none">' +
+				   'reset chart</a>' +
+				   '</span>');
     }
 }
