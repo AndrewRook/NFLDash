@@ -91,17 +91,16 @@
 			<div class="row">
 				<h4>Players</h4>
 				<div class="row col-md-4">
-					<div id="qb-select">
-					</div>
+					<div id="qb-select"></div>
 					<div id="rb-select"></div>
 				</div>
 				<div class="row col-md-4">
-					<div id="wr-select"></div>
-					<div id="te-select"></div>
+					<div id="receiver-select"></div>
+					<div id="ol-select"></div>
 				</div>
 				<div class="row col-md-4">
-					<div id="ol-select"></div>
 					<div id="d-select"></div>
+					<div id="unk-select"></div>
 				</div>
 				
 			</div>
@@ -115,11 +114,11 @@
 		var quarter_chart = null;
 		var time_left_chart = null;
 		var qb_chart = null;
-		var wr_chart = null;
+		var receiver_chart = null;
 		var rb_chart = null;
-		var te_chart = null;
 		var ol_chart = null;
 		var d_chart = null;
+		var unknown_chart = null;
 		
 		$(document).ready(function()
 			{
@@ -143,8 +142,15 @@
 								row.yards_to_go = +row.yards_to_go;
 								row.seconds_elapsed = +row.seconds_elapsed;
 								row.seconds_left = 900 - row.seconds_elapsed;
+								output_row = {'player_ids': row.player_ids,
+									'drive_id': row.drive_id,
+									'yardline': row.yardline,
+									'yards_to_go': row.yards_to_go,
+									'seconds_left': row.seconds_left,
+									'quarter': row.quarter
+									};
 								//console.log(row);
-								return row;
+								return output_row;
 							},
 							function(data)
 							{
@@ -163,7 +169,7 @@
 								
 								//Yardline bar
 								yardline_chart = make_barchart(cf, "yardline", "#yardline-chart", 500, 200);
-
+								
 								//Drive bar
 								drive_chart = make_barchart(cf, "drive_id", "#drive-chart", 400, 200);
 
@@ -173,19 +179,19 @@
 								//time left bar
 								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 400, 200);
 								
-								
-								qb_chart = make_player_selector(cf, "QB", "#qb-select");
-								rb_chart = make_player_selector(cf, "RB", "#rb-select");
-								wr_chart = make_player_selector(cf, "WR", "#wr-select");
-								te_chart = make_player_selector(cf, "TE", "#te-select");
-								ol_chart = make_player_selector(cf, ["T", "OG", "C"], "#ol-select");
-								d_chart = make_player_selector(cf, ["DE", "DT", "LB", "CB", "MLB", "NT"], "#d-select");
+								/* 
+								   qb_chart = make_player_selector(cf, "QB", "#qb-select");
+								   rb_chart = make_player_selector(cf, "RB", "#rb-select");
+								   receiver_chart = make_player_selector(cf, ["WR", "TE"], "#receiver-select");
+								   ol_chart = make_player_selector(cf, ["T", "OG", "C"], "#ol-select");
+								   d_chart = make_player_selector(cf, ["DE", "DT", "LB", "CB", "MLB", "NT"], "#d-select");
+								   unk_chart = make_player_selector(cf, "UNK", "#unk-select"); */
 								
 								dc.renderAll();
-								
-								render_selectors(["#qb-select", "#rb-select", "#wr-select", "#te-select", "#ol-select", "#d-select"],
-									["qb_chart", "rb_chart", "wr_chart", "te_chart", "ol_chart", "d_chart"],
-									["QBs", "RBs", "WRs", "TEs", "OLs", "Defense"]);
+								/* 
+								   render_selectors(["#qb-select", "#rb-select", "#receiver-select", "#ol-select", "#d-select", "#unk-select"],
+								   ["qb_chart", "rb_chart", "receiver_chart", "ol_chart", "d_chart", "unk_chart"],
+								   ["QBs", "RBs", "Receivers", "OLs", "Defense", "Unknown"]); */
 							});
 						
 					});
