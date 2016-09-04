@@ -122,17 +122,13 @@
 		
 		$(document).ready(function()
 			{
-				$.get("{{ url_for('static', filename='players.csv') }}", function(player_string)
+				var player_dict = {};
+				d3.csv("{{ url_for('static', filename='players.csv') }}", function(row)
 					{
-						players = player_string.split(/\r\n|\r|\n/g);
-						player_dict = {};
-						for (var i = 0; i < players.length; i++)
-						{
-							var player_info = players[i].split(",");
-							player_dict[player_info[0]] = {"name": player_info[1],
-								                       "position": player_info[2]};
-						}
-						
+						player_dict[row.player_id] = {"name": row.full_name, "position": row.position};
+						return row;
+					}, function(junk)
+					{	
 						d3.csv("{{ url_for('static', filename='plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
 							{
 								//console.log(row.player_ids, row.player_ids.length);
@@ -169,15 +165,15 @@
 								
 								//Yardline bar
 								yardline_chart = make_barchart(cf, "yardline", "#yardline-chart", 500, 200);
-								
-								//Drive bar
-								drive_chart = make_barchart(cf, "drive_id", "#drive-chart", 400, 200);
+								/* 
+								   //Drive bar
+								   drive_chart = make_barchart(cf, "drive_id", "#drive-chart", 400, 200);
 
-								//quarter chart
-								quarter_chart = make_piechart(cf, "quarter", "#quarter-chart", 80, 10);
+								   //quarter chart
+								   quarter_chart = make_piechart(cf, "quarter", "#quarter-chart", 80, 10);
 
-								//time left bar
-								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 400, 200);
+								   //time left bar
+								   time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 400, 200); */
 								
 								/* 
 								   qb_chart = make_player_selector(cf, "QB", "#qb-select");
