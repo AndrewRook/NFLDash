@@ -143,7 +143,8 @@
 									'yardline': row.yardline,
 									'yards_to_go': row.yards_to_go,
 									'seconds_left': row.seconds_left,
-									'quarter': row.quarter
+									'quarter': row.quarter,
+									'description': row.description
 									};
 								//console.log(row);
 								return output_row;
@@ -161,23 +162,23 @@
 									.group(all_grp);
 								
 								// Yards to go bar
-								ytg_chart = make_barchart(cf, "yards_to_go", "#ytg-chart", 500, 200);
+								ytg_chart = make_barchart(cf, "yards_to_go", "#ytg-chart", 500, 200, 1);
 								
 								//Yardline bar
-								yardline_chart = make_barchart(cf, "yardline", "#yardline-chart", 500, 200);
-								/* 
-								   //Drive bar
-								   drive_chart = make_barchart(cf, "drive_id", "#drive-chart", 400, 200);
-
-								   //quarter chart
-								   quarter_chart = make_piechart(cf, "quarter", "#quarter-chart", 80, 10);
-
-								   //time left bar
-								   time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 400, 200); */
+								yardline_chart = make_barchart(cf, "yardline", "#yardline-chart", 500, 200, 1);
 								
-								/* 
-								   qb_chart = make_player_selector(cf, "QB", "#qb-select");
-								   rb_chart = make_player_selector(cf, "RB", "#rb-select");
+								//Drive bar
+								drive_chart = make_barchart(cf, "drive_id", "#drive-chart", 400, 200, 1);
+
+								//quarter chart
+								quarter_chart = make_piechart(cf, "quarter", "#quarter-chart", 80, 10);
+
+								//time left bar
+								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 400, 200, 10);
+								
+								
+								qb_chart = make_player_selector(cf, "QB", "#qb-select", player_dict);
+								 /*  rb_chart = make_player_selector(cf, "RB", "#rb-select");
 								   receiver_chart = make_player_selector(cf, ["WR", "TE"], "#receiver-select");
 								   ol_chart = make_player_selector(cf, ["T", "OG", "C"], "#ol-select");
 								   d_chart = make_player_selector(cf, ["DE", "DT", "LB", "CB", "MLB", "NT"], "#d-select");
@@ -188,6 +189,9 @@
 								   render_selectors(["#qb-select", "#rb-select", "#receiver-select", "#ol-select", "#d-select", "#unk-select"],
 								   ["qb_chart", "rb_chart", "receiver_chart", "ol_chart", "d_chart", "unk_chart"],
 								   ["QBs", "RBs", "Receivers", "OLs", "Defense", "Unknown"]); */
+								   render_selectors(["#qb-select"],
+								   ["qb_chart"],
+								   ["QBs"]);
 							});
 						
 					});

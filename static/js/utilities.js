@@ -1,10 +1,15 @@
-function make_barchart (ndx, colname, div_id, width, height)
-{    
+function make_barchart (ndx, colname, div_id, width, height, bin_width)
+{
     var dim = ndx.dimension(function(d){ return d[colname];});
     var group = dim.group();
+    if (bin_width != 1)
+    {
+	group = dim.group(function(d) {return Math.floor(d/bin_width)*bin_width;});
+    }
     var chart = dc.barChart(div_id);
     var min_x = dim.bottom(1)[0][colname];
     var max_x = dim.top(1)[0][colname];
+    var num_bins = (max_x - min_x) / bin_width;
     chart
 	.dimension(dim)
 	.group(group)
@@ -12,7 +17,13 @@ function make_barchart (ndx, colname, div_id, width, height)
 	.centerBar(true)
 	.x(d3.scale.linear().domain([min_x, max_x]))
 	.elasticY(true)
+	.barPadding(0.1)
 	.width(width).height(height);
+    console.log(max_x, min_x, bin_width, num_bins);
+    if (bin_width != 1)
+    {
+	chart.xUnits(function(){return num_bins;});
+    }
     return chart;
 }
 
@@ -31,27 +42,29 @@ function make_piechart (ndx, colname, div_id, outer_radius, inner_radius)
     
 }
 
-function make_player_selector (ndx, position, div_id)
+function make_player_selector (ndx, position, div_id, player_dict)
 {
     var dim = ndx.dimension(function(d){ return d.player_ids;}, true);
+    
     var group = dim.group();
     var select = dc.selectMenu(div_id);
     select
 	.dimension(dim)
 	.group(group)
 	.filterDisplayed(function (d) {
-	    if (typeof(position) == "string")
-	    {
-		position = [position];
-	    }
-	    if ($.inArray(player_dict[d.key]["position"], position) > -1)
-	    {
-		return true;
-	    }
-	    else
-	    {
-		return false;
-	    }
+	    return true;
+	    // if (typeof(position) == "string")
+	    // {
+	    // 	position = [position];
+	    // }
+	    // if ($.inArray(player_dict[d.key]["position"], position) > -1)
+	    // {
+	    // 	return true;
+	    // }
+	    // else
+	    // {
+	    // 	return false;
+	    // }
 	})
 	.multiple(true)
 	.order(function (a, b) {
@@ -96,4 +109,39 @@ function render_selectors(selector_list, chart_list, titles_list)
 				   'reset chart</a>' +
 				   '</span>');
     }
+}
+
+function playerFilterHandler (dimension, filters) {
+    dimension.filter(null);
+    console.log("dimension:", dimension);
+    if (filters.length === 0) {
+        dimension.filter(null);
+    } else {
+        dimension.filterFunction(function (d, test) {
+	    var e = new Error('dummy');
+	    var stack = e.stack.replace(/^[^\(]+?[\n$]/gm, '')
+		.replace(/^\s+at\s+/gm, '')
+		.replace(/^Object.<anonymous>\s*\(/gm, '{anonymous}()@')
+		.split('\n');
+	    console.log(stack);
+	    //console.log("test", d, test, dimension.top(Infinity)[test]);
+	    //var filtered = true;
+            for (var i = 0; i < filters.length; i++) {
+                var filter = filters[i];
+                // if (filter.isFiltered && filter.isFiltered(d)) {
+                //     return true;
+                // } else if (filter <= d && filter >= d) {
+		//     console.log("test", filter, d);
+                //     return true;
+	    	// }
+		if (filter > d || filter < d)
+		{
+		    return false;
+		}
+            
+            }
+            return true;
+        });
+    }
+    return filters;
 }
