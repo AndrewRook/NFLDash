@@ -39,6 +39,7 @@ def query_db_plays():
                   )
     sql_string += ("greatest((agg_play.fumbles_rec_tds * 6), (agg_play.kicking_rec_tds * 6), (agg_play.passing_tds * 6), (agg_play.receiving_tds * 6), (agg_play.rushing_tds * 6), (agg_play.kicking_xpmade * 1), (agg_play.passing_twoptm * 2), (agg_play.receiving_twoptm * 2), (agg_play.rushing_twoptm * 2), (agg_play.kicking_fgm * 3)) as offense_play_points, "
                    "greatest((agg_play.defense_frec_tds * 6), (agg_play.defense_int_tds * 6), (agg_play.defense_misc_tds * 6), (agg_play.kickret_tds * 6), (agg_play.puntret_tds * 6), (agg_play.defense_safe * 2)) as defense_play_points, ")
+    sql_string += "((game.home_score > game.away_score and play.pos_team = game.home_team) or (game.away_score > game.home_score and play.pos_team = game.away_team)) as offense_won, "
     sql_string += "agg_player.player_ids "
     sql_string += "from play "
     sql_string += ("inner join (select gsis_id, drive_id, play_id, array_agg(player_id) as player_ids "
@@ -62,8 +63,37 @@ def query_db_plays():
     wpmodel = nflwin.model.WPModel.load_model()
     wp = wpmodel.predict_wp(plays_df)
     plays_df["wp"] = wp
-    print(plays_df)
+    plays_df = compute_wpa(plays_df)
     return plays_df
+
+def compute_wpa(plays_df):
+    next_play_id = plays_df["play_id"].values[1:]
+    next_play_id = np.append(next_play_id, -999)
+    next_play_wp = plays_df["wp"].values[1:]
+    next_play_wp = np.append(next_play_wp, -999)
+    next_play_offense = plays_df["offense_team"].values[1:]
+    next_play_offense = np.append(next_play_offense, -999)
+
+    plays_df["next_play_id"] = next_play_id
+    plays_df["next_play_wp"] = next_play_wp
+    plays_df["next_play_offense"] = next_play_offense
+    #print(plays_df.head())
+    #import sys; sys.exit(1)
+    plays_df["wpa"] = plays_df.apply(_compute_wpa_play, axis=1)
+    plays_df.drop(labels=["next_play_id", "next_play_wp", "next_play_offense"], axis=1, inplace=True)
+    #next_play_id = [plays_df["gsis_id"].values.astype(np.str) + plays_df["drive_id"].values.astype(np.str) + plays_df["play_idf"].values.astype(np.str)
+    return plays_df
+
+def _compute_wpa_play(play):
+    wpa = play.next_play_wp - play.wp
+    if play.next_play_offense != play.offense_team:
+        wpa = (1 - play.next_play_wp) - play.wp
+    if play.next_play_id < play.play_id:
+        if play.offense_won == True:
+            wpa = 1. - play.wp
+        else:
+            wpa = play.wp - 1.
+    return wpa
     
 if __name__ == "__main__":
     plays_df = query_db_plays()
