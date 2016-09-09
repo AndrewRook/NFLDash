@@ -95,6 +95,26 @@ function make_player_selector (ndx, position, div_id, player_dict)
     return select;
 }
 
+function make_team_selector(ndx, column_name, div_id)
+{
+    var dim = ndx.dimension(function(d){ return d[column_name];});
+    
+    var group = dim.group();
+    var select = dc.selectMenu(div_id);
+    select
+	.dimension(dim)
+	.group(group)
+	.filterDisplayed(function (d) {
+	    return true;
+	})
+	.multiple(true)
+	.title(function(d) {
+	    return d.key + ": " + d.value;
+	})
+    ;
+    return select;
+}
+
 function render_selectors(selector_list, chart_list, titles_list)
 {
     for (var i = 0; i < selector_list.length; i++)

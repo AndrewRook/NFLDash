@@ -109,6 +109,10 @@
 					
 				</div>
 				<div class="row">
+					Home Team: <div id="home-team-chart"></div>
+					Away Team: <div id="away-team-chart"></div>
+				</div>
+				<div class="row">
 					<h4>Players</h4>
 					<div class="row col-md-4">
 						<div id="qb-select"></div>
@@ -139,6 +143,7 @@
 		var drive_chart = null;
 		var quarter_chart = null;
 		var time_left_chart = null;
+		var home_team_chart = null;
 		var qb_chart = null;
 		var receiver_chart = null;
 		var rb_chart = null;
@@ -146,6 +151,43 @@
 		var d_chart = null;
 		var unknown_chart = null;
 		var description_chart = null;
+
+		var team_mapping = {
+			"NYJ": "New York Jets",
+			"BUF": "Buffalo Bills",
+			"NE": "New England Patriots",
+			"MIA": "Miami Dolphins",
+			"CLE": "Cleveland Browns",
+			"CIN": "Cincinnati Bengals",
+			"PIT": "Pittsburgh Steelers",
+			"BAL": "Baltimore Ravens",
+			"DEN": "Denver Broncos",
+			"KC": "Kansas City Chiefs",
+			"SD": "San Diego Chargers",
+			"OAK": "Oakland Raiders",
+			"JAC": "Jacksonville Jaguars",
+			"IND": "Indianapolis Colts",
+			"HOU": "Houston Texans",
+			"TEN": "Tennessee Titans",
+			"NYG": "New York Giants",
+			"WAS": "Washington",
+			"PHI": "Philadelphia Eagles",
+			"DAL": "Dallas Cowboys",
+			"GB": "Green Bay Packers",
+			"MIN": "Minnesota Vikings",
+			"CHI": "Chicago Bears",
+			"DET": "Detroit Lions",
+			"SEA": "Seattle Seahawks",
+			"ARI": "Arizona Cardinals",
+			"SF": "San Francisco 49ers",
+			"STL": "St. Louis/Los Angeles Rams",
+			"LA": "St. Louis/Los Angeles Rams",
+			"NO": "New Orleans Saints",
+			"ATL": "Atlanta Falcons",
+			"TB": "Tampa Bay Buccaneers",
+			"CAR": "Carolina Panthers"
+		};
+			
 		
 		$(document).ready(function()
 			{
@@ -169,7 +211,9 @@
 									'quarter': row.quarter,
 									'description': row.description,
 									'wp': +row.wp*100,
-									'wpa': +row.wpa*100
+									'wpa': +row.wpa*100,
+									'home_team': team_mapping[row.home_team],
+									'away_team': team_mapping[row.away_team]
 									};
 								//console.log(row);
 								return output_row;
@@ -206,7 +250,8 @@
 
 								   //time left bar
 								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 400, 200, 30);
-								
+
+								home_team_chart = make_team_selector(cf, "home_team", "#home-team-chart");
 								
 								//qb_chart = make_player_selector(cf, "QB", "#qb-select", player_dict);
 								 /*  rb_chart = make_player_selector(cf, "RB", "#rb-select");
@@ -230,9 +275,10 @@
 								   render_selectors(["#qb-select", "#rb-select", "#receiver-select", "#ol-select", "#d-select", "#unk-select"],
 								   ["qb_chart", "rb_chart", "receiver_chart", "ol_chart", "d_chart", "unk_chart"],
 								   ["QBs", "RBs", "Receivers", "OLs", "Defense", "Unknown"]); */
-								   render_selectors(["#qb-select"],
-								   ["qb_chart"],
-								   ["QBs"]);
+								render_selectors(["#home-team-chart"], ["home_team_chart"], ["All"]);
+								render_selectors(["#qb-select"],
+									["qb_chart"],
+									["QBs"]);
 							});
 						
 					});
