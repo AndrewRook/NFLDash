@@ -34,80 +34,106 @@
 	
 	<body>
 		<div class ="container" role="main">
-		<div class="jumbotron dc-data-count" style="float:left;">
-			<span class="filter-count"></span>
-			selected out of <span class="total-count"></span>
-			<a href="javascript:dc.filterAll(); dc.redrawAll();">Reset All</a>
-			<div class="row">
-				<div class="col-md-6" id="ytg-chart">
-				<h4>
-					Yards to Go
-					<span class="reset_span" style="font-size:10px; font-weight: normal;">
-						<a class="reset" href="javascript:ytg_chart.filterAll(); dc.redrawAll();" style="display:none">
-							reset chart</a>
-					</span>
-				</h4>
+			<div class="jumbotron dc-data-count" style="float:left;">
+				<span class="filter-count"></span>
+				selected out of <span class="total-count"></span>
+				<a href="javascript:dc.filterAll(); dc.redrawAll();">Reset All</a>
+				<div class="row">
+					<div class="col-md-6" id="wp-chart">
+						<h4>
+							Win Probability
+							<span class="reset_span" style="font-size:10px; font-weight: normal;">
+								<a class="reset" href="javascript:wp_chart.filterAll(); dc.redrawAll();" style="display:none">
+									reset chart</a>
+							</span>
+						</h4>
+					</div>
+					<div class="col-md-6" id="wpa-chart">
+						<h4>
+							Win Probability Added
+							<span class="reset_span" style="font-size:10px; font-weight: normal;">
+								<a class="reset" href="javascript:wpa_chart.filterAll(); dc.redrawAll();" style="display:none">
+									reset chart</a>
+							</span>
+						</h4>
+					</div>
 				</div>
-				<div class="col-md-6" id="yardline-chart">
-				<h4>
-					Yard Line (-1 = own 1-yard line)
-					<span class="reset_span" style="font-size:10px; font-weight: normal;">
-						<a class="reset" href="javascript:yardline_chart.filterAll(); dc.redrawAll();" style="display:none">
-							reset chart</a>
-					</span>
-				</h4>
+				<div class="row">
+					<div class="col-md-6" id="ytg-chart">
+						<h4>
+							Yards to Go
+							<span class="reset_span" style="font-size:10px; font-weight: normal;">
+								<a class="reset" href="javascript:ytg_chart.filterAll(); dc.redrawAll();" style="display:none">
+									reset chart</a>
+							</span>
+						</h4>
+					</div>
+					<div class="col-md-6" id="yardline-chart">
+						<h4>
+							Yard Line (-1 = own 1-yard line)
+							<span class="reset_span" style="font-size:10px; font-weight: normal;">
+								<a class="reset" href="javascript:yardline_chart.filterAll(); dc.redrawAll();" style="display:none">
+									reset chart</a>
+							</span>
+						</h4>
+					</div>
 				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-5" id="drive-chart">
-				<h4>
-					Drive Number
-					<span class="reset_span" style="font-size:10px; font-weight: normal;">
-						<a class="reset" href="javascript:drive_chart.filterAll(); dc.redrawAll();" style="display:none">
-							reset chart</a>
-					</span>
-				</h4>
+				<div class="row">
+					<div class="col-md-5" id="drive-chart">
+						<h4>
+							Drive Number
+							<span class="reset_span" style="font-size:10px; font-weight: normal;">
+								<a class="reset" href="javascript:drive_chart.filterAll(); dc.redrawAll();" style="display:none">
+									reset chart</a>
+							</span>
+						</h4>
+					</div>
+					<div class="col-md-2" id="quarter-chart">
+						<h4>
+							Quarter
+							<span class="reset_span" style="font-size:10px; font-weight: normal;">
+								<a class="reset" href="javascript:quarter_chart.filterAll(); dc.redrawAll();" style="display:none">
+									reset chart</a>
+							</span>
+						</h4>
+					</div>
+					<div class="col-md-5" id="time-left-chart">
+						<h4>
+							Time Left in Quarter
+							<span class="reset_span" style="font-size:10px; font-weight: normal;">
+								<a class="reset" href="javascript:time_left_chart.filterAll(); dc.redrawAll();" style="display:none">
+									reset chart</a>
+							</span>
+						</h4>
+					</div>
+					
 				</div>
-				<div class="col-md-2" id="quarter-chart">
-				<h4>
-					Quarter
-					<span class="reset_span" style="font-size:10px; font-weight: normal;">
-						<a class="reset" href="javascript:quarter_chart.filterAll(); dc.redrawAll();" style="display:none">
-							reset chart</a>
-					</span>
-				</h4>
+				<div class="row">
+					<h4>Players</h4>
+					<div class="row col-md-4">
+						<div id="qb-select"></div>
+						<div id="rb-select"></div>
+					</div>
+					<div class="row col-md-4">
+						<div id="receiver-select"></div>
+						<div id="ol-select"></div>
+					</div>
+					<div class="row col-md-4">
+						<div id="d-select"></div>
+						<div id="unk-select"></div>
+					</div>
+					
 				</div>
-				<div class="col-md-5" id="time-left-chart">
-				<h4>
-					Time Left in Quarter
-					<span class="reset_span" style="font-size:10px; font-weight: normal;">
-						<a class="reset" href="javascript:time_left_chart.filterAll(); dc.redrawAll();" style="display:none">
-							reset chart</a>
-					</span>
-				</h4>
+				<div class="row">
+					<div class="col-md-10" id="description-chart"></div>
 				</div>
-				
-			</div>
-			<div class="row">
-				<h4>Players</h4>
-				<div class="row col-md-4">
-					<div id="qb-select"></div>
-					<div id="rb-select"></div>
-				</div>
-				<div class="row col-md-4">
-					<div id="receiver-select"></div>
-					<div id="ol-select"></div>
-				</div>
-				<div class="row col-md-4">
-					<div id="d-select"></div>
-					<div id="unk-select"></div>
-				</div>
-				
-			</div>
+						
 			</div>
 		</div>
-
+		
 		<script>
+		var wp_chart = null;
+		var wpa_chart = null;
 		var ytg_chart = null;
 		var yardline_chart = null;
 		var drive_chart = null;
@@ -119,6 +145,7 @@
 		var ol_chart = null;
 		var d_chart = null;
 		var unknown_chart = null;
+		var description_chart = null;
 		
 		$(document).ready(function()
 			{
@@ -133,18 +160,16 @@
 							{
 								//console.log(row.player_ids, row.player_ids.length);
 								row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
-								row.drive_id = +row.drive_id;
-								row.yardline = +row.yardline;
-								row.yards_to_go = +row.yards_to_go;
-								row.seconds_elapsed = +row.seconds_elapsed;
-								row.seconds_left = 900 - row.seconds_elapsed;
+								row.seconds_left = 900 - +row.seconds_elapsed;
 								output_row = {'player_ids': row.player_ids,
-									'drive_id': row.drive_id,
-									'yardline': row.yardline,
-									'yards_to_go': row.yards_to_go,
-									'seconds_left': row.seconds_left,
+									'drive_id': +row.drive_id,
+									'yardline': +row.yardline,
+									'yards_to_go': +row.yards_to_go,
+									'seconds_left': +row.seconds_left,
 									'quarter': row.quarter,
-									'description': row.description
+									'description': row.description,
+									'wp': +row.wp*100,
+									'wpa': +row.wpa*100
 									};
 								//console.log(row);
 								return output_row;
@@ -160,29 +185,45 @@
 								dc.dataCount('.dc-data-count')
 									.dimension(cf)
 									.group(all_grp);
-								
-								// Yards to go bar
+
+								// WP bar
+								wp_chart = make_barchart(cf, "wp", "#wp-chart", 500, 200, 1);
+
+								// WPA bar
+								wpa_chart = make_barchart(cf, "wpa", "#wpa-chart", 500, 200, 0.5);
+								   
+								   // Yards to go bar
 								ytg_chart = make_barchart(cf, "yards_to_go", "#ytg-chart", 500, 200, 1);
-								
-								//Yardline bar
+								   
+								   //Yardline bar
 								yardline_chart = make_barchart(cf, "yardline", "#yardline-chart", 500, 200, 1);
-								
-								//Drive bar
+								   
+								   //Drive bar
 								drive_chart = make_barchart(cf, "drive_id", "#drive-chart", 400, 200, 1);
 
-								//quarter chart
+								   //quarter chart
 								quarter_chart = make_piechart(cf, "quarter", "#quarter-chart", 80, 10);
 
-								//time left bar
-								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 400, 200, 10);
+								   //time left bar
+								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 400, 200, 30);
 								
 								
-								qb_chart = make_player_selector(cf, "QB", "#qb-select", player_dict);
+								//qb_chart = make_player_selector(cf, "QB", "#qb-select", player_dict);
 								 /*  rb_chart = make_player_selector(cf, "RB", "#rb-select");
 								   receiver_chart = make_player_selector(cf, ["WR", "TE"], "#receiver-select");
 								   ol_chart = make_player_selector(cf, ["T", "OG", "C"], "#ol-select");
 								   d_chart = make_player_selector(cf, ["DE", "DT", "LB", "CB", "MLB", "NT"], "#d-select");
-								   unk_chart = make_player_selector(cf, "UNK", "#unk-select"); */
+								    unk_chart = make_player_selector(cf, "UNK", "#unk-select"); */
+
+								description_chart = dc.dataTable("#description-chart");
+								description_chart
+									.dimension(drive_chart.dimension())
+									.group(function(d) {
+										return d.description;
+									})
+									.size(10);
+
+								
 								
 								dc.renderAll();
 								/* 

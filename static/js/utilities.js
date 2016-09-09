@@ -7,8 +7,8 @@ function make_barchart (ndx, colname, div_id, width, height, bin_width)
 	group = dim.group(function(d) {return Math.floor(d/bin_width)*bin_width;});
     }
     var chart = dc.barChart(div_id);
-    var min_x = dim.bottom(1)[0][colname];
-    var max_x = dim.top(1)[0][colname];
+    var min_x = dim.bottom(1)[0][colname] - bin_width / 2.;
+    var max_x = dim.top(1)[0][colname] + bin_width / 2.;
     var num_bins = (max_x - min_x) / bin_width;
     chart
 	.dimension(dim)
@@ -19,7 +19,7 @@ function make_barchart (ndx, colname, div_id, width, height, bin_width)
 	.elasticY(true)
 	.barPadding(0.1)
 	.width(width).height(height);
-    console.log(max_x, min_x, bin_width, num_bins);
+    //console.log(max_x, min_x, bin_width, num_bins);
     if (bin_width != 1)
     {
 	chart.xUnits(function(){return num_bins;});

@@ -53,7 +53,10 @@ def query_db_plays():
                    )
     sql_string += ("inner join game on play.gsis_id = game.gsis_id ")
     sql_string += ("inner join agg_play on play.gsis_id = agg_play.gsis_id and play.drive_id = agg_play.drive_id and play.play_id = agg_play.play_id ")
-    sql_string += " limit 10"
+    #sql_string += ("where (play.gsis_id != '2009082952' and play.drive_id != 22 and play.play_id != 3904) ") #duplicated play
+    #sql_string += ("and (play.gsis_id != '2009082255' and play.drive_id != 1 and play.play_id != 415) ") #play out of order, wrong play ID
+    #sql_string += ("and (play.gsis_id != '2009082957' and play.drive_id != 5 and play.play_id != 1277) ") #play out of order, wrong play ID
+    #sql_string += " limit 10000"
     sql_string += ";"
 
     plays_df = pd.read_sql(sql_string, engine)
@@ -67,6 +70,8 @@ def query_db_plays():
     return plays_df
 
 def compute_wpa(plays_df):
+    next_gsis_id = plays_df["gsis_id"].values[1:]
+    next_gsis_id = np.append(next_gsis_id, -999)
     next_play_id = plays_df["play_id"].values[1:]
     next_play_id = np.append(next_play_id, -999)
     next_play_wp = plays_df["wp"].values[1:]
@@ -74,13 +79,17 @@ def compute_wpa(plays_df):
     next_play_offense = plays_df["offense_team"].values[1:]
     next_play_offense = np.append(next_play_offense, -999)
 
+    
+    plays_df["next_gsis_id"] = next_gsis_id
     plays_df["next_play_id"] = next_play_id
     plays_df["next_play_wp"] = next_play_wp
     plays_df["next_play_offense"] = next_play_offense
-    #print(plays_df.head())
-    #import sys; sys.exit(1)
+    # print(plays_df[["next_play_id", "play_id", "next_gsis_id", "gsis_id"]].head())
+    # test = (plays_df["next_play_id"] < plays_df["play_id"]) & (plays_df["next_gsis_id"] == plays_df["gsis_id"])
+    # print(test.head())
+    plays_df = plays_df[(plays_df["next_play_id"] > plays_df["play_id"]) | (plays_df["next_gsis_id"] != plays_df["gsis_id"])].copy()
     plays_df["wpa"] = plays_df.apply(_compute_wpa_play, axis=1)
-    plays_df.drop(labels=["next_play_id", "next_play_wp", "next_play_offense"], axis=1, inplace=True)
+    plays_df.drop(labels=["next_gsis_id", "next_play_id", "next_play_wp", "next_play_offense"], axis=1, inplace=True)
     #next_play_id = [plays_df["gsis_id"].values.astype(np.str) + plays_df["drive_id"].values.astype(np.str) + plays_df["play_idf"].values.astype(np.str)
     return plays_df
 
@@ -89,10 +98,15 @@ def _compute_wpa_play(play):
     if play.next_play_offense != play.offense_team:
         wpa = (1 - play.next_play_wp) - play.wp
     if play.next_play_id < play.play_id:
-        if play.offense_won == True:
+        if (play.quarter not in ["Q1", "Q2", "Q3"]) or play.seconds_elapsed < 800: #too much time left, missing plays
+            wpa = 0
+        elif play.offense_won == True:
             wpa = 1. - play.wp
         else:
-            wpa = play.wp - 1.
+            wpa = -1 * play.wp
+    # if play.gsis_id == "2009082952" and (play.drive_id == 22 or play.drive_id == 23) and play.play_id >= 3864:
+    #     print(play)
+    #     print("  ",wpa)
     return wpa
     
 if __name__ == "__main__":
