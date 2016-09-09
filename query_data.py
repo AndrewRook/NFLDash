@@ -11,7 +11,11 @@ def query_db_players():
 
     engine = nflwin.utilities.connect_nfldb()
 
-    sql_string = "select player_id, full_name, position from player"
+    sql_string = ("select player.player_id, player.full_name, player.position "
+                  "from player "
+                  "inner join play_player on player.player_id = play_player.player_id "
+                  "group by (player.player_id, player.full_name, player.position) "
+                  "having count(player.player_id) > 100;")
     #sql_string += " limit 10"
     sql_string += ";"
 
@@ -112,5 +116,5 @@ def _compute_wpa_play(play):
 if __name__ == "__main__":
     plays_df = query_db_plays()
     plays_df.to_csv("plays.csv", index=False)
-    #player_df = query_db_players()
-    #player_df.to_csv("players.csv", index=False)
+    player_df = query_db_players()
+    player_df.to_csv("players.csv", index=False)
