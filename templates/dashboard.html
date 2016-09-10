@@ -262,7 +262,6 @@
 								   //time left bar
 								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 400, 200, 30);
 
-								//home_team_chart = make_team_selector(cf, "home_team", "#home-team-chart");
 								
 								//qb_chart = make_player_selector(cf, "QB", "#qb-select", player_dict);
 								 /*  rb_chart = make_player_selector(cf, "RB", "#rb-select");
@@ -279,19 +278,20 @@
 									})
 									.size(10);
 
+
+								dc.renderAll();
+
 								for (var i in sorted_team_names)
 								{
 									$("#home-team-select").append("<option value=\""+sorted_team_names[i]+"\">"+sorted_team_names[i]+"</option>");
 									$("#away-team-select").append("<option value=\""+sorted_team_names[i]+"\">"+sorted_team_names[i]+"</option>");
 								}
 								$("#home-team-select").selectpicker('refresh'); 
-								$("#away-team-select").selectpicker('refresh'); 
+								$("#away-team-select").selectpicker('refresh');
 
-								$("#home-team-select").change(function()
-									{
-										console.log($(this).val());
-									});
-								dc.renderAll();
+								var home_team_dim = make_team_selector(cf, "#home-team-select", "home_team");
+								var away_team_dim = make_team_selector(cf, "#away-team-select", "away_team");
+								
 								/* 
 								   render_selectors(["#qb-select", "#rb-select", "#receiver-select", "#ol-select", "#d-select", "#unk-select"],
 								   ["qb_chart", "rb_chart", "receiver_chart", "ol_chart", "d_chart", "unk_chart"],

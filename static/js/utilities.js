@@ -95,24 +95,24 @@ function make_player_selector (ndx, position, div_id, player_dict)
     return select;
 }
 
-function make_team_selector(ndx, column_name, div_id)
+function make_team_selector(ndx, select_name, column_name)
 {
-    var dim = ndx.dimension(function(d){ return d[column_name];});
     
-    var group = dim.group();
-    var select = dc.selectMenu(div_id);
-    select
-	.dimension(dim)
-	.group(group)
-	.filterDisplayed(function (d) {
-	    return true;
-	})
-	.multiple(true)
-	.title(function(d) {
-	    return d.key + ": " + d.value;
-	})
-    ;
-    return select;
+    var dim = ndx.dimension(function(d){ return d[column_name];});
+    $(select_name).change(function()
+			  {
+			      dim.filterAll();
+			      var values = $(this).val();
+			      dim.filter(function(d) {
+				  if (values.length == 0)
+				  {
+				      return true;
+				  }
+				  return values.indexOf(d) != -1;
+			      });
+			      dc.redrawAll();
+			  });
+    return dim;
 }
 
 function render_selectors(selector_list, chart_list, titles_list)
