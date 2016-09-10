@@ -109,8 +109,14 @@
 					
 				</div>
 				<div class="row">
-					Home Team: <div id="home-team-chart"></div>
-					Away Team: <div id="away-team-chart"></div>
+					<div class="col-md-2">
+						Home Team: <select class="selectpicker" id="home-team-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select>
+						Away Team: <select class="selectpicker" id="away-team-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select>
+					</div>
+					<div class="col-md-10">
+					</div>
+					<!-- Home Team: <div id="home-team-chart"></div>
+					Away Team: <div id="away-team-chart"></div> -->
 				</div>
 				<div class="row">
 					<h4>Players</h4>
@@ -143,7 +149,7 @@
 		var drive_chart = null;
 		var quarter_chart = null;
 		var time_left_chart = null;
-		var home_team_chart = null;
+		//var home_team_chart = null;
 		var qb_chart = null;
 		var receiver_chart = null;
 		var rb_chart = null;
@@ -187,7 +193,12 @@
 			"TB": "Tampa Bay Buccaneers",
 			"CAR": "Carolina Panthers"
 		};
-			
+		var sorted_team_names = [];
+		for (var key in team_mapping)
+		{
+			sorted_team_names.push(team_mapping[key]);
+		}
+		sorted_team_names = sorted_team_names.sort();
 		
 		$(document).ready(function()
 			{
@@ -251,7 +262,7 @@
 								   //time left bar
 								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 400, 200, 30);
 
-								home_team_chart = make_team_selector(cf, "home_team", "#home-team-chart");
+								//home_team_chart = make_team_selector(cf, "home_team", "#home-team-chart");
 								
 								//qb_chart = make_player_selector(cf, "QB", "#qb-select", player_dict);
 								 /*  rb_chart = make_player_selector(cf, "RB", "#rb-select");
@@ -268,14 +279,24 @@
 									})
 									.size(10);
 
-								
-								
+								for (var i in sorted_team_names)
+								{
+									$("#home-team-select").append("<option value=\""+sorted_team_names[i]+"\">"+sorted_team_names[i]+"</option>");
+									$("#away-team-select").append("<option value=\""+sorted_team_names[i]+"\">"+sorted_team_names[i]+"</option>");
+								}
+								$("#home-team-select").selectpicker('refresh'); 
+								$("#away-team-select").selectpicker('refresh'); 
+
+								$("#home-team-select").change(function()
+									{
+										console.log($(this).val());
+									});
 								dc.renderAll();
 								/* 
 								   render_selectors(["#qb-select", "#rb-select", "#receiver-select", "#ol-select", "#d-select", "#unk-select"],
 								   ["qb_chart", "rb_chart", "receiver_chart", "ol_chart", "d_chart", "unk_chart"],
 								   ["QBs", "RBs", "Receivers", "OLs", "Defense", "Unknown"]); */
-								render_selectors(["#home-team-chart"], ["home_team_chart"], ["All"]);
+								//render_selectors(["#home-team-chart"], ["home_team_chart"], ["All"]);
 								render_selectors(["#qb-select"],
 									["qb_chart"],
 									["QBs"]);
