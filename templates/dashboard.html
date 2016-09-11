@@ -121,29 +121,13 @@
 						</select>
 					</div>
 					<div class="col-md-6">
-						<table><tr><th>Players</th></tr>
-							<tr><td><select class="selectpicker player-select" id="qb-select" multiple title="QBs" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
-							<tr><td><select class="selectpicker player-select" id="rb-select" multiple title="RBs" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
-							<tr><td><select class="selectpicker player-select" id="receiver-select" multiple title="Receivers" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
+						<table><tr><th>Players</th><th></th></tr>
+							<tr><td><select class="selectpicker player-select" id="qb-select" multiple title="QB" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td><select class="selectpicker player-select" id="d-select" multiple title="Defensive" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
+							<tr><td><select class="selectpicker player-select" id="rb-select" multiple title="RB" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td><select class="selectpicker player-select" id="other-select" multiple title="Other/Unknown" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
+							<tr><td><select class="selectpicker player-select" id="receiver-select" multiple title="Receivers" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td></td></tr>
 						</table>
 					</div>
 				</div>
-				<!-- <div class="row">
-				     <h4>Players</h4>
-				     <div class="row col-md-4">
-				     <div id="qb-select"></div>
-				     <div id="rb-select"></div>
-				     </div>
-				     <div class="row col-md-4">
-				     <div id="receiver-select"></div>
-				     <div id="ol-select"></div>
-				     </div>
-				     <div class="row col-md-4">
-				     <div id="d-select"></div>
-				     <div id="unk-select"></div>
-				     </div>
-				     
-				     </div> -->
 				<div class="row">
 					<div class="col-md-10" id="description-chart"></div>
 				</div>
@@ -159,13 +143,6 @@
 		var drive_chart = null;
 		var quarter_chart = null;
 		var time_left_chart = null;
-		//var home_team_chart = null;
-		var qb_chart = null;
-		var receiver_chart = null;
-		var rb_chart = null;
-		var ol_chart = null;
-		var d_chart = null;
-		var unknown_chart = null;
 		var description_chart = null;
 
 		var team_mapping = {
@@ -273,13 +250,6 @@
 								   //time left bar
 								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 400, 200, 30);
 
-								
-								//qb_chart = make_player_selector(cf, "QB", "#qb-select", player_dict);
-								 /*  rb_chart = make_player_selector(cf, "RB", "#rb-select");
-								   receiver_chart = make_player_selector(cf, ["WR", "TE"], "#receiver-select");
-								   ol_chart = make_player_selector(cf, ["T", "OG", "C"], "#ol-select");
-								   d_chart = make_player_selector(cf, ["DE", "DT", "LB", "CB", "MLB", "NT"], "#d-select");
-								    unk_chart = make_player_selector(cf, "UNK", "#unk-select"); */
 
 								description_chart = dc.dataTable("#description-chart");
 								description_chart
@@ -312,28 +282,30 @@
 									{
 										$("#qb-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
 									}
-									if (player_data[i]["position"] == "RB")
+									else if (player_data[i]["position"] == "RB" || player_data[i]["position"] == "FB")
 									{
 										$("#rb-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
 									}
-									if (player_data[i]["position"] == "WR" || player_data[i]["position"] == "TE")
+									else if (player_data[i]["position"] == "WR" || player_data[i]["position"] == "TE")
 									{
 										$("#receiver-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
+									}
+									else if (player_data[i]["position"] == "DE" || player_data[i]["position"] == "DT" || player_data[i]["position"] == "LB" || player_data[i]["position"] == "CB" || player_data[i]["position"] == "DB" || player_data[i]["position"] == "FS" || player_data[i]["position"] == "ILB" || player_data[i]["position"] == "MLB" || player_data[i]["position"] == "NT" || player_data[i]["position"] == "OLB" || player_data[i]["position"] == "SS")
+									{
+										$("#d-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
+									}
+									else
+									{
+										$("#other-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
 									}
 								}
 								$("#qb-select").selectpicker('refresh');
 								$("#rb-select").selectpicker('refresh');
 								$("#receiver-select").selectpicker('refresh');
+								$("#d-select").selectpicker('refresh');
+								$("#other-select").selectpicker('refresh');
 								var player_dim = cf.dimension(function(d){ return d["player_ids"];});
 								make_player_selector(player_dim, ".selectpicker.player-select");
-								/* 
-								   render_selectors(["#qb-select", "#rb-select", "#receiver-select", "#ol-select", "#d-select", "#unk-select"],
-								   ["qb_chart", "rb_chart", "receiver_chart", "ol_chart", "d_chart", "unk_chart"],
-								   ["QBs", "RBs", "Receivers", "OLs", "Defense", "Unknown"]); */
-								//render_selectors(["#home-team-chart"], ["home_team_chart"], ["All"]);
-								/* render_selectors(["#qb-select"],
-								   ["qb_chart"],
-								   ["QBs"]); */
 							});
 						
 					});
