@@ -109,31 +109,41 @@
 					
 				</div>
 				<div class="row">
-					<div class="col-md-2">
+					<div class="col-md-3">
 						Home Team: <select class="selectpicker" id="home-team-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select>
 						Away Team: <select class="selectpicker" id="away-team-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select>
 					</div>
-					<div class="col-md-10">
+					<div class="col-md-3">
+						Offense is:
+						<select class="selectpicker" multiple data-max-options="1" id="offense-home-select">
+							<option value="home">Home</option>
+							<option value="away">Away</option>
+						</select>
 					</div>
-					<!-- Home Team: <div id="home-team-chart"></div>
-					Away Team: <div id="away-team-chart"></div> -->
+					<div class="col-md-6">
+						<table><tr><th>Players</th></tr>
+							<tr><td><select class="selectpicker player-select" id="qb-select" multiple title="QBs" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
+							<tr><td><select class="selectpicker player-select" id="rb-select" multiple title="RBs" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
+							<tr><td><select class="selectpicker player-select" id="receiver-select" multiple title="Receivers" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
+						</table>
+					</div>
 				</div>
-				<div class="row">
-					<h4>Players</h4>
-					<div class="row col-md-4">
-						<div id="qb-select"></div>
-						<div id="rb-select"></div>
-					</div>
-					<div class="row col-md-4">
-						<div id="receiver-select"></div>
-						<div id="ol-select"></div>
-					</div>
-					<div class="row col-md-4">
-						<div id="d-select"></div>
-						<div id="unk-select"></div>
-					</div>
-					
-				</div>
+				<!-- <div class="row">
+				     <h4>Players</h4>
+				     <div class="row col-md-4">
+				     <div id="qb-select"></div>
+				     <div id="rb-select"></div>
+				     </div>
+				     <div class="row col-md-4">
+				     <div id="receiver-select"></div>
+				     <div id="ol-select"></div>
+				     </div>
+				     <div class="row col-md-4">
+				     <div id="d-select"></div>
+				     <div id="unk-select"></div>
+				     </div>
+				     
+				     </div> -->
 				<div class="row">
 					<div class="col-md-10" id="description-chart"></div>
 				</div>
@@ -207,7 +217,7 @@
 					{
 						player_dict[row.player_id] = {"name": row.full_name, "position": row.position};
 						return row;
-					}, function(junk)
+					}, function(player_data)
 					{	
 						d3.csv("{{ url_for('static', filename='plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
 							{
@@ -224,7 +234,8 @@
 									'wp': +row.wp*100,
 									'wpa': +row.wpa*100,
 									'home_team': team_mapping[row.home_team],
-									'away_team': team_mapping[row.away_team]
+									'away_team': team_mapping[row.away_team],
+									'offense_team': team_mapping[row.offense_team]
 									};
 								//console.log(row);
 								return output_row;
@@ -291,15 +302,38 @@
 
 								var home_team_dim = make_team_selector(cf, "#home-team-select", "home_team");
 								var away_team_dim = make_team_selector(cf, "#away-team-select", "away_team");
-								
+
+								var offense_home_dim = make_home_selector(cf, "#offense-home-select",
+									"home_team", "offense_team");
+
+								for (var i in player_data)
+								{
+									if (player_data[i]["position"] == "QB")
+									{
+										$("#qb-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
+									}
+									if (player_data[i]["position"] == "RB")
+									{
+										$("#rb-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
+									}
+									if (player_data[i]["position"] == "WR" || player_data[i]["position"] == "TE")
+									{
+										$("#receiver-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
+									}
+								}
+								$("#qb-select").selectpicker('refresh');
+								$("#rb-select").selectpicker('refresh');
+								$("#receiver-select").selectpicker('refresh');
+								var player_dim = cf.dimension(function(d){ return d["player_ids"];});
+								make_player_selector(player_dim, ".selectpicker.player-select");
 								/* 
 								   render_selectors(["#qb-select", "#rb-select", "#receiver-select", "#ol-select", "#d-select", "#unk-select"],
 								   ["qb_chart", "rb_chart", "receiver_chart", "ol_chart", "d_chart", "unk_chart"],
 								   ["QBs", "RBs", "Receivers", "OLs", "Defense", "Unknown"]); */
 								//render_selectors(["#home-team-chart"], ["home_team_chart"], ["All"]);
-								render_selectors(["#qb-select"],
-									["qb_chart"],
-									["QBs"]);
+								/* render_selectors(["#qb-select"],
+								   ["qb_chart"],
+								   ["QBs"]); */
 							});
 						
 					});

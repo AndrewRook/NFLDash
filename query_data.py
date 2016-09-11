@@ -15,7 +15,8 @@ def query_db_players():
                   "from player "
                   "inner join play_player on player.player_id = play_player.player_id "
                   "group by (player.player_id, player.full_name, player.position) "
-                  "having count(player.player_id) > 100;")
+                  "having count(player.player_id) > 100 "
+                  "order by player.full_name; ")
     #sql_string += " limit 10"
     sql_string += ";"
 

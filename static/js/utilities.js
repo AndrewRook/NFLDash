@@ -42,57 +42,50 @@ function make_piechart (ndx, colname, div_id, outer_radius, inner_radius)
     
 }
 
-function make_player_selector (ndx, position, div_id, player_dict)
+function make_player_selector(dim, select_class_name)
 {
-    var dim = ndx.dimension(function(d){ return d.player_ids;}, true);
-    
-    var group = dim.group();
-    var select = dc.selectMenu(div_id);
-    select
-	.dimension(dim)
-	.group(group)
-	.filterDisplayed(function (d) {
-	    return true;
-	    // if (typeof(position) == "string")
-	    // {
-	    // 	position = [position];
-	    // }
-	    // if ($.inArray(player_dict[d.key]["position"], position) > -1)
-	    // {
-	    // 	return true;
-	    // }
-	    // else
-	    // {
-	    // 	return false;
-	    // }
-	})
-	.multiple(true)
-	.order(function (a, b) {
-	    //Handle cases where there is no name:
-	    if (player_dict[a.key]["name"] == "") {return 1;}
-	    if (player_dict[b.key]["name"] == "") {return -1;}
-	    
-	    if (player_dict[a.key]["name"] > player_dict[b.key]["name"])
-	    {
-		return 1;
-	    }
-	    else if (player_dict[b.key]["name"] > player_dict[a.key]["name"])
-	    {
-		return -1;
-	    }
-	    else
-	    {return 0;}
-	})
-	.title(function(d) {
-	    if (player_dict[d.key]["name"] !== "")
-	    {
-		return player_dict[d.key]["name"] + ": " + d.value;
-	    }
-	    else
-	    {return d.key + ": " + d.value;}
-	})
-    ;
-    return select;
+    $(select_class_name).change(function()
+				{
+				    var player_dicts = [];
+				    $(select_class_name).each(function()
+							      {
+								  var players = $(this).val();
+								  if (players.length > 0)
+								  {
+								      var player_dict = {};
+								      for (var i in players)
+								      {
+									  player_dict[players[i]] = 1;
+								      }
+								      player_dicts.push(player_dict);
+								  }
+							      });
+				    dim.filterAll();
+				    dim.filter(function(d) {
+					if (player_dicts.length == 0)
+					{
+					    return true;
+					}
+					for (var i in player_dicts)
+					{
+					    var found = false;
+					    for (var j in d)
+					    {
+						if (player_dicts[i][d[j]] != null)
+						{
+						    found = true;
+						    break;
+						}
+					    }
+					    if (found === false)
+					    {
+						return false;
+					    }
+					}
+					return true;
+				    });
+				    dc.redrawAll();
+				});
 }
 
 function make_team_selector(ndx, select_name, column_name)
@@ -103,65 +96,40 @@ function make_team_selector(ndx, select_name, column_name)
 			  {
 			      dim.filterAll();
 			      var values = $(this).val();
-			      dim.filter(function(d) {
-				  if (values.length == 0)
-				  {
-				      return true;
-				  }
-				  return values.indexOf(d) != -1;
-			      });
+			      if (values.length != 0)
+			      {
+				  dim.filter(function(d) {
+				      return values.indexOf(d) != -1;
+				  });
+			      }
 			      dc.redrawAll();
 			  });
     return dim;
 }
-
-function render_selectors(selector_list, chart_list, titles_list)
+function make_home_selector(ndx, select_name, home_column, offense_column)
 {
-    for (var i = 0; i < selector_list.length; i++)
-    {
-	var selector = $(selector_list[i]).children("select")[0];
-	$(selector).addClass("selectpicker");
-	$(selector).attr("data-live-search", "true");
-	$(selector).attr("title", titles_list[i]);
-	$(selector).selectpicker('refresh'); 
-	$(selector_list[i]).append('<span class="reset_span" style="font-size:10px; font-weight: normal;">' +
-                                   '<a class="reset" href="javascript:' + chart_list[i] + '.filterAll(); dc.redrawAll();" style="display:none">' +
-				   'reset chart</a>' +
-				   '</span>');
-    }
-}
-
-function playerFilterHandler (dimension, filters) {
-    dimension.filter(null);
-    console.log("dimension:", dimension);
-    if (filters.length === 0) {
-        dimension.filter(null);
-    } else {
-        dimension.filterFunction(function (d, test) {
-	    var e = new Error('dummy');
-	    var stack = e.stack.replace(/^[^\(]+?[\n$]/gm, '')
-		.replace(/^\s+at\s+/gm, '')
-		.replace(/^Object.<anonymous>\s*\(/gm, '{anonymous}()@')
-		.split('\n');
-	    console.log(stack);
-	    //console.log("test", d, test, dimension.top(Infinity)[test]);
-	    //var filtered = true;
-            for (var i = 0; i < filters.length; i++) {
-                var filter = filters[i];
-                // if (filter.isFiltered && filter.isFiltered(d)) {
-                //     return true;
-                // } else if (filter <= d && filter >= d) {
-		//     console.log("test", filter, d);
-                //     return true;
-	    	// }
-		if (filter > d || filter < d)
-		{
-		    return false;
-		}
-            
-            }
-            return true;
-        });
-    }
-    return filters;
+    var dim = ndx.dimension(function(d){ return d[offense_column] == d[home_column];});
+    $(select_name).change(function()
+			  {
+			      dim.filterAll();
+			      var values = $(this).val();
+			      if (values.length != 0)
+			      {
+				  var value = values[0];
+				  dim.filter(function(d) {
+				      if ((value == "home" && d) || (value == "away" && d == false))
+				      {
+					  return true;
+				      }
+				      else
+				      {
+					  return false;
+				      }
+				  });
+			      }
+			      dc.redrawAll();
+			  });
+    
+    return dim;
+    
 }
