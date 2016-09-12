@@ -28,6 +28,9 @@
 		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.0/js/bootstrap-select.min.js"></script>-->
 		<script type="text/javascript" src="{{ url_for('static', filename='bootstrap-select-1.11.0/dist/js/bootstrap-select.js') }}"></script>
 
+		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.12/fh-3.1.2/sc-1.4.2/datatables.min.css"/>
+		<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/fh-3.1.2/sc-1.4.2/datatables.min.js"></script>
+
 		<script type="text/javascript" src="{{ url_for('static', filename='js/utilities.js') }}"></script>
 
 	</head>
@@ -129,6 +132,14 @@
 					</div>
 				</div>
 				<div class="row">
+					<table class="table table-condensed table-hover table-striped" id="play-table">
+						<thead>
+							<tr class="header" id="play-table-header">
+							</tr>
+						</thead>
+					</table>
+				</div>
+				<div class="row">
 					<div class="col-md-10" id="description-chart"></div>
 				</div>
 						
@@ -186,6 +197,13 @@
 			sorted_team_names.push(team_mapping[key]);
 		}
 		sorted_team_names = sorted_team_names.sort();
+
+		var column_name_mapping = {
+			'Yardline': 'yardline_text',
+			'Down': 'down',
+			'Distance': 'yards_to_go',
+			'Description': 'description'
+			};
 		
 		$(document).ready(function()
 			{
@@ -196,14 +214,26 @@
 						return row;
 					}, function(player_data)
 					{	
-						d3.csv("{{ url_for('static', filename='plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
+						d3.csv("{{ url_for('static', filename='sample_plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
 							{
 								//console.log(row.player_ids, row.player_ids.length);
 								row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
 								row.seconds_left = 900 - +row.seconds_elapsed;
+								var yardline_text = "Opp " + (50 - +row.yardline).toString();
+								if (+row.yardline == 0)
+								{
+									yardline_text = "50";
+								}
+								else if (+row.yardline < 0)
+								{
+									yardline_text = "Own " + (+row.yardline + 50).toString();
+								}
+								
 								output_row = {'player_ids': row.player_ids,
 									'drive_id': +row.drive_id,
 									'yardline': +row.yardline,
+									'yardline_text': yardline_text,
+									'down': +row.down,
 									'yards_to_go': +row.yards_to_go,
 									'seconds_left': +row.seconds_left,
 									'quarter': row.quarter,
@@ -306,6 +336,50 @@
 								$("#other-select").selectpicker('refresh');
 								var player_dim = cf.dimension(function(d){ return d["player_ids"];});
 								make_player_selector(player_dim, ".selectpicker.player-select");
+
+								var column_def_list = [];
+								var column_count = 0;
+								for (var key in column_name_mapping)
+								{
+									console.log(column_count, key, column_name_mapping[key]);
+									var key_copy = JSON.parse(JSON.stringify(key))
+									column_def_list.push({
+										targets: column_count,
+										data: function(d) {
+											return d[column_name_mapping[key_copy]];
+										}
+									});
+									column_count = column_count + 1;
+									$("#play-table-header").append("<th>"+key+"</th>");
+								}
+								var play_table_options = {
+									columnDefs: column_def_list
+								};
+								var datatable = $("#play-table").dataTable(play_table_options);
+
+								function RefreshTable() {
+									dc.events.trigger(function () {
+										//var test = {"One": 5, "Two": 1, "Three": 10, "Four": "woo"};
+										//var test = [5, 1, 10, "woo"];
+										/*var test_list = []
+										for (var i = 0; i < 5; i++)
+										{
+											test_list.push(test);
+										}
+										console.log(test_list);*/
+										datatable.api()
+											.clear()
+											.rows.add( player_dim.top(Infinity) )
+											//.rows.add(test_list)
+											.draw();
+									});
+								}
+								/*for (var i = 0; i < dc.chartRegistry.list().length; i++) {
+									var chartI = dc.chartRegistry.list()[i];
+									chartI.on("filtered", RefreshTable);
+								}*/
+								console.log(player_dim.top(3));
+								RefreshTable();
 							});
 						
 					});
