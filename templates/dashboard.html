@@ -139,9 +139,6 @@
 						</thead>
 					</table>
 				</div>
-				<div class="row">
-					<div class="col-md-10" id="description-chart"></div>
-				</div>
 						
 			</div>
 		</div>
@@ -154,7 +151,6 @@
 		var drive_chart = null;
 		var quarter_chart = null;
 		var time_left_chart = null;
-		var description_chart = null;
 
 		var team_mapping = {
 			"NYJ": "New York Jets",
@@ -197,13 +193,12 @@
 			sorted_team_names.push(team_mapping[key]);
 		}
 		sorted_team_names = sorted_team_names.sort();
-
-		var column_name_mapping = {
-			'Yardline': 'yardline_text',
-			'Down': 'down',
-			'Distance': 'yards_to_go',
-			'Description': 'description'
-			};
+			
+		var column_name_mapping = [["Yardline", "yardline"],
+			["Down", "down"],
+			["Distance", "yards_to_go"],
+			["Description", "description"]];
+		
 		
 		$(document).ready(function()
 			{
@@ -214,7 +209,7 @@
 						return row;
 					}, function(player_data)
 					{	
-						d3.csv("{{ url_for('static', filename='sample_plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
+						d3.csv("{{ url_for('static', filename='plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
 							{
 								//console.log(row.player_ids, row.player_ids.length);
 								row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
@@ -281,16 +276,34 @@
 								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 400, 200, 30);
 
 
-								description_chart = dc.dataTable("#description-chart");
-								description_chart
-									.dimension(drive_chart.dimension())
-									.group(function(d) {
-										return d.description;
-									})
-									.size(10);
-
-
 								dc.renderAll();
+								
+								var player_dim = cf.dimension(function(d){ return d["player_ids"];});
+								
+								var column_def_list = [];
+								var column_count = 0;
+								for (var i = 0; i < column_name_mapping.length; i++)
+								{
+									$("#play-table-header").append("<th>"+column_name_mapping[i][0]+"</th>");
+									var tempfunc = (
+										function(i)
+										{
+											return function(d)
+											{
+												return d[column_name_mapping[i][1]];
+											}
+										} )(i);
+									column_def_list.push({
+										targets: i,
+										data: tempfunc
+									});
+									column_count = column_count + 1;
+								}
+								var play_table_options = {
+									columnDefs: column_def_list,
+									language: {"emptyTable": "Too many plays to display (> 1000)"}
+								};
+								var datatable = $("#play-table").dataTable(play_table_options);
 
 								for (var i in sorted_team_names)
 								{
@@ -300,11 +313,11 @@
 								$("#home-team-select").selectpicker('refresh'); 
 								$("#away-team-select").selectpicker('refresh');
 
-								var home_team_dim = make_team_selector(cf, "#home-team-select", "home_team");
-								var away_team_dim = make_team_selector(cf, "#away-team-select", "away_team");
+								var home_team_dim = make_team_selector(cf, "#home-team-select", "home_team", datatable, player_dim);
+								var away_team_dim = make_team_selector(cf, "#away-team-select", "away_team", datatable, player_dim);
 
 								var offense_home_dim = make_home_selector(cf, "#offense-home-select",
-									"home_team", "offense_team");
+									"home_team", "offense_team", datatable, player_dim);
 
 								for (var i in player_data)
 								{
@@ -334,52 +347,23 @@
 								$("#receiver-select").selectpicker('refresh');
 								$("#d-select").selectpicker('refresh');
 								$("#other-select").selectpicker('refresh');
-								var player_dim = cf.dimension(function(d){ return d["player_ids"];});
-								make_player_selector(player_dim, ".selectpicker.player-select");
+								make_player_selector(player_dim, ".selectpicker.player-select", datatable);
 
-								var column_def_list = [];
-								var column_count = 0;
-								for (var key in column_name_mapping)
-								{
-									console.log(column_count, key, column_name_mapping[key]);
-									var key_copy = JSON.parse(JSON.stringify(key))
-									column_def_list.push({
-										targets: column_count,
-										data: function(d) {
-											return d[column_name_mapping[key_copy]];
-										}
-									});
-									column_count = column_count + 1;
-									$("#play-table-header").append("<th>"+key+"</th>");
-								}
-								var play_table_options = {
-									columnDefs: column_def_list
-								};
-								var datatable = $("#play-table").dataTable(play_table_options);
 
-								function RefreshTable() {
-									dc.events.trigger(function () {
-										//var test = {"One": 5, "Two": 1, "Three": 10, "Four": "woo"};
-										//var test = [5, 1, 10, "woo"];
-										/*var test_list = []
-										for (var i = 0; i < 5; i++)
+								var curryed_refreshtable = (
+									function(datatable, player_dim)
+									{
+										return function()
 										{
-											test_list.push(test);
+											return RefreshTable(datatable, player_dim);
 										}
-										console.log(test_list);*/
-										datatable.api()
-											.clear()
-											.rows.add( player_dim.top(Infinity) )
-											//.rows.add(test_list)
-											.draw();
-									});
-								}
-								/*for (var i = 0; i < dc.chartRegistry.list().length; i++) {
+									})(datatable, player_dim);
+								for (var i = 0; i < dc.chartRegistry.list().length; i++) {
 									var chartI = dc.chartRegistry.list()[i];
-									chartI.on("filtered", RefreshTable);
-								}*/
-								console.log(player_dim.top(3));
-								RefreshTable();
+									chartI.on("filtered", curryed_refreshtable);
+								}
+								//console.log(player_dim.top(3));
+								RefreshTable(datatable, player_dim);
 							});
 						
 					});

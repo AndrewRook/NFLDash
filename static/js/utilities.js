@@ -42,7 +42,7 @@ function make_piechart (ndx, colname, div_id, outer_radius, inner_radius)
     
 }
 
-function make_player_selector(dim, select_class_name)
+function make_player_selector(dim, select_class_name, datatable)
 {
     $(select_class_name).change(function()
 				{
@@ -85,10 +85,11 @@ function make_player_selector(dim, select_class_name)
 					return true;
 				    });
 				    dc.redrawAll();
+				    RefreshTable(datatable, dim);
 				});
 }
 
-function make_team_selector(ndx, select_name, column_name)
+function make_team_selector(ndx, select_name, column_name, datatable, player_dim)
 {
     
     var dim = ndx.dimension(function(d){ return d[column_name];});
@@ -103,10 +104,11 @@ function make_team_selector(ndx, select_name, column_name)
 				  });
 			      }
 			      dc.redrawAll();
+			      RefreshTable(datatable, player_dim);
 			  });
     return dim;
 }
-function make_home_selector(ndx, select_name, home_column, offense_column)
+function make_home_selector(ndx, select_name, home_column, offense_column, datatable, player_dim)
 {
     var dim = ndx.dimension(function(d){ return d[offense_column] == d[home_column];});
     $(select_name).change(function()
@@ -128,8 +130,31 @@ function make_home_selector(ndx, select_name, home_column, offense_column)
 				  });
 			      }
 			      dc.redrawAll();
+			      RefreshTable(datatable, player_dim);
 			  });
     
     return dim;
     
+}
+
+
+function RefreshTable(datatable, player_dim) {
+    dc.events.trigger(function () {
+	//console.log("test", player_dim.top(1000).length);
+	if (player_dim.top(1001).length < 1001)
+	{
+	    datatable.fnSettings().oLanguage.sEmptyTable = "All plays filtered";
+	    datatable.api()
+		.clear()
+		.rows.add( player_dim.top(Infinity) )
+		.draw();
+	}
+	else
+	{
+	    datatable.fnSettings().oLanguage.sEmptyTable = "Too many plays to display (> 1000)";
+	    datatable.api()
+		.clear()
+		.draw();
+	}
+    });
 }
