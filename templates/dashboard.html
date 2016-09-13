@@ -28,126 +28,216 @@
 		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.0/js/bootstrap-select.min.js"></script>-->
 		<script type="text/javascript" src="{{ url_for('static', filename='bootstrap-select-1.11.0/dist/js/bootstrap-select.js') }}"></script>
 
+		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.12/fh-3.1.2/sc-1.4.2/datatables.min.css"/>
+		<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/fh-3.1.2/sc-1.4.2/datatables.min.js"></script>
+
 		<script type="text/javascript" src="{{ url_for('static', filename='js/utilities.js') }}"></script>
 
 	</head>
 	
 	<body>
 		<div class ="container" role="main">
-		<div class="jumbotron dc-data-count" style="float:left;">
-			<span class="filter-count"></span>
-			selected out of <span class="total-count"></span>
-			<a href="javascript:dc.filterAll(); dc.redrawAll();">Reset All</a>
-			<div class="row">
-				<div class="col-md-6" id="ytg-chart">
-				<h4>
-					Yards to Go
-					<span class="reset_span" style="font-size:10px; font-weight: normal;">
-						<a class="reset" href="javascript:ytg_chart.filterAll(); dc.redrawAll();" style="display:none">
-							reset chart</a>
-					</span>
-				</h4>
+			<div class="jumbotron dc-data-count" style="float:left;">
+				<span class="filter-count"></span>
+				selected out of <span class="total-count"></span>
+				<a href="javascript:dc.filterAll(); dc.redrawAll();">Reset All</a>
+				<div class="row">
+					<div class="col-md-6" id="wp-chart">
+						<h4>
+							Win Probability
+							<span class="reset_span" style="font-size:10px; font-weight: normal;">
+								<a class="reset" href="javascript:wp_chart.filterAll(); dc.redrawAll();" style="display:none">
+									reset chart</a>
+							</span>
+						</h4>
+					</div>
+					<div class="col-md-6" id="wpa-chart">
+						<h4>
+							Win Probability Added
+							<span class="reset_span" style="font-size:10px; font-weight: normal;">
+								<a class="reset" href="javascript:wpa_chart.filterAll(); dc.redrawAll();" style="display:none">
+									reset chart</a>
+							</span>
+						</h4>
+					</div>
 				</div>
-				<div class="col-md-6" id="yardline-chart">
-				<h4>
-					Yard Line (-1 = own 1-yard line)
-					<span class="reset_span" style="font-size:10px; font-weight: normal;">
-						<a class="reset" href="javascript:yardline_chart.filterAll(); dc.redrawAll();" style="display:none">
-							reset chart</a>
-					</span>
-				</h4>
+				<div class="row">
+					<div class="col-md-6" id="ytg-chart">
+						<h4>
+							Yards to Go
+							<span class="reset_span" style="font-size:10px; font-weight: normal;">
+								<a class="reset" href="javascript:ytg_chart.filterAll(); dc.redrawAll();" style="display:none">
+									reset chart</a>
+							</span>
+						</h4>
+					</div>
+					<div class="col-md-6" id="yardline-chart">
+						<h4>
+							Yard Line (-1 = own 1-yard line)
+							<span class="reset_span" style="font-size:10px; font-weight: normal;">
+								<a class="reset" href="javascript:yardline_chart.filterAll(); dc.redrawAll();" style="display:none">
+									reset chart</a>
+							</span>
+						</h4>
+					</div>
 				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-5" id="drive-chart">
-				<h4>
-					Drive Number
-					<span class="reset_span" style="font-size:10px; font-weight: normal;">
-						<a class="reset" href="javascript:drive_chart.filterAll(); dc.redrawAll();" style="display:none">
-							reset chart</a>
-					</span>
-				</h4>
+				<div class="row">
+					<div class="col-md-5" id="drive-chart">
+						<h4>
+							Drive Number
+							<span class="reset_span" style="font-size:10px; font-weight: normal;">
+								<a class="reset" href="javascript:drive_chart.filterAll(); dc.redrawAll();" style="display:none">
+									reset chart</a>
+							</span>
+						</h4>
+					</div>
+					<div class="col-md-2" id="quarter-chart">
+						<h4>
+							Quarter
+							<span class="reset_span" style="font-size:10px; font-weight: normal;">
+								<a class="reset" href="javascript:quarter_chart.filterAll(); dc.redrawAll();" style="display:none">
+									reset chart</a>
+							</span>
+						</h4>
+					</div>
+					<div class="col-md-5" id="time-left-chart">
+						<h4>
+							Time Left in Quarter
+							<span class="reset_span" style="font-size:10px; font-weight: normal;">
+								<a class="reset" href="javascript:time_left_chart.filterAll(); dc.redrawAll();" style="display:none">
+									reset chart</a>
+							</span>
+						</h4>
+					</div>
+					
 				</div>
-				<div class="col-md-2" id="quarter-chart">
-				<h4>
-					Quarter
-					<span class="reset_span" style="font-size:10px; font-weight: normal;">
-						<a class="reset" href="javascript:quarter_chart.filterAll(); dc.redrawAll();" style="display:none">
-							reset chart</a>
-					</span>
-				</h4>
+				<div class="row">
+					<div class="col-md-3">
+						Home Team: <select class="selectpicker" id="home-team-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select>
+						Away Team: <select class="selectpicker" id="away-team-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select>
+					</div>
+					<div class="col-md-3">
+						Offense is:
+						<select class="selectpicker" multiple data-max-options="1" id="offense-home-select">
+							<option value="home">Home</option>
+							<option value="away">Away</option>
+						</select>
+					</div>
+					<div class="col-md-6">
+						<table><tr><th>Players</th><th></th></tr>
+							<tr><td><select class="selectpicker player-select" id="qb-select" multiple title="QB" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td><select class="selectpicker player-select" id="d-select" multiple title="Defensive" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
+							<tr><td><select class="selectpicker player-select" id="rb-select" multiple title="RB" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td><select class="selectpicker player-select" id="other-select" multiple title="Other/Unknown" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
+							<tr><td><select class="selectpicker player-select" id="receiver-select" multiple title="Receivers" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td></td></tr>
+						</table>
+					</div>
 				</div>
-				<div class="col-md-5" id="time-left-chart">
-				<h4>
-					Time Left in Quarter
-					<span class="reset_span" style="font-size:10px; font-weight: normal;">
-						<a class="reset" href="javascript:time_left_chart.filterAll(); dc.redrawAll();" style="display:none">
-							reset chart</a>
-					</span>
-				</h4>
+				<div class="row">
+					<table class="table table-condensed table-hover table-striped" id="play-table">
+						<thead>
+							<tr class="header" id="play-table-header">
+							</tr>
+						</thead>
+					</table>
 				</div>
-				
-			</div>
-			<div class="row">
-				<h4>Players</h4>
-				<div class="row col-md-4">
-					<div id="qb-select"></div>
-					<div id="rb-select"></div>
-				</div>
-				<div class="row col-md-4">
-					<div id="receiver-select"></div>
-					<div id="ol-select"></div>
-				</div>
-				<div class="row col-md-4">
-					<div id="d-select"></div>
-					<div id="unk-select"></div>
-				</div>
-				
-			</div>
+						
 			</div>
 		</div>
-
+		
 		<script>
+		var wp_chart = null;
+		var wpa_chart = null;
 		var ytg_chart = null;
 		var yardline_chart = null;
 		var drive_chart = null;
 		var quarter_chart = null;
 		var time_left_chart = null;
-		var qb_chart = null;
-		var receiver_chart = null;
-		var rb_chart = null;
-		var ol_chart = null;
-		var d_chart = null;
-		var unknown_chart = null;
+
+		var team_mapping = {
+			"NYJ": "New York Jets",
+			"BUF": "Buffalo Bills",
+			"NE": "New England Patriots",
+			"MIA": "Miami Dolphins",
+			"CLE": "Cleveland Browns",
+			"CIN": "Cincinnati Bengals",
+			"PIT": "Pittsburgh Steelers",
+			"BAL": "Baltimore Ravens",
+			"DEN": "Denver Broncos",
+			"KC": "Kansas City Chiefs",
+			"SD": "San Diego Chargers",
+			"OAK": "Oakland Raiders",
+			"JAC": "Jacksonville Jaguars",
+			"IND": "Indianapolis Colts",
+			"HOU": "Houston Texans",
+			"TEN": "Tennessee Titans",
+			"NYG": "New York Giants",
+			"WAS": "Washington",
+			"PHI": "Philadelphia Eagles",
+			"DAL": "Dallas Cowboys",
+			"GB": "Green Bay Packers",
+			"MIN": "Minnesota Vikings",
+			"CHI": "Chicago Bears",
+			"DET": "Detroit Lions",
+			"SEA": "Seattle Seahawks",
+			"ARI": "Arizona Cardinals",
+			"SF": "San Francisco 49ers",
+			"STL": "St. Louis/Los Angeles Rams",
+			"LA": "St. Louis/Los Angeles Rams",
+			"NO": "New Orleans Saints",
+			"ATL": "Atlanta Falcons",
+			"TB": "Tampa Bay Buccaneers",
+			"CAR": "Carolina Panthers"
+		};
+		var sorted_team_names = [];
+		for (var key in team_mapping)
+		{
+			sorted_team_names.push(team_mapping[key]);
+		}
+		sorted_team_names = sorted_team_names.sort();
+			
+		var column_name_mapping = [["Yardline", "yardline"],
+			["Down", "down"],
+			["Distance", "yards_to_go"],
+			["Description", "description"]];
+		
 		
 		$(document).ready(function()
 			{
-				$.get("{{ url_for('static', filename='players.csv') }}", function(player_string)
+				var player_dict = {};
+				d3.csv("{{ url_for('static', filename='players.csv') }}", function(row)
 					{
-						players = player_string.split(/\r\n|\r|\n/g);
-						player_dict = {};
-						for (var i = 0; i < players.length; i++)
-						{
-							var player_info = players[i].split(",");
-							player_dict[player_info[0]] = {"name": player_info[1],
-								                       "position": player_info[2]};
-						}
-						
+						player_dict[row.player_id] = {"name": row.full_name, "position": row.position};
+						return row;
+					}, function(player_data)
+					{	
 						d3.csv("{{ url_for('static', filename='plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
 							{
 								//console.log(row.player_ids, row.player_ids.length);
 								row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
-								row.drive_id = +row.drive_id;
-								row.yardline = +row.yardline;
-								row.yards_to_go = +row.yards_to_go;
-								row.seconds_elapsed = +row.seconds_elapsed;
-								row.seconds_left = 900 - row.seconds_elapsed;
+								row.seconds_left = 900 - +row.seconds_elapsed;
+								var yardline_text = "Opp " + (50 - +row.yardline).toString();
+								if (+row.yardline == 0)
+								{
+									yardline_text = "50";
+								}
+								else if (+row.yardline < 0)
+								{
+									yardline_text = "Own " + (+row.yardline + 50).toString();
+								}
+								
 								output_row = {'player_ids': row.player_ids,
-									'drive_id': row.drive_id,
-									'yardline': row.yardline,
-									'yards_to_go': row.yards_to_go,
-									'seconds_left': row.seconds_left,
-									'quarter': row.quarter
+									'drive_id': +row.drive_id,
+									'yardline': +row.yardline,
+									'yardline_text': yardline_text,
+									'down': +row.down,
+									'yards_to_go': +row.yards_to_go,
+									'seconds_left': +row.seconds_left,
+									'quarter': row.quarter,
+									'description': row.description,
+									'wp': +row.wp*100,
+									'wpa': +row.wpa*100,
+									'home_team': team_mapping[row.home_team],
+									'away_team': team_mapping[row.away_team],
+									'offense_team': team_mapping[row.offense_team]
 									};
 								//console.log(row);
 								return output_row;
@@ -163,35 +253,117 @@
 								dc.dataCount('.dc-data-count')
 									.dimension(cf)
 									.group(all_grp);
-								
-								// Yards to go bar
-								ytg_chart = make_barchart(cf, "yards_to_go", "#ytg-chart", 500, 200);
-								
-								//Yardline bar
-								yardline_chart = make_barchart(cf, "yardline", "#yardline-chart", 500, 200);
-								
-								//Drive bar
-								drive_chart = make_barchart(cf, "drive_id", "#drive-chart", 400, 200);
 
-								//quarter chart
+								// WP bar
+								wp_chart = make_barchart(cf, "wp", "#wp-chart", 500, 200, 1);
+
+								// WPA bar
+								wpa_chart = make_barchart(cf, "wpa", "#wpa-chart", 500, 200, 0.5);
+								   
+								   // Yards to go bar
+								ytg_chart = make_barchart(cf, "yards_to_go", "#ytg-chart", 500, 200, 1);
+								   
+								   //Yardline bar
+								yardline_chart = make_barchart(cf, "yardline", "#yardline-chart", 500, 200, 1);
+								   
+								   //Drive bar
+								drive_chart = make_barchart(cf, "drive_id", "#drive-chart", 400, 200, 1);
+
+								   //quarter chart
 								quarter_chart = make_piechart(cf, "quarter", "#quarter-chart", 80, 10);
 
-								//time left bar
-								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 400, 200);
-								
-								/* 
-								   qb_chart = make_player_selector(cf, "QB", "#qb-select");
-								   rb_chart = make_player_selector(cf, "RB", "#rb-select");
-								   receiver_chart = make_player_selector(cf, ["WR", "TE"], "#receiver-select");
-								   ol_chart = make_player_selector(cf, ["T", "OG", "C"], "#ol-select");
-								   d_chart = make_player_selector(cf, ["DE", "DT", "LB", "CB", "MLB", "NT"], "#d-select");
-								   unk_chart = make_player_selector(cf, "UNK", "#unk-select"); */
-								
+								   //time left bar
+								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 400, 200, 30);
+
+
 								dc.renderAll();
-								/* 
-								   render_selectors(["#qb-select", "#rb-select", "#receiver-select", "#ol-select", "#d-select", "#unk-select"],
-								   ["qb_chart", "rb_chart", "receiver_chart", "ol_chart", "d_chart", "unk_chart"],
-								   ["QBs", "RBs", "Receivers", "OLs", "Defense", "Unknown"]); */
+								
+								var player_dim = cf.dimension(function(d){ return d["player_ids"];});
+								
+								var column_def_list = [];
+								var column_count = 0;
+								for (var i = 0; i < column_name_mapping.length; i++)
+								{
+									$("#play-table-header").append("<th>"+column_name_mapping[i][0]+"</th>");
+									var tempfunc = (
+										function(i)
+										{
+											return function(d)
+											{
+												return d[column_name_mapping[i][1]];
+											}
+										} )(i);
+									column_def_list.push({
+										targets: i,
+										data: tempfunc
+									});
+									column_count = column_count + 1;
+								}
+								var play_table_options = {
+									columnDefs: column_def_list,
+									language: {"emptyTable": "Too many plays to display (> 1000)"}
+								};
+								var datatable = $("#play-table").dataTable(play_table_options);
+
+								for (var i in sorted_team_names)
+								{
+									$("#home-team-select").append("<option value=\""+sorted_team_names[i]+"\">"+sorted_team_names[i]+"</option>");
+									$("#away-team-select").append("<option value=\""+sorted_team_names[i]+"\">"+sorted_team_names[i]+"</option>");
+								}
+								$("#home-team-select").selectpicker('refresh'); 
+								$("#away-team-select").selectpicker('refresh');
+
+								var home_team_dim = make_team_selector(cf, "#home-team-select", "home_team", datatable, player_dim);
+								var away_team_dim = make_team_selector(cf, "#away-team-select", "away_team", datatable, player_dim);
+
+								var offense_home_dim = make_home_selector(cf, "#offense-home-select",
+									"home_team", "offense_team", datatable, player_dim);
+
+								for (var i in player_data)
+								{
+									if (player_data[i]["position"] == "QB")
+									{
+										$("#qb-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
+									}
+									else if (player_data[i]["position"] == "RB" || player_data[i]["position"] == "FB")
+									{
+										$("#rb-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
+									}
+									else if (player_data[i]["position"] == "WR" || player_data[i]["position"] == "TE")
+									{
+										$("#receiver-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
+									}
+									else if (player_data[i]["position"] == "DE" || player_data[i]["position"] == "DT" || player_data[i]["position"] == "LB" || player_data[i]["position"] == "CB" || player_data[i]["position"] == "DB" || player_data[i]["position"] == "FS" || player_data[i]["position"] == "ILB" || player_data[i]["position"] == "MLB" || player_data[i]["position"] == "NT" || player_data[i]["position"] == "OLB" || player_data[i]["position"] == "SS")
+									{
+										$("#d-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
+									}
+									else
+									{
+										$("#other-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
+									}
+								}
+								$("#qb-select").selectpicker('refresh');
+								$("#rb-select").selectpicker('refresh');
+								$("#receiver-select").selectpicker('refresh');
+								$("#d-select").selectpicker('refresh');
+								$("#other-select").selectpicker('refresh');
+								make_player_selector(player_dim, ".selectpicker.player-select", datatable);
+
+
+								var curryed_refreshtable = (
+									function(datatable, player_dim)
+									{
+										return function()
+										{
+											return RefreshTable(datatable, player_dim);
+										}
+									})(datatable, player_dim);
+								for (var i = 0; i < dc.chartRegistry.list().length; i++) {
+									var chartI = dc.chartRegistry.list()[i];
+									chartI.on("filtered", curryed_refreshtable);
+								}
+								//console.log(player_dim.top(3));
+								RefreshTable(datatable, player_dim);
 							});
 						
 					});
