@@ -137,6 +137,33 @@ function make_home_selector(ndx, select_name, home_column, offense_column, datat
     
 }
 
+function make_offense_won_selector(ndx, select_name, offense_won_column, datatable, player_dim)
+{
+    var dim = ndx.dimension(function(d){ return d[offense_won_column] == "True";});
+    $(select_name).change(function()
+			  {
+			      dim.filterAll()
+			      var values = $(this).val();
+			      if (values.length != 0)
+			      {
+				  var value = values[0];
+				  dim.filter(function(d) {
+				      if ((value == "won" && d) || (value == "loss" && d == false))
+				      {
+					  return true;
+				      }
+				      else
+				      {
+					  return false;
+				      }
+				  });
+			      }
+			      dc.redrawAll();
+			      RefreshTable(datatable, player_dim);
+			  });
+    return dim;
+}
+
 
 function RefreshTable(datatable, player_dim) {
     dc.events.trigger(function () {
