@@ -89,7 +89,7 @@ function make_player_selector(dim, select_class_name, datatable)
 				});
 }
 
-function make_team_selector(ndx, select_name, column_name, datatable, player_dim)
+function make_team_season_selector(ndx, select_name, column_name, datatable, player_dim)
 {
     
     var dim = ndx.dimension(function(d){ return d[column_name];});
@@ -100,7 +100,7 @@ function make_team_selector(ndx, select_name, column_name, datatable, player_dim
 			      if (values.length != 0)
 			      {
 				  dim.filter(function(d) {
-				      return values.indexOf(d) != -1;
+				      return values.indexOf(String(d)) != -1;
 				  });
 			      }
 			      dc.redrawAll();
@@ -185,3 +185,26 @@ function RefreshTable(datatable, player_dim) {
 	}
     });
 }
+
+jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+    "yardline-pre": function ( a ) {
+	var x = a.replace("Opp ", "");
+	x = parseInt(x.replace("Own ", "-"));
+	if (x < 0)
+	{
+	    return -50 - x;
+	}
+	else
+	{
+	    return 50 - x;
+	}
+    },
+ 
+    "yardline-asc": function ( a, b ) {
+        return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+    },
+ 
+    "yardline-desc": function ( a, b ) {
+        return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+    }
+} );

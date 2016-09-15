@@ -41,6 +41,8 @@ def query_db_plays():
                   "play.pos_team as offense_team, "
                   "game.home_team, "
                   "game.away_team, "
+                  "case when game.season_type = 'Regular' then game.week when game.season_type = 'Postseason' then game.week+17 else 0 end as week, "
+                  "game.season_year, "
                   )
     sql_string += ("greatest((agg_play.fumbles_rec_tds * 6), (agg_play.kicking_rec_tds * 6), (agg_play.passing_tds * 6), (agg_play.receiving_tds * 6), (agg_play.rushing_tds * 6), (agg_play.kicking_xpmade * 1), (agg_play.passing_twoptm * 2), (agg_play.receiving_twoptm * 2), (agg_play.rushing_twoptm * 2), (agg_play.kicking_fgm * 3)) as offense_play_points, "
                    "greatest((agg_play.defense_frec_tds * 6), (agg_play.defense_int_tds * 6), (agg_play.defense_misc_tds * 6), (agg_play.kickret_tds * 6), (agg_play.puntret_tds * 6), (agg_play.defense_safe * 2)) as defense_play_points, ")
@@ -58,9 +60,7 @@ def query_db_plays():
                    )
     sql_string += ("inner join game on play.gsis_id = game.gsis_id ")
     sql_string += ("inner join agg_play on play.gsis_id = agg_play.gsis_id and play.drive_id = agg_play.drive_id and play.play_id = agg_play.play_id ")
-    #sql_string += ("where (play.gsis_id != '2009082952' and play.drive_id != 22 and play.play_id != 3904) ") #duplicated play
-    #sql_string += ("and (play.gsis_id != '2009082255' and play.drive_id != 1 and play.play_id != 415) ") #play out of order, wrong play ID
-    #sql_string += ("and (play.gsis_id != '2009082957' and play.drive_id != 5 and play.play_id != 1277) ") #play out of order, wrong play ID
+    sql_string += ("where play.pos_team != 'UNK'  and (play.time).phase not in ('Pregame', 'Half', 'Final') and game.season_type != 'Preseason' ")
     #sql_string += " limit 10000"
     sql_string += ";"
 

@@ -42,6 +42,34 @@
 				selected out of <span class="total-count"></span>
 				<a href="javascript:dc.filterAll(); dc.redrawAll();">Reset All</a>
 				<div class="row">
+					<div class="col-md-3">
+						Season: <select class="selectpicker" id="season-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select>
+						Home Team: <select class="selectpicker" id="home-team-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select>
+						Away Team: <select class="selectpicker" id="away-team-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select>
+					</div>
+					<div class="col-md-3">
+						Offense Is:
+						<select class="selectpicker" multiple data-max-options="1" id="offense-home-select">
+							<option value="home">Home</option>
+							<option value="away">Away</option>
+						</select>
+						Game Result:
+						<select class="selectpicker" multiple data-max-options="1" id="offense-won-select">
+							<option value="won">Offense Won</option>
+							<option value="loss">Offense Lost</option>
+						</select>
+					</div>
+					<div class="col-md-6" id="week-chart">
+						<h4>
+							Week
+							<span class="reset_span" style="font-size:10px; font-weight: normal;">
+								<a class="reset" href="javascript:week_chart.filterAll(); dc.redrawAll();" style="display:none">
+									reset chart</a>
+							</span>
+						</h4>
+					</div>
+				</div>
+				<div class="row">
 					<div class="col-md-6" id="wp-chart">
 						<h4>
 							Win Probability
@@ -113,20 +141,8 @@
 				</div>
 				<div class="row">
 					<div class="col-md-3">
-						Home Team: <select class="selectpicker" id="home-team-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select>
-						Away Team: <select class="selectpicker" id="away-team-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select>
 					</div>
 					<div class="col-md-3">
-						Offense Is:
-						<select class="selectpicker" multiple data-max-options="1" id="offense-home-select">
-							<option value="home">Home</option>
-							<option value="away">Away</option>
-						</select>
-						Game Result:
-						<select class="selectpicker" multiple data-max-options="1" id="offense-won-select">
-							<option value="won">Offense Won</option>
-							<option value="loss">Offense Lost</option>
-						</select>
 						
 					</div>
 					<div class="col-md-6">
@@ -201,25 +217,28 @@
 		sorted_team_names = sorted_team_names.sort();
 			
 		var column_name_mapping = [
+			["Season", "season_year", "9%"],
+			["Week", "week", "6%"],
 			["Off", "offense_team_abbrev", "6%"],
 			["Def", "defense_team_abbrev", "6%"],
 			["Qtr", "quarter", "6%"],
-			["Yardline", "yardline", "9%"],
+			["Yardline", "yardline_text", "9%", "yardline"],
 			["Down", "down", "7%"],
 			["Dist", "yards_to_go", "7%"],
-			["Description", "description", "59%"]];
+			["Description", "description", "44%"]];
 		
 		
 		$(document).ready(function()
 			{
 				var player_dict = {};
+				var unique_seasons = {};
 				d3.csv("{{ url_for('static', filename='players.csv') }}", function(row)
 					{
 						player_dict[row.player_id] = {"name": row.full_name, "position": row.position};
 						return row;
 					}, function(player_data)
 					{	
-						d3.csv("{{ url_for('static', filename='sample_plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
+						d3.csv("{{ url_for('static', filename='plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
 							{
 								//console.log(row.player_ids, row.player_ids.length);
 								row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
@@ -239,9 +258,16 @@
 								{
 									defense_team = row.home_team;
 								}
-								
+								var week = +row.week;
+								if(week > 21)
+								{
+									week = 21; //ignore bye week before superbowl
+								}
+								unique_seasons[row.season_year] = 1
 								output_row = {'player_ids': row.player_ids,
 									'drive_id': +row.drive_id,
+									'week': week,
+									'season_year': +row.season_year,
 									'yardline': +row.yardline,
 									'yardline_text': yardline_text,
 									'down': +row.down,
@@ -294,6 +320,9 @@
 								   //time left bar
 								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 400, 200, 30);
 
+								//week chart
+								week_chart = make_barchart(cf, "week", "#week-chart", 400, 200, 1);
+
 
 								dc.renderAll();
 								
@@ -312,11 +341,16 @@
 												return d[column_name_mapping[i][1]];
 											}
 										} )(i);
-									column_def_list.push({
+									var param_dict = {
 										targets: i,
 										width: column_name_mapping[i][2],
 										data: tempfunc
-									});
+									};
+									if (column_name_mapping[i].length > 3)
+									{
+										param_dict["type"] = column_name_mapping[i][3];
+									}
+									column_def_list.push(param_dict);
 									column_count = column_count + 1;
 								}
 								var play_table_options = {
@@ -334,14 +368,21 @@
 								$("#home-team-select").selectpicker('refresh'); 
 								$("#away-team-select").selectpicker('refresh');
 
-								var home_team_dim = make_team_selector(cf, "#home-team-select", "home_team", datatable, player_dim);
-								var away_team_dim = make_team_selector(cf, "#away-team-select", "away_team", datatable, player_dim);
+								var home_team_dim = make_team_season_selector(cf, "#home-team-select", "home_team", datatable, player_dim);
+								var away_team_dim = make_team_season_selector(cf, "#away-team-select", "away_team", datatable, player_dim);
 
 								var offense_home_dim = make_home_selector(cf, "#offense-home-select",
 									"home_team", "offense_team", datatable, player_dim);
 
 								var offense_won_dim = make_offense_won_selector(cf, "#offense-won-select",
 									"offense_won", datatable, player_dim);
+
+								var season_dim = make_team_season_selector(cf, "#season-select", "season_year", datatable, player_dim);
+								for (var season in unique_seasons)
+								{
+									$("#season-select").append("<option value=\""+season+"\">"+season+"</option>");
+								}
+								$("#season-select").selectpicker('refresh');
 
 								for (var i in player_data)
 								{
