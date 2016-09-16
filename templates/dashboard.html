@@ -33,14 +33,44 @@
 
 		<script type="text/javascript" src="{{ url_for('static', filename='js/utilities.js') }}"></script>
 
+		<style>
+		body {
+			padding-top: 50px;
+		}
+		</style>
+
 	</head>
 	
 	<body>
+		    <nav class="navbar navbar-default navbar-fixed-top">
+			    <div class="container">
+				    <div class="navbar-header">
+					    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+						    <span class="sr-only">Toggle navigation</span>
+						    <span class="icon-bar"></span>
+						    <span class="icon-bar"></span>
+						    <span class="icon-bar"></span>
+					    </button>
+					    <span class="navbar-brand">NFLDash</span>
+				    </div>
+				    <div id="navbar" class="navbar-collapse collapse">
+					    <ul class="nav navbar-nav">
+						    <li><a href="#about">About</a></li>
+						    <li><a href="https://github.com/AndrewRook/NFLDash">GitHub</a></li>
+					    </ul>
+					    <ul class="nav navbar-nav navbar-right">
+						    <div class="dc-data-count">
+							    <li><span class="filter-count"></span> selected out of <span class="total-count"></span></li>
+						    </div>
+						    <li><a href="javascript:dc.filterAll(); dc.redrawAll();">Reset All</a></li>
+					    </ul>
+				    </div><!--/.nav-collapse -->
+			    </div>
+		    </nav>
+
+		
 		<div class ="container" role="main">
-			<div class="jumbotron dc-data-count" style="float:left;">
-				<span class="filter-count"></span>
-				selected out of <span class="total-count"></span>
-				<a href="javascript:dc.filterAll(); dc.redrawAll();">Reset All</a>
+			<div class="jumbotron"><!-- style="float:left;">-->
 				<div class="row">
 					<div class="col-md-3">
 						Season: <select class="selectpicker" id="season-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select>
@@ -90,16 +120,25 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-6" id="ytg-chart">
+					<div class="col-md-2" id="down-chart">
 						<h4>
-							Yards to Go
+							Down
+							<span class="reset_span" style="font-size:10px; font-weight: normal;">
+								<a class="reset" href="javascript:down_chart.filterAll(); dc.redrawAll();" style="display:none">
+									reset chart</a>
+							</span>
+						</h4>
+					</div>
+					<div class="col-md-5" id="ytg-chart">
+						<h4>
+							Distance
 							<span class="reset_span" style="font-size:10px; font-weight: normal;">
 								<a class="reset" href="javascript:ytg_chart.filterAll(); dc.redrawAll();" style="display:none">
 									reset chart</a>
 							</span>
 						</h4>
 					</div>
-					<div class="col-md-6" id="yardline-chart">
+					<div class="col-md-5" id="yardline-chart">
 						<h4>
 							Yard Line (-1 = own 1-yard line)
 							<span class="reset_span" style="font-size:10px; font-weight: normal;">
@@ -238,7 +277,7 @@
 						return row;
 					}, function(player_data)
 					{	
-						d3.csv("{{ url_for('static', filename='plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
+						d3.csv("{{ url_for('static', filename='sample_plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
 							{
 								//console.log(row.player_ids, row.player_ids.length);
 								row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
@@ -304,12 +343,14 @@
 
 								// WPA bar
 								wpa_chart = make_barchart(cf, "wpa", "#wpa-chart", 500, 200, 0.5);
+
+								down_chart = make_piechart(cf, "down", "#down-chart", 60, 10);
 								   
 								   // Yards to go bar
-								ytg_chart = make_barchart(cf, "yards_to_go", "#ytg-chart", 500, 200, 1);
+								ytg_chart = make_barchart(cf, "yards_to_go", "#ytg-chart", 400, 200, 1);
 								   
 								   //Yardline bar
-								yardline_chart = make_barchart(cf, "yardline", "#yardline-chart", 500, 200, 1);
+								yardline_chart = make_barchart(cf, "yardline", "#yardline-chart", 400, 200, 1);
 								   
 								   //Drive bar
 								drive_chart = make_barchart(cf, "drive_id", "#drive-chart", 400, 200, 1);
