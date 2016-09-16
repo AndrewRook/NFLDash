@@ -39,6 +39,9 @@
 		body {
 			padding-top: 50px;
 		}
+		.glyphicon {
+			font-size: 14px;
+		}
 		</style>
 
 	</head>
@@ -66,8 +69,8 @@
 								    <span class="filter-count"></span> selected out of <span class="total-count"></span> plays
 							    </div>
 						    </li>
-						    <li><a href="javascript:export_filtered_data();" data-toggle="tooltip" data-placement="bottom" title="Download filtered plays to CSV">Export Data</a></li>
 						    <li><a href="javascript:dc.filterAll(); dc.redrawAll();" data-toggle="tooltip" data-placement="bottom" title="Reset all filters">Reset All</a></li>
+						    <li><a href="javascript:export_filtered_data();" data-toggle="tooltip" data-placement="bottom" title="Download filtered plays to CSV. For larger datasets it may take several seconds to prepare the data for download.">Export Data</a></li>
 					    </ul>
 				    </div><!--/.nav-collapse -->
 			    </div>
@@ -96,7 +99,7 @@
 					</div>
 					<div class="col-md-6" id="week-chart">
 						<h4>
-							<span data-toggle="tooltip" data-placement="top" title="Week 18 is Wild-Card Weekend, Week 19 is the Divisional round, Week 20 is the Conference Championships, and Week 21 is the Super Bowl">Week</span>
+							Week <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Week 18 is Wild-Card Weekend, Week 19 is the Divisional round, Week 20 is the Conference Championships, and Week 21 is the Super Bowl"></span>
 							<span class="reset_span" style="font-size:10px; font-weight: normal;">
 								<a class="reset" href="javascript:week_chart.filterAll(); dc.redrawAll();" style="display:none">
 									reset chart</a>
@@ -289,7 +292,7 @@
 						return row;
 					}, function(player_data)
 					{	
-						d3.csv("{{ url_for('static', filename='plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
+						d3.csv("{{ url_for('static', filename='sample_plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
 							{
 								//console.log(row.player_ids, row.player_ids.length);
 								row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
