@@ -480,14 +480,13 @@
 									var chartI = dc.chartRegistry.list()[i];
 									chartI.on("filtered", curryed_refreshtable);
 								}
-								//console.log(player_dim.top(3));
 								RefreshTable(datatable, player_dim);
 
 								export_filtered_data = function()
 								{
-									var output_data = player_dim.top(Infinity);
+									var output_data = $.extend(true, [], player_dim.top(Infinity));
 									output_data.forEach(function(d) {
-										d['player_ids'] = "\"" + d['player_ids'].join() + "\"";
+										d['player_ids'] = d['player_ids'].join();
 									});
 									var blob = new Blob([d3.csv.format(output_data)],
 										{type: "text/csv;charset=utf-8"});
