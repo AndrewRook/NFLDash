@@ -30,6 +30,8 @@
 
 		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.12/fh-3.1.2/sc-1.4.2/datatables.min.css"/>
 		<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/fh-3.1.2/sc-1.4.2/datatables.min.js"></script>
+		
+		<script type="text/javascript" src="{{ url_for('static', filename='filesaver/FileSaver.js') }}"></script>
 
 		<script type="text/javascript" src="{{ url_for('static', filename='js/utilities.js') }}"></script>
 
@@ -64,7 +66,8 @@
 								    <span class="filter-count"></span> selected out of <span class="total-count"></span> plays
 							    </div>
 						    </li>
-						    <li><a href="javascript:dc.filterAll(); dc.redrawAll();">Reset All</a></li>
+						    <li><a href="javascript:export_filtered_data();" data-toggle="tooltip" data-placement="bottom" title="Download filtered plays to CSV">Export Data</a></li>
+						    <li><a href="javascript:dc.filterAll(); dc.redrawAll();" data-toggle="tooltip" data-placement="bottom" title="Reset all filters">Reset All</a></li>
 					    </ul>
 				    </div><!--/.nav-collapse -->
 			    </div>
@@ -93,7 +96,7 @@
 					</div>
 					<div class="col-md-6" id="week-chart">
 						<h4>
-							Week
+							<span data-toggle="tooltip" data-placement="top" title="Week 18 is Wild-Card Weekend, Week 19 is the Divisional round, Week 20 is the Conference Championships, and Week 21 is the Super Bowl">Week</span>
 							<span class="reset_span" style="font-size:10px; font-weight: normal;">
 								<a class="reset" href="javascript:week_chart.filterAll(); dc.redrawAll();" style="display:none">
 									reset chart</a>
@@ -267,10 +270,17 @@
 			["Down", "down", "7%"],
 			["Dist", "yards_to_go", "7%"],
 			["Description", "description", "44%"]];
+
+		var export_filtered_data;
 		
 		
 		$(document).ready(function()
 			{
+				$(function () {
+					$('[data-toggle="tooltip"]').tooltip()
+				});
+
+				
 				var player_dict = {};
 				var unique_seasons = {};
 				d3.csv("{{ url_for('static', filename='players.csv') }}", function(row)
@@ -279,7 +289,7 @@
 						return row;
 					}, function(player_data)
 					{	
-						d3.csv("{{ url_for('static', filename='sample_plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
+						d3.csv("{{ url_for('static', filename='plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
 							{
 								//console.log(row.player_ids, row.player_ids.length);
 								row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
@@ -472,6 +482,18 @@
 								}
 								//console.log(player_dim.top(3));
 								RefreshTable(datatable, player_dim);
+
+								export_filtered_data = function()
+								{
+									var output_data = player_dim.top(Infinity);
+									output_data.forEach(function(d) {
+										d['player_ids'] = "\"" + d['player_ids'].join() + "\"";
+									});
+									var blob = new Blob([d3.csv.format(output_data)],
+										{type: "text/csv;charset=utf-8"});
+									saveAs(blob, 'plays.csv');
+								}
+								
 							});
 						
 					});
