@@ -35,6 +35,8 @@ function make_piechart (ndx, colname, div_id, outer_radius, inner_radius)
     chart
 	.dimension(dim)
 	.group(group)
+	.width(160)
+	.height(160)
 	.radius(outer_radius)
 	.innerRadius(inner_radius);
 

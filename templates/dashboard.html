@@ -81,21 +81,27 @@
 			<div class="jumbotron"><!-- style="float:left;">-->
 				<div class="row">
 					<div class="col-md-3">
-						Season: <select class="selectpicker" id="season-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select>
-						Home Team: <select class="selectpicker" id="home-team-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select>
-						Away Team: <select class="selectpicker" id="away-team-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select>
+						<div>
+							<h4>General</h4>
+							Season: <select class="selectpicker" id="season-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select>
+							Home Team: <select class="selectpicker" id="home-team-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select>
+							Away Team: <select class="selectpicker" id="away-team-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select>
+						</div>
 					</div>
 					<div class="col-md-3">
-						Offense Is:
-						<select class="selectpicker" multiple data-max-options="1" id="offense-home-select">
-							<option value="home">Home</option>
-							<option value="away">Away</option>
-						</select>
-						Game Result:
-						<select class="selectpicker" multiple data-max-options="1" id="offense-won-select">
-							<option value="won">Offense Won</option>
-							<option value="loss">Offense Lost</option>
-						</select>
+						<div>
+							<h4 style="visibility:hidden;"">General:</h4>
+							Offense Is:
+							<select class="selectpicker" multiple data-max-options="1" id="offense-home-select">
+								<option value="home">Home</option>
+								<option value="away">Away</option>
+							</select>
+							Game Result:
+							<select class="selectpicker" multiple data-max-options="1" id="offense-won-select">
+								<option value="won">Offense Won</option>
+								<option value="loss">Offense Lost</option>
+							</select>
+						</div>
 					</div>
 					<div class="col-md-6" id="week-chart">
 						<h4>
@@ -157,15 +163,15 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-5" id="drive-chart">
-						<h4>
-							Drive Number
-							<span class="reset_span" style="font-size:10px; font-weight: normal;">
-								<a class="reset" href="javascript:drive_chart.filterAll(); dc.redrawAll();" style="display:none">
-									reset chart</a>
-							</span>
-						</h4>
-					</div>
+					<!-- <div class="col-md-5" id="drive-chart">
+					     <h4>
+					     Drive Number
+					     <span class="reset_span" style="font-size:10px; font-weight: normal;">
+					     <a class="reset" href="javascript:drive_chart.filterAll(); dc.redrawAll();" style="display:none">
+					     reset chart</a>
+					     </span>
+					     </h4>
+					     </div> -->
 					<div class="col-md-2" id="quarter-chart">
 						<h4>
 							Quarter
@@ -177,29 +183,38 @@
 					</div>
 					<div class="col-md-5" id="time-left-chart">
 						<h4>
-							Time Left in Quarter
+							Time Left in Quarter <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="In seconds, with 900 seconds representing 15:00 to go in the quarter"></span>
 							<span class="reset_span" style="font-size:10px; font-weight: normal;">
 								<a class="reset" href="javascript:time_left_chart.filterAll(); dc.redrawAll();" style="display:none">
 									reset chart</a>
 							</span>
 						</h4>
 					</div>
-					
-				</div>
-				<div class="row">
-					<div class="col-md-3">
-					</div>
-					<div class="col-md-3">
-						
-					</div>
-					<div class="col-md-6">
-						<table><tr><th>Players</th><th></th></tr>
+					<div class="col-md-5">
+						<h4>Players</h4>
+						<table><tr><th></th><th></th></tr>
 							<tr><td><select class="selectpicker player-select" id="qb-select" multiple title="QB" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td><select class="selectpicker player-select" id="d-select" multiple title="Defensive" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
 							<tr><td><select class="selectpicker player-select" id="rb-select" multiple title="RB" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td><select class="selectpicker player-select" id="other-select" multiple title="Other/Unknown" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
 							<tr><td><select class="selectpicker player-select" id="receiver-select" multiple title="Receivers" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td></td></tr>
 						</table>
 					</div>
+					
 				</div>
+				<!-- <div class="row">
+				     <div class="col-md-3">
+				     </div>
+				     <div class="col-md-3">
+				     
+				     </div>
+				     <div class="col-md-6">
+				     <table><tr><th>Players</th><th></th></tr>
+				     <tr><td><select class="selectpicker player-select" id="qb-select" multiple title="QB" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td><select class="selectpicker player-select" id="d-select" multiple title="Defensive" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
+				     <tr><td><select class="selectpicker player-select" id="rb-select" multiple title="RB" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td><select class="selectpicker player-select" id="other-select" multiple title="Other/Unknown" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
+				     <tr><td><select class="selectpicker player-select" id="receiver-select" multiple title="Receivers" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td></td></tr>
+				     </table>
+				     </div>
+				     </div> -->
+				<hr>
 				<div class="row">
 					<table class="table table-condensed table-hover table-striped" id="play-table">
 						<thead>
@@ -359,13 +374,13 @@
 								// WPA bar
 								wpa_chart = make_barchart(cf, "wpa", "#wpa-chart", 500, 200, 0.5);
 
-								down_chart = make_piechart(cf, "down", "#down-chart", 60, 10);
+								down_chart = make_piechart(cf, "down", "#down-chart", 80, 10);
 								   
 								   // Yards to go bar
-								ytg_chart = make_barchart(cf, "yards_to_go", "#ytg-chart", 400, 200, 1);
+								ytg_chart = make_barchart(cf, "yards_to_go", "#ytg-chart", 450, 200, 1);
 								   
 								   //Yardline bar
-								yardline_chart = make_barchart(cf, "yardline", "#yardline-chart", 400, 200, 1);
+								yardline_chart = make_barchart(cf, "yardline", "#yardline-chart", 450, 200, 1);
 								   
 								   //Drive bar
 								drive_chart = make_barchart(cf, "drive_id", "#drive-chart", 400, 200, 1);
@@ -374,10 +389,10 @@
 								quarter_chart = make_piechart(cf, "quarter", "#quarter-chart", 80, 10);
 
 								   //time left bar
-								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 400, 200, 30);
+								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 450, 200, 30);
 
 								//week chart
-								week_chart = make_barchart(cf, "week", "#week-chart", 400, 200, 1);
+								week_chart = make_barchart(cf, "week", "#week-chart", 500, 200, 1);
 
 
 								dc.renderAll();
