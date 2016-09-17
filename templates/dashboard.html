@@ -195,7 +195,7 @@
 						</h4>
 					</div>
 					<div class="col-md-5">
-						<h4>Players</h4>
+						<h4>Player <span id="player-reset" style="font-size:10px; font-weight:normal; visibility:hidden;"><a href="javascript:$('.player-select').selectpicker('deselectAll');">reset players</a></span></h4>
 						<table><tr><th></th><th></th></tr>
 							<tr><td><select class="selectpicker player-select" id="qb-select" multiple title="QB" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td><select class="selectpicker player-select" id="d-select" multiple title="Defensive" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
 							<tr><td><select class="selectpicker player-select" id="rb-select" multiple title="RB" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td><select class="selectpicker player-select" id="other-select" multiple title="Other/Unknown" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
@@ -204,20 +204,6 @@
 					</div>
 					
 				</div>
-				<!-- <div class="row">
-				     <div class="col-md-3">
-				     </div>
-				     <div class="col-md-3">
-				     
-				     </div>
-				     <div class="col-md-6">
-				     <table><tr><th>Players</th><th></th></tr>
-				     <tr><td><select class="selectpicker player-select" id="qb-select" multiple title="QB" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td><select class="selectpicker player-select" id="d-select" multiple title="Defensive" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
-				     <tr><td><select class="selectpicker player-select" id="rb-select" multiple title="RB" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td><select class="selectpicker player-select" id="other-select" multiple title="Other/Unknown" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
-				     <tr><td><select class="selectpicker player-select" id="receiver-select" multiple title="Receivers" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td></td></tr>
-				     </table>
-				     </div>
-				     </div> -->
 				<hr>
 				<div class="row">
 					<table class="table table-condensed table-hover table-striped" id="play-table">
@@ -311,7 +297,7 @@
 						return row;
 					}, function(player_data)
 					{	
-						d3.csv("{{ url_for('static', filename='plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
+						d3.csv("{{ url_for('static', filename='sample_plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
 							{
 								//console.log(row.player_ids, row.player_ids.length);
 								row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");

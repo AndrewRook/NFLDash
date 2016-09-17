@@ -101,29 +101,30 @@ function make_player_selector(dim, select_class_name, datatable)
 								  }
 							      });
 				    dim.filterAll();
-				    dim.filter(function(d) {
-					if (player_dicts.length == 0)
-					{
-					    return true;
-					}
-					for (var i in player_dicts)
-					{
-					    var found = false;
-					    for (var j in d)
+				    $('#player-reset').css('visibility','hidden');
+				    if (player_dicts.length > 0)
+				    {
+					$('#player-reset').css('visibility','visible');
+					dim.filter(function(d) {
+					    for (var i in player_dicts)
 					    {
-						if (player_dicts[i][d[j]] != null)
+						var found = false;
+						for (var j in d)
 						{
-						    found = true;
-						    break;
+						    if (player_dicts[i][d[j]] != null)
+						    {
+							found = true;
+							break;
+						    }
+						}
+						if (found === false)
+						{
+						    return false;
 						}
 					    }
-					    if (found === false)
-					    {
-						return false;
-					    }
-					}
-					return true;
-				    });
+					    return true;
+					});
+				    }
 				    dc.redrawAll();
 				    RefreshTable(datatable, dim);
 				});
