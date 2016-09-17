@@ -1,4 +1,4 @@
-function make_barchart (ndx, colname, div_id, width, height, bin_width)
+function make_barchart_test (ndx, colname, div_id, width, height, bin_width)
 {
     var dim = ndx.dimension(function(d){ return d[colname];});
     var group = dim.group();
@@ -26,6 +26,44 @@ function make_barchart (ndx, colname, div_id, width, height, bin_width)
     }
     return chart;
 }
+
+function make_barchart (ndx, colname, div_id, width, height, bin_width, y_axis_style)
+{
+    var dim = ndx.dimension(function(d){ return d[colname];});
+    var group = dim.group();
+    if (bin_width != 1)
+    {
+	group = dim.group(function(d) {return Math.floor(d/bin_width)*bin_width;});
+    }
+    if (y_axis_style == "sqrt")
+    {
+	group.reduce(function(p, v) {return Math.sqrt(p*p + 1);}, function(p, v) {return Math.sqrt(p*p - 1);}, function(p, v) {return 0;});
+    }
+    var chart = dc.barChart(div_id);
+    var min_x = dim.bottom(1)[0][colname] - bin_width / 2.;
+    var max_x = dim.top(1)[0][colname] + bin_width / 2.;
+    var num_bins = (max_x - min_x) / bin_width;
+    chart
+	.dimension(dim)
+	.group(group)
+	.margins({top: 10, right: 40, bottom: 30, left: 40})
+	.centerBar(true)
+	.x(d3.scale.linear().domain([min_x, max_x]))
+	.elasticY(true)
+	.barPadding(0.1)
+	.width(width).height(height);
+    //console.log(max_x, min_x, bin_width, num_bins);
+    if (bin_width != 1)
+    {
+	chart.xUnits(function(){return num_bins;});
+    }
+    if (y_axis_style == "sqrt")
+    {
+	chart.yAxis().tickFormat(function(v) {return v*v;});
+    }
+    return chart;
+}
+
 
 function make_piechart (ndx, colname, div_id, outer_radius, inner_radius)
 {

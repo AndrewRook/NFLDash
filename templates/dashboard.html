@@ -69,7 +69,11 @@
 								    <span class="filter-count"></span> selected out of <span class="total-count"></span> plays
 							    </div>
 						    </li>
-						    <li><a href="javascript:dc.filterAll(); dc.redrawAll();" data-toggle="tooltip" data-placement="bottom" title="Reset all filters">Reset All</a></li>
+						    <li>
+							    <p class="navbar-btn">
+								    <a class="btn btn-danger" href="javascript:dc.filterAll(); dc.redrawAll();" data-toggle="tooltip" data-placement="bottom" title="Reset all filters">Reset All</a>
+							    </p>
+						    </li>
 						    <li><a href="javascript:export_filtered_data();" data-toggle="tooltip" data-placement="bottom" title="Download filtered plays to CSV. For larger datasets it may take several seconds to prepare the data for download.">Export Data</a></li>
 					    </ul>
 				    </div><!--/.nav-collapse -->
@@ -136,7 +140,7 @@
 				<div class="row">
 					<div class="col-md-2" id="down-chart">
 						<h4>
-							Down
+							Down <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Down 0 denotes special teams plays"></span>
 							<span class="reset_span" style="font-size:10px; font-weight: normal;">
 								<a class="reset" href="javascript:down_chart.filterAll(); dc.redrawAll();" style="display:none">
 									reset chart</a>
@@ -307,7 +311,7 @@
 						return row;
 					}, function(player_data)
 					{	
-						d3.csv("{{ url_for('static', filename='sample_plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
+						d3.csv("{{ url_for('static', filename='plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
 							{
 								//console.log(row.player_ids, row.player_ids.length);
 								row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
@@ -369,30 +373,31 @@
 									.group(all_grp);
 
 								// WP bar
-								wp_chart = make_barchart(cf, "wp", "#wp-chart", 500, 200, 1);
+								wp_chart = make_barchart(cf, "wp", "#wp-chart", 500, 200, 1, 'linear');
 
 								// WPA bar
-								wpa_chart = make_barchart(cf, "wpa", "#wpa-chart", 500, 200, 0.5);
+								wpa_chart = make_barchart(cf, "wpa", "#wpa-chart", 500, 200, 0.5, 'sqrt');
+								//wpa_chart.yAxis().tickFormat(function(v) {return v / 1000;});
 
 								down_chart = make_piechart(cf, "down", "#down-chart", 80, 10);
 								   
 								   // Yards to go bar
-								ytg_chart = make_barchart(cf, "yards_to_go", "#ytg-chart", 450, 200, 1);
+								ytg_chart = make_barchart(cf, "yards_to_go", "#ytg-chart", 450, 200, 1, 'sqrt');
 								   
 								   //Yardline bar
-								yardline_chart = make_barchart(cf, "yardline", "#yardline-chart", 450, 200, 1);
+								yardline_chart = make_barchart(cf, "yardline", "#yardline-chart", 450, 200, 1, 'linear');
 								   
 								   //Drive bar
-								drive_chart = make_barchart(cf, "drive_id", "#drive-chart", 400, 200, 1);
+								//drive_chart = make_barchart(cf, "drive_id", "#drive-chart", 400, 200, 1, 'linear');
 
 								   //quarter chart
 								quarter_chart = make_piechart(cf, "quarter", "#quarter-chart", 80, 10);
 
 								   //time left bar
-								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 450, 200, 30);
+								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 450, 200, 30, 'linear');
 
 								//week chart
-								week_chart = make_barchart(cf, "week", "#week-chart", 500, 200, 1);
+								week_chart = make_barchart(cf, "week", "#week-chart", 500, 200, 1, 'linear');
 
 
 								dc.renderAll();
