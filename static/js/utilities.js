@@ -37,7 +37,7 @@ function make_barchart (ndx, colname, div_id, width, height, bin_width, y_axis_s
     }
     if (y_axis_style == "sqrt")
     {
-	group.reduce(function(p, v) {return Math.sqrt(p*p + 1);}, function(p, v) {return Math.sqrt(p*p - 1);}, function(p, v) {return 0;});
+	group.reduce(function(p, v) {return Math.sqrt(Math.round(p*p) + 1);}, function(p, v) {return Math.sqrt(Math.round(p*p) - 1);}, function(p, v) {return 0;});
     }
     var chart = dc.barChart(div_id);
     var min_x = dim.bottom(1)[0][colname] - bin_width / 2.;
