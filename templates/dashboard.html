@@ -5,35 +5,43 @@
 
 		<meta http-equiv="content-type" content="text/html; charset=UTF8">
 
-		<script type="text/javascript" src="{{ url_for('static', filename='jquery/jquery-3.1.0.min.js') }}"></script>
+		<!-- <script type="text/javascript" src="{{ url_for('static', filename='jquery/jquery-3.1.0.min.js') }}"></script> -->
+		<script type="text/javascript" src="../static/jquery/jquery-3.1.0.min.js"></script>
 
-		<script type="text/javascript" src="{{ url_for('static', filename='d3/d3.js') }}"></script>
+		<!-- <script type="text/javascript" src="{{ url_for('static', filename='d3/d3.js') }}"></script> -->
+		<script type="text/javascript" src="../static/d3/d3.js"></script>
 		
-		<script type="text/javascript" src="{{ url_for('static', filename='crossfilter-1.4.0-alpha.06/crossfilter.js') }}"></script>
+		<!-- <script type="text/javascript" src="{{ url_for('static', filename='crossfilter-1.4.0-alpha.06/crossfilter.js') }}"></script> -->
+		<script type="text/javascript" src="../static/crossfilter-1.4.0-alpha.06/crossfilter.js"></script>
 
 		
-		<script type="text/javascript" src="{{ url_for('static', filename='dc.js-develop/dc.js') }}"></script>
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dc.js-develop/dc.css') }}" media="screen" />
-		<!-- <script type="text/javascript" src="{{ url_for('static', filename='dc/dc.js') }}"></script>
-		     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dc/dc.css') }}" media="screen" /> -->
+		<!-- <script type="text/javascript" src="{{ url_for('static', filename='dc.js-develop/dc.js') }}"></script>
+		     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dc.js-develop/dc.css') }}" media="screen" /> -->
+		<script type="text/javascript" src="../static/dc.js-develop/dc.js"></script>
+		<link rel="stylesheet" type="text/css" href="../static/dc.js-develop/dc.css" media="screen" />
 
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" />
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap-theme.min.css') }}" />
-		<script type="text/javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
-
+		<!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" />
+		     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap-theme.min.css') }}" />
+		     <script type="text/javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script> -->
+		<link rel="stylesheet" type="text/css" href="../static/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="../static/bootstrap/css/bootstrap-theme.min.css" />
+		<script type="text/javascript" src="../static/bootstrap/js/bootstrap.min.js"></script>
+		
 		<!-- Latest compiled and minified CSS -->
-		<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.0/css/bootstrap-select.min.css"> -->
-		<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-select-1.11.0/dist/css/bootstrap-select.min.css') }}" />
+		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-select-1.11.0/dist/css/bootstrap-select.min.css') }}" /> -->
+		<link rel="stylesheet" href="../static/bootstrap-select-1.11.0/dist/css/bootstrap-select.min.css" />
 		<!-- Latest compiled and minified JavaScript -->
-		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.0/js/bootstrap-select.min.js"></script>-->
-		<script type="text/javascript" src="{{ url_for('static', filename='bootstrap-select-1.11.0/dist/js/bootstrap-select.js') }}"></script>
+		<!-- <script type="text/javascript" src="{{ url_for('static', filename='bootstrap-select-1.11.0/dist/js/bootstrap-select.js') }}"></script> -->
+		<script type="text/javascript" src="../static/bootstrap-select-1.11.0/dist/js/bootstrap-select.js"></script>
 
 		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.12/fh-3.1.2/sc-1.4.2/datatables.min.css"/>
 		<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/fh-3.1.2/sc-1.4.2/datatables.min.js"></script>
 		
-		<script type="text/javascript" src="{{ url_for('static', filename='filesaver/FileSaver.js') }}"></script>
+		<!-- <script type="text/javascript" src="{{ url_for('static', filename='filesaver/FileSaver.js') }}"></script> -->
+		<script type="text/javascript" src="../static/filesaver/FileSaver.js"></script>
 
-		<script type="text/javascript" src="{{ url_for('static', filename='js/utilities.js') }}"></script>
+		<!-- <script type="text/javascript" src="{{ url_for('static', filename='js/utilities.js') }}"></script> -->
+		<script type="text/javascript" src="../static/js/utilities.js"></script>
 
 		<style>
 		body {
@@ -282,13 +290,15 @@
 				
 				var player_dict = {};
 				var unique_seasons = {};
-				d3.csv("{{ url_for('static', filename='players.csv') }}", function(row)
+				//d3.csv("{{ url_for('static', filename='players.csv') }}", function(row)
+				d3.csv("../static/players.csv", function(row)
 					{
 						player_dict[row.player_id] = {"name": row.full_name, "position": row.position};
 						return row;
 					}, function(player_data)
 					{	
-						d3.csv("{{ url_for('static', filename='sample_plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
+						//d3.csv("{{ url_for('static', filename='sample_plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
+						d3.csv("../static/sample_plays.csv" + '?' + Math.floor(Math.random() * 10000), function(row)
 							{
 								//console.log(row.player_ids, row.player_ids.length);
 								row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
