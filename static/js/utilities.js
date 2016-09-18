@@ -104,13 +104,16 @@ function make_player_selector(dim, select_class_name, datatable)
 				    $('#player-reset').css('visibility','hidden');
 				    if (player_dicts.length > 0)
 				    {
+					console.log(player_dicts);
 					$('#player-reset').css('visibility','visible');
 					dim.filter(function(d) {
 					    for (var i in player_dicts)
 					    {
+						console.log(d, i, player_dicts[i]);
 						var found = false;
 						for (var j in d)
 						{
+						    console.log(d[j], i, player_dicts[i]);
 						    if (player_dicts[i][d[j]] != null)
 						    {
 							found = true;
