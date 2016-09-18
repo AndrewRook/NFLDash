@@ -109,14 +109,11 @@ function make_player_selector(dim, select_class_name, datatable)
 					dim.filter(function(d) {
 					    for (var i in player_dicts)
 					    {
-						console.log(d, i, player_dicts[i]);
 						var found = false;
 						for (var j in d)
 						{
-						    console.log(d[j], i, player_dicts[i]);
 						    if (player_dicts[i][d[j]] != null)
 						    {
-							console.log("True!", d[j], i, player_dicts[i]);
 							found = true;
 							break;
 						    }
