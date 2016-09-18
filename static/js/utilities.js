@@ -104,7 +104,6 @@ function make_player_selector(dim, select_class_name, datatable)
 				    $('#player-reset').css('visibility','hidden');
 				    if (player_dicts.length > 0)
 				    {
-					console.log(player_dicts);
 					$('#player-reset').css('visibility','visible');
 					dim.filter(function(d) {
 					    for (var i in player_dicts)
