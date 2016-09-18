@@ -116,6 +116,7 @@ function make_player_selector(dim, select_class_name, datatable)
 						    console.log(d[j], i, player_dicts[i]);
 						    if (player_dicts[i][d[j]] != null)
 						    {
+							console.log("True!", d[j], i, player_dicts[i]);
 							found = true;
 							break;
 						    }
