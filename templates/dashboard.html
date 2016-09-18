@@ -292,14 +292,14 @@
 				var player_dict = {};
 				var unique_seasons = {};
 				//d3.csv("{{ url_for('static', filename='players.csv') }}", function(row)
-				d3.csv("../static/players.csv", function(row)
+				d3.csv("https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/players.csv", function(row)
 					{
 						player_dict[row.player_id] = {"name": row.full_name, "position": row.position};
 						return row;
 					}, function(player_data)
 					{	
 						//d3.csv("{{ url_for('static', filename='sample_plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
-						d3.csv("../static/sample_plays.csv" + '?' + Math.floor(Math.random() * 10000), function(row)
+						d3.csv("https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/sample_plays.csv" + '?' + Math.floor(Math.random() * 10000), function(row)
 							{
 								//console.log(row.player_ids, row.player_ids.length);
 								row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
