@@ -201,7 +201,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 						</h4>
 					</div>
 				</div>
-				<div class="container-fluid row">
+				<div class="row">
 					<div class="col-md-2" id="quarter-chart">
 						<h4>
 							Quarter
@@ -220,16 +220,15 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 							</span>
 						</h4>
 					</div>
-					<div class="col-md-5">
-						<!-- <h4>Player <span id="player-reset" style="font-size:10px; font-weight:normal; visibility:hidden;"><a href="javascript:$('.player-select').selectpicker('deselectAll');">reset players</a></span></h4> -->
-						<div>
-							<table class="table"><tr><td>woo</td><td>ooo</td><td>a</td><td>b</td><td>c</td><td>d</td><td>a</td><td>b</td><td>c</td><td>d</td></tr></table>
-						</div>
-						<!-- <table><tr><th></th><th></th></tr>
-						     <tr><td><select class="selectpicker player-select cf-select" id="qb-select" multiple title="QB" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td><select class="selectpicker player-select cf-select" id="d-select" multiple title="Defensive" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
-						     <tr><td><select class="selectpicker player-select cf-select" id="rb-select" multiple title="RB" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td><select class="selectpicker player-select cf-select" id="other-select" multiple title="Other/Unknown" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
-						     <tr><td><select class="selectpicker player-select cf-select" id="receiver-select" multiple title="Receivers" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td></td></tr>
-						     </table> -->
+					<div class="col-xs-12 col-md-5">
+					
+						<h4>Players <span id="player-reset" style="font-size:10px; font-weight:normal; visibility:hidden;"><a href="javascript:$('.player-select').selectpicker('deselectAll');">reset players</a></span></h4>
+					
+						<table><tr><th></th><th></th></tr>
+							<tr><td><select class="selectpicker player-select cf-select" id="qb-select" multiple title="QB" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td><select class="selectpicker player-select cf-select" id="d-select" multiple title="Defensive" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
+							<tr><td><select class="selectpicker player-select cf-select" id="rb-select" multiple title="RB" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td><select class="selectpicker player-select cf-select" id="other-select" multiple title="Other/Unknown" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
+							<tr><td><select class="selectpicker player-select cf-select" id="receiver-select" multiple title="Receivers" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td></td></tr>
+						</table>
 					</div>
 					
 				</div>
@@ -396,19 +395,19 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 									.group(all_grp);
 
 								// WP bar
-								wp_chart = make_barchart(cf, "wp", "#wp-chart", 500, 200, 1, 'linear');
+								wp_chart = make_barchart(cf, "wp", "#wp-chart", 450, 200, 1, 'linear');
 
 								// WPA bar
-								wpa_chart = make_barchart(cf, "wpa", "#wpa-chart", 500, 200, 0.5, 'sqrt');
+								wpa_chart = make_barchart(cf, "wpa", "#wpa-chart", 450, 200, 0.5, 'sqrt');
 								//wpa_chart.yAxis().tickFormat(function(v) {return v / 1000;});
 
 								down_chart = make_piechart(cf, "down", "#down-chart", 80, 10);
 								   
 								   // Yards to go bar
-								ytg_chart = make_barchart(cf, "yards_to_go", "#ytg-chart", 450, 200, 1, 'sqrt');
+								ytg_chart = make_barchart(cf, "yards_to_go", "#ytg-chart", 400, 200, 1, 'sqrt');
 								   
 								   //Yardline bar
-								yardline_chart = make_barchart(cf, "yardline", "#yardline-chart", 450, 200, 1, 'linear');
+								yardline_chart = make_barchart(cf, "yardline", "#yardline-chart", 400, 200, 1, 'linear');
 								   
 								   //Drive bar
 								//drive_chart = make_barchart(cf, "drive_id", "#drive-chart", 400, 200, 1, 'linear');
@@ -417,10 +416,10 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 								quarter_chart = make_piechart(cf, "quarter", "#quarter-chart", 80, 10);
 
 								   //time left bar
-								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 450, 200, 30, 'linear');
+								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 400, 200, 30, 'linear');
 
 								//week chart
-								week_chart = make_barchart(cf, "week", "#week-chart", 500, 200, 1, 'linear');
+								week_chart = make_barchart(cf, "week", "#week-chart", 450, 200, 1, 'linear');
 
 
 								dc.renderAll();
