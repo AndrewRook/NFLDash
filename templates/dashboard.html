@@ -115,9 +115,29 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 				    <span class="glyphicon glyphicon-exclamation-sign"></span> It looks like you're using a touch device. While NFLDash <b>should</b> work with smartphones and tablets, it's not optimized for such devices. This is especially true for smartphones - In addition to issues with touch controls and laying out the dashboard on a small screen, NFLDash does all of its processing on the client side and can strain a phone's CPU. Feel free to try it out on this device, but for the ideal experience please consider using a PC.
 			    </h3>
 		    </div>
-		    
-		    <div class ="container-fluid" role="main">
-			<div class="jumbotron"><!-- style="float:left;">-->
+		    <div class="jumbotron loaded"><!-- style="float:left;">-->
+			    
+			    <div class="modal fade bs-example-modal-sm" id="pleaseWaitDialog" tabindex="-1"
+				    role="dialog" aria-hidden="true" data-backdrop="static">
+				    <div class="modal-dialog modal-sm">
+					    <div class="modal-content">
+						    <div class="modal-header">
+							    <h4 class="modal-title">
+								    <span class="glyphicon glyphicon-time">
+								    </span> Loading the data. This may take a few seconds...
+							    </h4>
+						    </div>
+						    <div class="modal-body">
+							    <div class="progress">
+								    <div class="progress-bar progress-bar-info
+										progress-bar-striped active"
+									    style="width: 100%">
+								    </div>
+							    </div>
+						    </div>
+					    </div>
+				    </div>
+			    </div>
 				<div class="row">
 					<div class="col-md-3">
 						<div>
@@ -312,6 +332,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 		
 		$(document).ready(function()
 			{
+				$("#pleaseWaitDialog").modal('show');
 				//enable the tooltips:
 				$(function () {
 					$('[data-toggle="tooltip"]').tooltip()
@@ -384,6 +405,9 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 							},
 							function(data)
 							{
+								$("#pleaseWaitDialog").modal('hide');
+								//show the dashboard
+								$(".loaded").css("display", "block");
 
 								console.log(data.length);
 								console.log(data[0]);
