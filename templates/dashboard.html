@@ -395,34 +395,18 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 									.group(all_grp);
 
 								// WP bar
-								wp_chart = make_barchart(cf, "wp", "#wp-chart", $("#wp-chart").width()-20, 200, 1, 'linear');
-								var resize_charts = (
-									function(chart_list)
-									{
-										return function()
-										{
-											for (var i = 0; i < chart_list.length; i++)
-											{
-												chart_list[i]
-													.width($("#"+chart_list[i].anchorName()).width()-20)
-													.rescale()
-													.redraw();
-											}
-										}
-									})([wp_chart]);
-
-								window.onresize = resize_charts;
+								wp_chart = make_barchart(cf, "wp", "#wp-chart", $("#wp-chart").width(), 200, 1, 'linear');
 
 								// WPA bar
-								wpa_chart = make_barchart(cf, "wpa", "#wpa-chart", 450, 200, 0.5, 'sqrt');
+								wpa_chart = make_barchart(cf, "wpa", "#wpa-chart", $("#wpa-chart").width(), 200, 0.5, 'sqrt');
 
 								down_chart = make_piechart(cf, "down", "#down-chart", 80, 10);
 								   
 								   // Yards to go bar
-								ytg_chart = make_barchart(cf, "yards_to_go", "#ytg-chart", 400, 200, 1, 'sqrt');
+								ytg_chart = make_barchart(cf, "yards_to_go", "#ytg-chart", $("#ytg-chart").width(), 200, 1, 'sqrt');
 								   
 								   //Yardline bar
-								yardline_chart = make_barchart(cf, "yardline", "#yardline-chart", 400, 200, 1, 'linear');
+								yardline_chart = make_barchart(cf, "yardline", "#yardline-chart", $("#ytg-chart").width(), 200, 1, 'linear');
 								   
 								   //Drive bar
 								//drive_chart = make_barchart(cf, "drive_id", "#drive-chart", 400, 200, 1, 'linear');
@@ -431,10 +415,10 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 								quarter_chart = make_piechart(cf, "quarter", "#quarter-chart", 80, 10);
 
 								   //time left bar
-								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", 400, 200, 30, 'linear');
+								time_left_chart = make_barchart(cf, "seconds_left", "#time-left-chart", $("#time-left-chart").width(), 200, 30, 'linear');
 
 								//week chart
-								week_chart = make_barchart(cf, "week", "#week-chart", 450, 200, 1, 'linear');
+								week_chart = make_barchart(cf, "week", "#week-chart", $("#week-chart").width(), 200, 1, 'linear');
 
 
 								dc.renderAll();
@@ -552,6 +536,28 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 										{type: "text/csv;charset=utf-8"});
 									saveAs(blob, 'plays.csv');
 								}
+
+								var resize_charts = (
+									function(chart_list)
+									{
+										return function()
+										{
+											for (var i = 0; i < chart_list.length; i++)
+											{
+												var width = 100;
+												if ($("#"+chart_list[i].anchorName()).width() > 100)
+												{
+													width = $("#"+chart_list[i].anchorName()).width();
+												}
+												chart_list[i]
+													.width(width)
+													.rescale()
+													.redraw();
+											}
+										}
+									})([wp_chart, wpa_chart, ytg_chart, yardline_chart, time_left_chart, week_chart]);
+
+								window.onresize = resize_charts;
 								
 							});
 						
