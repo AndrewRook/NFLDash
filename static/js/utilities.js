@@ -130,7 +130,7 @@ function make_player_selector(dim, select_class_name, datatable)
 				});
 }
 
-function make_team_season_selector(ndx, select_name, column_name, datatable, player_dim)
+function make_team_season_result_selector(ndx, select_name, column_name, datatable, player_dim)
 {
     
     var dim = ndx.dimension(function(d){ return d[column_name];});

@@ -162,6 +162,9 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 										<option value="won">Offense Won</option>
 										<option value="loss">Offense Lost</option>
 									</select></td></tr>
+								<tr><td>Play Result:
+									<select class="selectpicker cf-select" multiple id="result-select"></select>
+								</td></tr>
 							</table>
 						</div>
 					</div>
@@ -343,6 +346,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 				
 				var player_dict = {};
 				var unique_seasons = {};
+				var unique_play_results = {};
 				//d3.csv("{{ url_for('static', filename='players.csv') }}", function(row)
 				d3.csv("https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/players.csv", function(row)
 					{
@@ -376,7 +380,10 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 								{
 									week = 21; //ignore bye week before superbowl
 								}
-								unique_seasons[row.season_year] = 1
+
+								unique_seasons[row.season_year] = 1;
+								unique_play_results[row.play_result] = 1;
+
 								output_row = {'player_ids': row.player_ids,
 									'drive_id': +row.drive_id,
 									'week': week,
@@ -388,6 +395,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 									'seconds_left': +row.seconds_left,
 									'quarter': row.quarter,
 									'description': row.description,
+									'play_result': row.play_result,
 									'wp': +row.wp*100,
 									'wpa': +row.wpa*100,
 									'home_team': team_mapping[row.home_team],
@@ -493,8 +501,8 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 								$("#home-team-select").selectpicker('refresh'); 
 								$("#away-team-select").selectpicker('refresh');
 
-								var home_team_dim = make_team_season_selector(cf, "#home-team-select", "home_team", datatable, player_dim);
-								var away_team_dim = make_team_season_selector(cf, "#away-team-select", "away_team", datatable, player_dim);
+								var home_team_dim = make_team_season_result_selector(cf, "#home-team-select", "home_team", datatable, player_dim);
+								var away_team_dim = make_team_season_result_selector(cf, "#away-team-select", "away_team", datatable, player_dim);
 
 								var offense_home_dim = make_home_selector(cf, "#offense-home-select",
 									"home_team", "offense_team", datatable, player_dim);
@@ -502,12 +510,20 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 								var offense_won_dim = make_offense_won_selector(cf, "#offense-won-select",
 									"offense_won", datatable, player_dim);
 
-								var season_dim = make_team_season_selector(cf, "#season-select", "season_year", datatable, player_dim);
+								var season_dim = make_team_season_result_selector(cf, "#season-select", "season_year", datatable, player_dim);
 								for (var season in unique_seasons)
 								{
 									$("#season-select").append("<option value=\""+season+"\">"+season+"</option>");
 								}
 								$("#season-select").selectpicker('refresh');
+
+								var result_dim = make_team_season_result_selector(cf, "#result-select", "play_result", datatable, player_dim);
+								for (var result in unique_play_results)
+								{
+									$("#result-select").append("<option value=\""+result+"\">"+result+"</option>");
+								}
+								$("#result-select").selectpicker('refresh');
+			
 
 								for (var i in player_data)
 								{
