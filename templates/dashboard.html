@@ -121,12 +121,6 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 				    role="dialog" aria-hidden="true" data-backdrop="static" style="top:40%;">
 				    <div class="modal-dialog">
 					    <div class="modal-content">
-						    <!-- <div class="modal-header">
-							 <h4 class="modal-title">
-							 <span class="glyphicon glyphicon-time">
-							 </span> Loading the data. This may take a few seconds...
-							 </h4>
-							 </div> -->
 						    <div class="modal-body">
 							    <h4>
 								    <span class="glyphicon glyphicon-time">
@@ -342,12 +336,6 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 				$(function () {
 					$('[data-toggle="tooltip"]').tooltip()
 				});
-
-				// Check for mobile user agent
-				var mobile = (/iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase()));
-				if (mobile) {
-					$("#touch-warning").css("display", "block");         
-				}
 				
 				var player_dict = {};
 				var unique_seasons = {};
@@ -411,6 +399,13 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 							function(data)
 							{
 								$("#pleaseWaitDialog").modal('hide');
+
+								// Check for mobile user agent
+								var mobile = (/iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase()));
+								if (mobile) {
+									$("#touch-warning").css("display", "block");         
+								}
+
 								//show the dashboard
 								$(".loaded").css("display", "block");
 
