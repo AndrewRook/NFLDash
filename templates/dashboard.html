@@ -67,6 +67,9 @@
 		.glyphicon {
 			font-size: 14px;
 		}
+		/* .dataTable > thead > tr > th[class*="sort"]:after{
+		   content: "" !important;
+		   } */
 		</style>
 
 	</head>
@@ -199,6 +202,26 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 					</div>
 				</div>
 				<div class="row">
+					<div class="col-md-6" id="off-score-chart">
+						<h4>
+							Offense Score <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Point total for the offense at the start of the play"></span>
+							<span class="reset_span" style="font-size:10px; font-weight: normal;">
+								<a class="reset" href="javascript:off_score_chart.filterAll(); dc.redrawAll();" style="display:none">
+									reset chart</a>
+							</span>
+						</h4>
+					</div>
+					<div class="col-md-6" id="def-score-chart">
+						<h4>
+							Defense Score <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Point total for the defense at the start of the play"></span>
+							<span class="reset_span" style="font-size:10px; font-weight: normal;">
+								<a class="reset" href="javascript:def_score_chart.filterAll(); dc.redrawAll();" style="display:none">
+									reset chart</a>
+							</span>
+						</h4>
+					</div>
+				</div>
+				<div class="row">
 					<div class="col-md-2" id="down-chart">
 						<h4>
 							Down <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Down 0 denotes special teams plays"></span>
@@ -210,7 +233,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 					</div>
 					<div class="col-md-5" id="ytg-chart">
 						<h4>
-							Distance  <span class="filter"></span>
+							Distance  <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Yards to go for a first down/touchdown"></span>
 							<span class="reset_span" style="font-size:10px; font-weight: normal;">
 								<a class="reset" href="javascript:ytg_chart.filterAll(); dc.redrawAll();" style="display:none">
 									reset chart</a>
@@ -230,7 +253,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 				<div class="row">
 					<div class="col-md-2" id="quarter-chart">
 						<h4>
-							Quarter
+							Quarter <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="All overtime periods are designated with 'OT'"></span>
 							<span class="reset_span" style="font-size:10px; font-weight: normal;">
 								<a class="reset" href="javascript:quarter_chart.filterAll(); dc.redrawAll();" style="display:none">
 									reset chart</a>
@@ -248,7 +271,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 					</div>
 					<div class="col-xs-12 col-md-5">
 					
-						<h4>Players <span id="player-reset" style="font-size:10px; font-weight:normal; visibility:hidden;"><a href="javascript:$('.player-select').selectpicker('deselectAll');">reset players</a></span></h4>
+						<h4>Players <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Multiple players chosen at the same position are ORed together, while players selected at different positions are combined with an AND clause. For example, selecting 'Tom Brady', 'Julian Edelman', and 'Rob Gronkowski' would filter to all plays where Brady and one of Edelman or Gronkowski were involved"></span><span id="player-reset" style="font-size:10px; font-weight:normal; visibility:hidden;"><a href="javascript:$('.player-select').selectpicker('deselectAll');">reset players</a></span></h4>
 					
 						<table><tr><th></th><th></th></tr>
 							<tr><td><select class="selectpicker player-select cf-select" id="qb-select" multiple title="QB" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td><select class="selectpicker player-select cf-select" id="d-select" multiple title="Defensive" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
@@ -323,15 +346,17 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 		sorted_team_names = sorted_team_names.sort();
 			
 		var column_name_mapping = [
-			["Season", "season_year", "9%"],
-			["Week", "week", "6%"],
+			["Season", "season_year", "8%"],
+			["Week", "week", "7%"],
 			["Off", "offense_team_abbrev", "6%"],
 			["Def", "defense_team_abbrev", "6%"],
-			["Qtr", "quarter", "6%"],
+			["Off Score", "off_score", "10%"],
+			["Def Score", "def_score", "10%"],
 			["Yardline", "yardline_text", "9%", "yardline"],
 			["Down", "down", "7%"],
-			["Dist", "yards_to_go", "7%"],
-			["Description", "description", "44%"]];
+			["Dist", "yards_to_go", "6%"],
+			["Qtr", "quarter", "6%"],
+			["Description", "description", "25%"]];
 
 		var export_filtered_data;
 		
@@ -380,6 +405,14 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 								{
 									week = 21; //ignore bye week before superbowl
 								}
+								
+								var off_score = +row.curr_home_score;
+								var def_score = +row.curr_away_score;
+								if (row.offense_team != row.home_team)
+								{
+									off_score = +row.curr_away_score;
+									def_score = +row.curr_home_score;
+								}
 
 								unique_seasons[row.season_year] = 1;
 								unique_play_results[row.play_result] = 1;
@@ -403,7 +436,9 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 									'offense_team': team_mapping[row.offense_team],
 									'offense_team_abbrev': row.offense_team,
 									'defense_team_abbrev': defense_team,
-									'offense_won': row.offense_won
+									'offense_won': row.offense_won,
+									'off_score': off_score,
+									'def_score': def_score
 									};
 								//console.log(row);
 								return output_row;
@@ -435,6 +470,11 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 
 								// WPA bar
 								wpa_chart = make_barchart(cf, "wpa", "#wpa-chart", $("#wpa-chart").width(), 200, 0.5, 'sqrt');
+
+								off_score_chart = make_barchart(cf, "off_score", "#off-score-chart", $("#off-score-chart").width(), 200, 1, 'sqrt');
+								
+								def_score_chart = make_barchart(cf, "def_score", "#def-score-chart", $("#def-score-chart").width(), 200, 1, 'sqrt');
+
 
 								down_chart = make_piechart(cf, "down", "#down-chart", 80, 10);
 								   
@@ -599,7 +639,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 													.redraw();
 											}
 										}
-									})([wp_chart, wpa_chart, ytg_chart, yardline_chart, time_left_chart, week_chart]);
+									})([wp_chart, wpa_chart, ytg_chart, yardline_chart, time_left_chart, week_chart, off_score_chart, def_score_chart]);
 
 								window.onresize = resize_charts;
 								
