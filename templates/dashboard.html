@@ -141,35 +141,44 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 			    </div>
 			    <div class="jumbotron loaded" style="display:none"><!-- style="float:left;">-->
 				    <div class="row">
-					    <div class="col-xs-6 col-md-3">
+					    <div class="col-xs-6 col-md-2">
 						    <div>
 							    <h4>General</h4>
 							    <table>
-								    <tr><td>Season: <select class="selectpicker cf-select" id="season-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select></td></tr>
-								    <tr><td>Home Team: <select class="selectpicker cf-select" id="home-team-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select></td></tr>
-								    <tr><td>Away Team: <select class="selectpicker cf-select" id="away-team-select" multiple data-live-search="true" data-size="5" data-actions-box="true"></select></td></tr>
+								    <tr><td>Season: <select class="selectpicker cf-select" id="season-select" multiple data-width="100%" data-live-search="true" data-size="5"></select></td></tr>
+								    <tr><td>Home Team: <select class="selectpicker cf-select" id="home-team-select" multiple data-width="100%" data-live-search="true" data-size="5" data-actions-box="true"></select></td></tr>
+								    <tr><td>Away Team: <select class="selectpicker cf-select" id="away-team-select" multiple data-width="100%" data-live-search="true" data-size="5" data-actions-box="true"></select></td></tr>
 							    </table>
 						</div>
 					</div>
-					<div class="col-xs-6 col-md-3">
+					<div class="col-xs-6 col-md-2">
 						<div>
 							<h4 style="visibility:hidden;"">General:</h4>
 							<table>
 								<tr><td>Offense Is:
-									<select class="selectpicker cf-select" multiple data-max-options="1" id="offense-home-select">
+									<select class="selectpicker cf-select" multiple data-width="100%" data-max-options="1" id="offense-home-select">
 										<option value="home">Home</option>
 										<option value="away">Away</option>
 									</select></td></tr>
 								<tr><td>Game Result:
-									<select class="selectpicker cf-select" multiple data-max-options="1" id="offense-won-select">
+									<select class="selectpicker cf-select" multiple data-width="100%" data-max-options="1" id="offense-won-select">
 										<option value="won">Offense Won</option>
 										<option value="loss">Offense Lost</option>
 									</select></td></tr>
 								<tr><td>Play Result:
-									<select class="selectpicker cf-select" multiple id="result-select"></select>
+									<select class="selectpicker cf-select" multiple data-width="100%" id="result-select"></select>
 								</td></tr>
 							</table>
 						</div>
+					</div>
+					<div class="col-md-2" id="play-type-chart">
+						<h4>
+							Play Type <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="'Penalty' plays are exclusively ones that resulted in no play (e.g. False Start or Encroachment)"></span>
+							<span class="reset_span" style="font-size:10px; font-weight: normal;">
+								<a class="reset" href="javascript:play_type_chart.filterAll(); dc.redrawAll();" style="display:none">
+									reset chart</a>
+							</span>
+						</h4>
 					</div>
 					<div class="col-md-6" id="week-chart">
 						<h4>
@@ -428,6 +437,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 									'seconds_left': +row.seconds_left,
 									'quarter': row.quarter,
 									'description': row.description,
+									'play_type': row.play_type,
 									'play_result': row.play_result,
 									'wp': +row.wp*100,
 									'wpa': +row.wpa*100,
@@ -495,6 +505,8 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 
 								//week chart
 								week_chart = make_barchart(cf, "week", "#week-chart", $("#week-chart").width(), 200, 1, 'linear');
+
+								play_type_chart = make_piechart(cf, "play_type", "#play-type-chart", 80, 10);
 
 
 								dc.renderAll();
