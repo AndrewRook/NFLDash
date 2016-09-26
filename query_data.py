@@ -1,3 +1,7 @@
+#     Copyright 2016 Andrew Schechtman-Rook
+#     Distributed under the terms of the GNU General Public License v3
+
+
 from __future__ import print_function, division
 
 

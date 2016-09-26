@@ -1,3 +1,8 @@
+/*
+     Copyright 2016 Andrew Schechtman-Rook
+     Distributed under the terms of the GNU General Public License v3
+*/
+
 function make_barchart_test (ndx, colname, div_id, width, height, bin_width)
 {
     var dim = ndx.dimension(function(d){ return d[colname];});
