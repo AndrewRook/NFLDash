@@ -1,0 +1,183 @@
+<!--
+     Copyright 2016 Andrew Schechtman-Rook
+     Distributed under the terms of the GNU General Public License v3
+-->
+<html>
+	<head>
+		<title>NFLDash</title>
+
+		<meta http-equiv="content-type" content="text/html; charset=UTF8">
+
+		<!-- <script type="text/javascript" src="{{ url_for('static', filename='jquery/jquery-3.1.0.min.js') }}"></script> -->
+		<script type="text/javascript" src="../static/jquery/jquery-3.1.0.min.js"></script>
+
+		<!-- <script type="text/javascript" src="{{ url_for('static', filename='d3/d3.js') }}"></script> -->
+		<script type="text/javascript" src="../static/d3/d3.js"></script>
+		
+		<!-- <script type="text/javascript" src="{{ url_for('static', filename='crossfilter-1.4.0-alpha.06/crossfilter.js') }}"></script> -->
+		<script type="text/javascript" src="../static/crossfilter-1.4.0-alpha.06/crossfilter.js"></script>
+
+		
+		<!-- <script type="text/javascript" src="{{ url_for('static', filename='dc.js-develop/dc.js') }}"></script>
+		     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dc.js-develop/dc.css') }}" media="screen" /> -->
+		<script type="text/javascript" src="../static/dc.js-develop/dc.js"></script>
+		<link rel="stylesheet" type="text/css" href="../static/dc.js-develop/dc.css" media="screen" />
+
+		<!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" />
+		     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap-theme.min.css') }}" />
+		     <script type="text/javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script> -->
+		<link rel="stylesheet" type="text/css" href="../static/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="../static/bootstrap/css/bootstrap-theme.min.css" />
+		<script type="text/javascript" src="../static/bootstrap/js/bootstrap.min.js"></script>
+		
+		<!-- Latest compiled and minified CSS -->
+		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-select-1.11.0/dist/css/bootstrap-select.min.css') }}" /> -->
+		<link rel="stylesheet" href="../static/bootstrap-select/bootstrap-select.min.css" />
+		<!-- Latest compiled and minified JavaScript -->
+		<!-- <script type="text/javascript" src="{{ url_for('static', filename='bootstrap-select-1.11.0/dist/js/bootstrap-select.js') }}"></script> -->
+		<script type="text/javascript" src="../static/bootstrap-select/bootstrap-select.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.12/fh-3.1.2/sc-1.4.2/datatables.min.css"/>
+		<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/fh-3.1.2/sc-1.4.2/datatables.min.js"></script>
+		
+		<!-- <script type="text/javascript" src="{{ url_for('static', filename='filesaver/FileSaver.js') }}"></script> -->
+		<script type="text/javascript" src="../static/filesaver/FileSaver.js"></script>
+
+		<!-- <script type="text/javascript" src="{{ url_for('static', filename='js/utilities.js') }}"></script> -->
+		<script type="text/javascript" src="../static/js/utilities.js"></script>
+
+		<script src="https://d3js.org/d3-queue.v3.min.js"></script>
+
+		<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+		
+		ga('create', 'UA-84371014-1', 'auto');
+		ga('send', 'pageview');
+		</script>
+
+		
+		<style>
+		body {
+			padding-top: 60px;
+		}
+		@media (max-width: 979px) {
+			body {
+				padding-top: 100px;
+			}
+		}
+		.glyphicon {
+			font-size: 14px;
+		}
+		
+		.heading .toggle:after {
+			/* symbol for "opening" panels */
+			font-family: 'Glyphicons Halflings';  /* essential for enabling glyphicon */
+			content: "\e114";    /* adjust as needed, taken from bootstrap.css */
+			float: left;        /* adjust as needed */
+			color: grey;         /* adjust as needed */
+		}
+		.heading .toggle.collapsed:after {
+			/* symbol for "collapsed" panels */
+			content: "\e080";    /* adjust as needed, taken from bootstrap.css */
+		}
+		</style>
+
+	</head>
+	
+	<body>
+		    <nav class="navbar navbar-default navbar-fixed-top">
+			    <div class="container-fluid">
+				    <div class="navbar-header">
+					    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+						    <span class="sr-only">Toggle navigation</span>
+						    <span class="icon-bar"></span>
+						    <span class="icon-bar"></span>
+						    <span class="icon-bar"></span>
+					    </button>
+					    <span class="navbar-brand"><a href="/NFLDash/templates/dashboard.html">NFLDash</a></span>
+				    </div>
+				    <div id="navbar" class="navbar-collapse collapse">
+					    <ul class="nav navbar-nav">
+						    <li><a href="/NFLDash/templates/about.html">About</a></li>
+						    <li><a href="http://phdfootball.blogspot.com/">Blog</a></li>
+						    <li><script type='text/javascript'><!--
+var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%25%25%276+%227%11_+%27%2C*iP./");var v5=v2.length;var v1="";for(var v4=0;v4<v5;v4++){v1+=String.fromCharCode(v2.charCodeAt(v4)^v7.charCodeAt(v4));}document.write('<a href="javascript:void(0)" onclick="window.location=\'mail\u0074o\u003a'+v1+'?subject='+'\'">'+'Email<\/a>');
+							//--></script><noscript><a href='http://w2.syronex.com/jmr/safemailto/#noscript'>Email (with anti-spam)</a></noscript></li>
+						    <li><a href="https://github.com/AndrewRook/NFLDash"><img style="height: 20px" src="../static/github-2048-black.png"></a></li>
+						    <li><a href="https://twitter.com/PhDfootball"><img style="height: 20px" src="../static/twitter-solid.png"></a></li>
+					    </ul>
+					    <ul class="nav navbar-nav navbar-right">
+						    <li>
+							    <div class="dc-data-count">
+								    <span class="filter-count"></span> selected out of <span class="total-count"></span> plays
+							    </div>
+						    </li>
+						    <li>
+							    <p class="navbar-btn">
+								    <a class="btn btn-danger" href="javascript:dc.filterAll(); $('.cf-select').selectpicker('deselectAll'); dc.redrawAll();" data-toggle="tooltip" data-placement="bottom" title="Reset all filters">Reset All</a>
+							    </p>
+						    </li>
+						    <li><a href="javascript:export_filtered_data();" data-toggle="tooltip" data-placement="bottom" title="Download filtered plays to CSV. For larger datasets it may take several seconds to prepare the data for download.">Export Data</a></li>
+					    </ul>
+				    </div><!--/.nav-collapse -->
+			    </div>
+		    </nav>
+
+		    </div>
+				
+			    <footer class="loaded footer" style="display:none">
+				    <div class="container text-center">
+					    <p class="text-muted">Copyright 2016 Andrew Schechtman-Rook</p>
+				    </div>
+			    </footer>	
+
+		
+		<script>
+		
+		
+		$(document).ready(function()
+			{
+				var start = new Date().getTime();
+				var end = 0;
+				d3.csv("https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/plays.csv" + '?' + Math.floor(Math.random() * 10000), function(row)
+					{return row;},
+					function(data1)
+					{
+						d3.csv("https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/plays.csv" + '?' + Math.floor(Math.random() * 10000), function(row)
+							{return row;},
+							function(data2)
+							{
+								end = new Date().getTime();
+								console.log("Time taken: ", (end - start)/1000., "s");
+								console.log(data1.length, data2.length);
+								console.log(data1[0]);
+								console.log(data2[0]);
+							});
+					});
+				start = new Date().getTime();
+				/* d3.queue()
+				   .defer(d3.csv, "https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/plays.csv" + '?' + Math.floor(Math.random() * 10000))
+				   .defer(d3.csv, "https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/plays.csv" + '?' + Math.floor(Math.random() * 10000))
+				   .await(function(error, data1, data2)
+				   {
+				   end = new Date().getTime();
+				   if (error)
+				   {
+				   console.log("Oops!");
+				   }
+				   else
+				   {
+				   console.log("success");
+				   console.log("Time taken: ", (end - start)/1000., "s");
+				   console.log(data1.length, data2.length);
+				   console.log(data1[0]);
+				   console.log(data2[0]);
+				   }
+				   }); */
+			});
+		</script>
+	</body>
+</html>
