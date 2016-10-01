@@ -1,5 +1,8 @@
 
+@import 'https://fonts.googleapis.com/css?family=Lato|Roboto:900';
+
 body {
+    font-family: 'Lato', sans-serif;
     padding-top: 80px;
     background: #D6B894;
 }
@@ -24,9 +27,15 @@ body {
     content: "\e080";    /* adjust as needed, taken from bootstrap.css */
 }
 
-.panel-heading.heading{
+.panel {
+    margin-bottom: 10px;
+    border: 0px;
+}
+
+.panel-heading.heading {
     background: #47B262;
     color: white;
+    border-bottom: 0px;
 }
 
 .panel-body {
@@ -36,9 +45,40 @@ body {
 
 h4 {
     font-size: 20px;
-    font-weight: 600;
+    font-weight: bold;
 }
 
 h4.panel-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.navbar-brand a {
+    font-family: 'Roboto', sans-serif;
+    font-size: 26px;
+    font-weight: 900;
+    color: #2a693a;
+}
+
+.navbar-nav li a {
     font-size: 18px;
+    font-weight: bold;
+}
+
+.footer {
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.dc-data-count {
+    color: black;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.navbar-btn a.btn {
+    margin-left: 2px;
+    margin-right: 2px;
+    font-size: 14px;
 }
