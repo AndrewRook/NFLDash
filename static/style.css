@@ -1,0 +1,44 @@
+
+body {
+    padding-top: 80px;
+    background: #D6B894;
+}
+@media (max-width: 979px) {
+    body {
+	padding-top: 100px;
+    }
+}
+.glyphicon {
+    font-size: 14px;
+}
+
+.heading .toggle:after {
+    /* symbol for "opening" panels */
+    font-family: 'Glyphicons Halflings';  /* essential for enabling glyphicon */
+    content: "\e114";    /* adjust as needed, taken from bootstrap.css */
+    float: left;        /* adjust as needed */
+    color: white;         /* adjust as needed */
+}
+.heading .toggle.collapsed:after {
+    /* symbol for "collapsed" panels */
+    content: "\e080";    /* adjust as needed, taken from bootstrap.css */
+}
+
+.panel-heading.heading{
+    background: #47B262;
+    color: white;
+}
+
+.panel-body {
+    color: black;
+    /*background: #ECD078;*/
+}
+
+h4 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+h4.panel-title {
+    font-size: 18px;
+}
