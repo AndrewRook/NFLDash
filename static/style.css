@@ -8,7 +8,9 @@ body {
 }
 @media (max-width: 979px) {
     body {
+	font-family: 'Lato', sans-serif;
 	padding-top: 100px;
+	background: #D6B894;
     }
 }
 .glyphicon {
@@ -45,6 +47,10 @@ body {
 
 h4 {
     font-size: 20px;
+    font-weight: bold;
+}
+
+h2 {
     font-weight: bold;
 }
 

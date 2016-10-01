@@ -29,21 +29,7 @@
 		ga('send', 'pageview');
 		</script>
 
-		
-		<style>
-		body {
-			padding-top: 60px;
-		}
-		@media (max-width: 979px) {
-			body {
-				padding-top: 100px;
-			}
-		}
-		.glyphicon {
-			font-size: 14px;
-		}
-		
-		</style>
+		<link href="../static/style.css" media="screen" rel="stylesheet">
 
 	</head>
 	
@@ -75,8 +61,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 
 		    <div class ="container-fluid" role="main">
 				    
-			    <div class="jumbotron"">
-				    <p>
+			    <div class="jumbotron" style="background:white;padding-top:10px;">
 					    <h2>Overview</h2>
 					    NFLDash provides an intuitive, reactive dashboard to let you filter NFL plays by a wide variety of metrics in real-time. Pick an option from a pie chart menu and it will filter every chart by that option. Click and drag on a bar chart and select a range of values to filter by. Combine multiple filters to find interesting subsets of plays. You're limited only by your imagination, but here's a few ideas to get you started:
 					    <br>
@@ -89,9 +74,8 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 						    <li>Find those rare interceptions that are actually beneficial to the offense by choosing "Interception" from the Play Result dropdown and filtering for Win Probability Added values > 0%.</li>
 					    </ul>
 					    
-					    Once you've filtered down to plays you like, you can either inspect them in the table at the bottom of the dashboard (if you've filtered < 1000 plays) or by exporting the data to CSV for further analysis. 
-				    </p>
-				    <p>
+					    Once you've filtered down to plays you like, you can either inspect them in the table at the bottom of the dashboard (if you've filtered < 1000 plays) or by exporting the data to CSV for further analysis.
+					    
 					    <h2>How it Works</h2>
 					    NFLDash uses play-by-play data downloaded by the <a href="https://github.com/BurntSushi/nfldb">nfldb package</a>, which covers all games from the 2009 season onward. While there are a few plays which have been misclassified, overall nfldb's accuracy is quite high. A Python script runs a custom query on the nfldb database, then outputs the results to a CSV file. Then, whenever someone loads the dashboard, several javascript libraries go to work, most notably:
 					    <br>
@@ -102,7 +86,6 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 						    <li><a href="https://dc-js.github.io/dc.js/">dc.js</a> provides the glue between D3 and Crossfilter to easily create reactive charts which are connected to each other.</li>
 					    </ul>
 					    There's also a small amount of custom javascript (and some monkeypatching) to handle some idiosyncrasies in displaying the data most effectively, while <a href="http://getbootstrap.com/">Bootstrap</a> covers the styling. 
-				    </p>
 			    </div>
 		    </div>
 		
