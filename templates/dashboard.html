@@ -165,17 +165,16 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 								    </div>
 							    </div>
 							    <div class="col-xs-12 col-md-2" id="play-type-chart">
-								    <h4>
+								    <h4 class="title">
 									    Play Type <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="'Penalty' plays are exclusively ones that resulted in no play (e.g. False Start or Encroachment)"></span>
-									    <span class="reset_span" style="font-size:10px; font-weight: normal;">
-										    <a class="reset" href="javascript:play_type_chart.filterAll(); dc.redrawAll();" style="display:none">
-											    reset chart</a>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset" href="javascript:play_type_chart.filterAll(); dc.redrawAll();" style="display:none;">Reset</a>
 									    </span>
 								    </h4>
 							    </div>
 							    <div class="col-xs-12 col-md-5">
 								    
-								    <h4>Players <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Multiple players chosen at the same position are ORed together, while players selected at different positions are combined with an AND clause. For example, selecting 'Tom Brady', 'Julian Edelman', and 'Rob Gronkowski' would filter to all plays where Brady and either Edelman or Gronkowski (or both) were involved"></span><span id="player-reset" style="font-size:10px; font-weight:normal; visibility:hidden;"><a href="javascript:$('.player-select').selectpicker('deselectAll');">reset players</a></span></h4>
+								    <h4 class="title">Players <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Multiple players chosen at the same position are ORed together, while players selected at different positions are combined with an AND clause. For example, selecting 'Tom Brady', 'Julian Edelman', and 'Rob Gronkowski' would filter to all plays where Brady and either Edelman or Gronkowski (or both) were involved"></span><span id="player-reset" style="font-size:10px; font-weight:normal; visibility:hidden;">&nbsp;<a class="btn btn-danger btn-xs reset" href="javascript:$('.player-select').selectpicker('deselectAll');">Reset</a></span></h4>
 								    
 								    <table><tr><th></th><th></th></tr>
 									    <tr><td><select class="selectpicker player-select cf-select" id="qb-select" multiple title="QB" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td><select class="selectpicker player-select cf-select" id="d-select" multiple title="Defensive" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
@@ -193,20 +192,20 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 					    <div class="panel-body collapse in" id="probabilities">
 						    <div class="row">
 							    <div class="col-md-6" id="wp-chart">
-								    <h4>
+								    <h4 class="title">
 									    Win Probability <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Win Probability (WP) is the likelihood that the offensive team will go on to win the game, based solely on the game state at the start of the play. NFLDash uses NFLWin for its WP calculations"></span>
-									    <span class="reset_span" style="font-size:10px; font-weight: normal;">
-										    <a class="reset" href="javascript:wp_chart.filterAll(); dc.redrawAll();" style="display:none">
-											    reset chart</a>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset reset-bar" href="javascript:wp_chart.filterAll(); dc.redrawAll();" style="display:none">
+											    Reset</a>
 									    </span>
 								    </h4>
 							    </div>
 							    <div class="col-md-6" id="wpa-chart">
-								    <h4>
+								    <h4 class="title">
 									    Win Probability Added <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Win Probability Added (WPA) is the difference between Win Probability at the start of this play and the start of the next play (larger WPA is better for the offense)"></span>
-									    <span class="reset_span" style="font-size:10px; font-weight: normal;">
-										    <a class="reset" href="javascript:wpa_chart.filterAll(); dc.redrawAll();" style="display:none">
-											    reset chart</a>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset reset-bar" href="javascript:wpa_chart.filterAll(); dc.redrawAll();" style="display:none">
+											    Reset</a>
 									    </span>
 								    </h4>
 							    </div>
@@ -220,20 +219,20 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 					    <div class="panel-body collapse in" id="score">
 						    <div class="row">
 							    <div class="col-md-6" id="off-score-chart">
-								    <h4>
+								    <h4 class="title">
 									    Offense Score <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Point total for the offense at the start of the play"></span>
-									    <span class="reset_span" style="font-size:10px; font-weight: normal;">
-										    <a class="reset" href="javascript:off_score_chart.filterAll(); dc.redrawAll();" style="display:none">
-											    reset chart</a>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset reset-bar" href="javascript:off_score_chart.filterAll(); dc.redrawAll();" style="display:none">
+											    Reset</a>
 									    </span>
 								    </h4>
 							    </div>
 							    <div class="col-md-6" id="def-score-chart">
-								    <h4>
+								    <h4 class="title">
 									    Defense Score <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Point total for the defense at the start of the play"></span>
-									    <span class="reset_span" style="font-size:10px; font-weight: normal;">
-										    <a class="reset" href="javascript:def_score_chart.filterAll(); dc.redrawAll();" style="display:none">
-											    reset chart</a>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset reset-bar" href="javascript:def_score_chart.filterAll(); dc.redrawAll();" style="display:none">
+											    Reset</a>
 									    </span>
 								    </h4>
 							    </div>
@@ -247,29 +246,29 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 					    <div class="panel-body collapse in" id="position">
 						    <div class="row">
 							    <div class="col-xs-4 col-md-2" id="down-chart">
-								    <h4>
+								    <h4 class="title">
 									    Down <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Down 0 denotes special teams plays"></span>
-									    <span class="reset_span" style="font-size:10px; font-weight: normal;">
-										    <a class="reset" href="javascript:down_chart.filterAll(); dc.redrawAll();" style="display:none">
-											    reset chart</a>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset" href="javascript:down_chart.filterAll(); dc.redrawAll();" style="display:none">
+											    Reset</a>
 									    </span>
 								    </h4>
 							    </div>
 							    <div class="col-xs-8 col-md-5" id="ytg-chart">
-								    <h4>
+								    <h4 class="title">
 									    Distance  <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Yards to go for a first down/touchdown"></span>
-									    <span class="reset_span" style="font-size:10px; font-weight: normal;">
-										    <a class="reset" href="javascript:ytg_chart.filterAll(); dc.redrawAll();" style="display:none">
-											    reset chart</a>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset reset-bar" href="javascript:ytg_chart.filterAll(); dc.redrawAll();" style="display:none">
+											    Reset</a>
 									    </span>
 								    </h4>
 							    </div>
 							    <div class="col-xs-12 col-md-5" id="yardline-chart">
-								    <h4>
+								    <h4 class="title">
 									    Yard Line <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="-49 is equivalent to the offense's 1-yard line, while +49 is the defense's 1-yard line"></span>
-									    <span class="reset_span" style="font-size:10px; font-weight: normal;">
-										    <a class="reset" href="javascript:yardline_chart.filterAll(); dc.redrawAll();" style="display:none">
-											    reset chart</a>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset reset-bar" href="javascript:yardline_chart.filterAll(); dc.redrawAll();" style="display:none">
+											    Reset</a>
 									    </span>
 								    </h4>
 							    </div>
@@ -283,29 +282,29 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 					    <div class="panel-body collapse in" id="time">
 						    <div class="row">
 							    <div class="col-xs-4 col-md-2" id="quarter-chart">
-								    <h4>
+								    <h4 class="title">
 									    Quarter <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="All overtime periods are designated with 'OT'"></span>
-									    <span class="reset_span" style="font-size:10px; font-weight: normal;">
-										    <a class="reset" href="javascript:quarter_chart.filterAll(); dc.redrawAll();" style="display:none">
-											    reset chart</a>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset" href="javascript:quarter_chart.filterAll(); dc.redrawAll();" style="display:none">
+											    Reset</a>
 									    </span>
 								    </h4>
 							    </div>
 							    <div class="col-xs-8 col-md-5" id="time-left-chart">
-								    <h4>
+								    <h4 class="title">
 									    Time Left in Quarter <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="In seconds, with 900 seconds representing 15:00 to go in the quarter"></span>
-									    <span class="reset_span" style="font-size:10px; font-weight: normal;">
-										    <a class="reset" href="javascript:time_left_chart.filterAll(); dc.redrawAll();" style="display:none">
-											    reset chart</a>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset reset-bar" href="javascript:time_left_chart.filterAll(); dc.redrawAll();" style="display:none">
+											    Reset</a>
 									    </span>
 								    </h4>
 							    </div>
 							    <div class="col-xs-12 col-md-5" id="week-chart">
-								    <h4>
+								    <h4 class="title">
 									    Week <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Week 18 is Wild-Card Weekend, Week 19 is the Divisional round, Week 20 is the Conference Championships, and Week 21 is the Super Bowl"></span>
-									    <span class="reset_span" style="font-size:10px; font-weight: normal;">
-										    <a class="reset" href="javascript:week_chart.filterAll(); dc.redrawAll();" style="display:none">
-											    reset chart</a>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset reset-bar" href="javascript:week_chart.filterAll(); dc.redrawAll();" style="display:none">
+											    Reset</a>
 									    </span>
 								    </h4>
 							    </div>

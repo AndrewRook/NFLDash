@@ -88,3 +88,24 @@ h4.panel-title {
     margin-right: 2px;
     font-size: 14px;
 }
+
+.btn-danger {
+    background: #ea4141;
+}
+
+.btn-primary {
+    background:  #47B262;
+}
+
+.reset {
+    margin-bottom: 2%;
+    font-weight: bold;
+}
+
+.reset-bar {
+    margin-bottom: 1%;
+}
+
+h4.title {
+    height: 30px;
+}
