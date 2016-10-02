@@ -403,6 +403,10 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 			["Description", "description", "25%"]];
 
 		var export_filtered_data;
+
+		var pie_chart_colors = ["#2A693A", "#388E4E", "#47b262", "#69C380",
+			"#BA874A", "#C8A06F", "#D6B894", "#E4D0B9",
+			"#B11414", "#DF1919", "#EA4141", "#EF6F6F"];
 		
 		
 		$(document).ready(function()
@@ -522,6 +526,8 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 
 
 								down_chart = make_piechart(cf, "down", "#down-chart", 80, 10);
+								//console.log(down_chart.colors());
+								//down_chart.ordinalColors(pie_chart_colors);
 								   
 								   // Yards to go bar
 								ytg_chart = make_barchart(cf, "yards_to_go", "#ytg-chart", $("#ytg-chart").width(), 200, 1, 'sqrt');
@@ -542,6 +548,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 								week_chart = make_barchart(cf, "week", "#week-chart", $("#week-chart").width(), 200, 1, 'linear');
 
 								play_type_chart = make_piechart(cf, "play_type", "#play-type-chart", 80, 10);
+								//play_type_chart.ordinalColors(pie_chart_colors);
 
 
 								dc.renderAll();
