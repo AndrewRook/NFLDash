@@ -135,15 +135,39 @@ function make_player_selector(dim, select_class_name, datatable)
 				});
 }
 
+function show_hide_general_reset()
+{
+    var is_selected_list = $("select.general-select").map(function() {return this.value != "";});
+    var any_selected = false;
+    for (var i = 0; i < is_selected_list.length; i++)
+    {
+	if (is_selected_list[i] === true)
+	{
+	    any_selected = true;
+	    break;
+	}
+    }
+    if (any_selected === true)
+    {
+	$('#general-reset').css('visibility','visible');
+    }
+    else
+    {
+	
+	$('#general-reset').css('visibility','hidden');
+    }
+}
+
 function make_team_season_result_selector(ndx, select_name, column_name, datatable, player_dim)
 {
     
     var dim = ndx.dimension(function(d){ return d[column_name];});
     $(select_name).change(function()
 			  {
+			      show_hide_general_reset();
 			      dim.filterAll();
 			      var values = $(this).val();
-			      if (values.length != 0)
+			      if (values.length > 0)
 			      {
 				  dim.filter(function(d) {
 				      return values.indexOf(String(d)) != -1;
@@ -159,6 +183,7 @@ function make_home_selector(ndx, select_name, home_column, offense_column, datat
     var dim = ndx.dimension(function(d){ return d[offense_column] == d[home_column];});
     $(select_name).change(function()
 			  {
+			      show_hide_general_reset();
 			      dim.filterAll();
 			      var values = $(this).val();
 			      if (values.length != 0)
@@ -188,6 +213,7 @@ function make_offense_won_selector(ndx, select_name, offense_won_column, datatab
     var dim = ndx.dimension(function(d){ return d[offense_won_column] == "True";});
     $(select_name).change(function()
 			  {
+			      show_hide_general_reset();
 			      dim.filterAll()
 			      var values = $(this).val();
 			      if (values.length != 0)
