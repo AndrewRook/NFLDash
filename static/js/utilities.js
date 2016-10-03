@@ -94,9 +94,11 @@ function make_player_selector(dim, select_class_name, datatable)
 				    var player_dicts = [];
 				    $(select_class_name).each(function()
 							      {
+								  $(this).siblings("button").css("background", "rgb(255, 255, 255) linear-gradient(rgb(255, 255, 255) 0px, rgb(224, 224, 224) 100%) ").css("color", "black").css("text-shadow", "0 1px 0 #fff");
 								  var players = $(this).val();
 								  if (players.length > 0)
 								  {
+								      $(this).siblings("button").css("background", "#3182BD").css("color", "white").css("text-shadow", "0px 0px 0px #fff");
 								      var player_dict = {};
 								      for (var i in players)
 								      {
@@ -164,11 +166,13 @@ function make_team_season_result_selector(ndx, select_name, column_name, datatab
     var dim = ndx.dimension(function(d){ return d[column_name];});
     $(select_name).change(function()
 			  {
+			      $(this).siblings("button").css("background", "rgb(255, 255, 255) linear-gradient(rgb(255, 255, 255) 0px, rgb(224, 224, 224) 100%) ").css("color", "black").css("text-shadow", "0 1px 0 #fff");
 			      show_hide_general_reset();
 			      dim.filterAll();
 			      var values = $(this).val();
 			      if (values.length > 0)
 			      {
+				  $(this).siblings("button").css("background", "#3182BD").css("color", "white").css("text-shadow", "0px 0px 0px #fff");
 				  dim.filter(function(d) {
 				      return values.indexOf(String(d)) != -1;
 				  });
@@ -183,11 +187,14 @@ function make_home_selector(ndx, select_name, home_column, offense_column, datat
     var dim = ndx.dimension(function(d){ return d[offense_column] == d[home_column];});
     $(select_name).change(function()
 			  {
+			      $(this).siblings("button").css("background", "rgb(255, 255, 255) linear-gradient(rgb(255, 255, 255) 0px, rgb(224, 224, 224) 100%) ").css("color", "black").css("text-shadow", "0 1px 0 #fff");
 			      show_hide_general_reset();
 			      dim.filterAll();
 			      var values = $(this).val();
 			      if (values.length != 0)
 			      {
+				  
+				  $(this).siblings("button").css("background", "#3182BD").css("color", "white").css("text-shadow", "0px 0px 0px #fff");
 				  var value = values[0];
 				  dim.filter(function(d) {
 				      if ((value == "home" && d) || (value == "away" && d == false))
@@ -213,11 +220,13 @@ function make_offense_won_selector(ndx, select_name, offense_won_column, datatab
     var dim = ndx.dimension(function(d){ return d[offense_won_column] == "True";});
     $(select_name).change(function()
 			  {
+			      $(this).siblings("button").css("background", "rgb(255, 255, 255) linear-gradient(rgb(255, 255, 255) 0px, rgb(224, 224, 224) 100%) ").css("color", "black").css("text-shadow", "0 1px 0 #fff");
 			      show_hide_general_reset();
 			      dim.filterAll()
 			      var values = $(this).val();
 			      if (values.length != 0)
 			      {
+				  $(this).siblings("button").css("background", "#3182BD").css("color", "white").css("text-shadow", "0px 0px 0px #fff");
 				  var value = values[0];
 				  dim.filter(function(d) {
 				      if ((value == "won" && d) || (value == "loss" && d == false))
