@@ -149,7 +149,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 											    </select>
 										    </td></tr>
 										    <tr><td>
-											    <select class="selectpicker general-select cf-select" id="home-team-select" multiple data-width="200px" title="Home Team:" data-live-search="true" data-size="5" data-actions-box="true" data-selected-text-format="count > 2"></select>
+											    <select class="selectpicker general-select cf-select" id="team-select" multiple data-width="200px" title="Team:" data-live-search="true" data-size="5" data-actions-box="true" data-selected-text-format="count > 2"></select>
 										    </td><td>
 											    <select class="selectpicker general-select cf-select" multiple data-width="200px" title="Game Result:" data-max-options="1" id="offense-won-select">
 												    <option value="won">Offense Won</option>
@@ -157,7 +157,10 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 											    </select>
 										    </td></tr>
 										    <tr><td>
-											    <select class="selectpicker general-select cf-select" id="away-team-select" multiple data-width="200px" title="Away Team:" data-live-search="true" data-size="5" data-actions-box="true" data-selected-text-format="count > 2"></select>
+											    <select class="selectpicker general-select cf-select" multiple data-width="200px" title="Team Is:" data-max-options="1" id="team-offense-select" disabled>
+												    <option value="offense">Offense</option>
+												    <option value="defense">Defense</option>
+											    </select>
 										    </td><td>
 											    <select class="selectpicker general-select cf-select" multiple data-width="200px" title="Play Result:" id="result-select"></select>
 										    </td></tr>
@@ -483,6 +486,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 									'home_team': team_mapping[row.home_team],
 									'away_team': team_mapping[row.away_team],
 									'offense_team': team_mapping[row.offense_team],
+									'defense_team': team_mapping[defense_team],
 									'offense_team_abbrev': row.offense_team,
 									'defense_team_abbrev': defense_team,
 									'offense_won': row.offense_won,
@@ -589,14 +593,13 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 
 								for (var i in sorted_team_names)
 								{
-									$("#home-team-select").append("<option value=\""+sorted_team_names[i]+"\">"+sorted_team_names[i]+"</option>");
-									$("#away-team-select").append("<option value=\""+sorted_team_names[i]+"\">"+sorted_team_names[i]+"</option>");
+									$("#team-select").append("<option value=\""+sorted_team_names[i]+"\">"+sorted_team_names[i]+"</option>");
 								}
-								$("#home-team-select").selectpicker('refresh'); 
-								$("#away-team-select").selectpicker('refresh');
+								$("#team-select").selectpicker('refresh');
 
-								var home_team_dim = make_team_season_result_selector(cf, "#home-team-select", "home_team", datatable, player_dim);
-								var away_team_dim = make_team_season_result_selector(cf, "#away-team-select", "away_team", datatable, player_dim);
+								var team_dim = make_team_selector(cf, "#team-select", "#team-offense-select", "home_team", "away_team", datatable, player_dim);
+
+								var team_offense_dim = make_offense_selector(cf, "#team-offense-select", "#team-select", "offense_team", "defense_team", datatable, player_dim);
 
 								var offense_home_dim = make_home_selector(cf, "#offense-home-select",
 									"home_team", "offense_team", datatable, player_dim);
@@ -604,14 +607,14 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 								var offense_won_dim = make_offense_won_selector(cf, "#offense-won-select",
 									"offense_won", datatable, player_dim);
 
-								var season_dim = make_team_season_result_selector(cf, "#season-select", "season_year", datatable, player_dim);
+								var season_dim = make_season_result_selector(cf, "#season-select", "season_year", datatable, player_dim);
 								for (var season in unique_seasons)
 								{
 									$("#season-select").append("<option value=\""+season+"\">"+season+"</option>");
 								}
 								$("#season-select").selectpicker('refresh');
 
-								var result_dim = make_team_season_result_selector(cf, "#result-select", "play_result", datatable, player_dim);
+								var result_dim = make_season_result_selector(cf, "#result-select", "play_result", datatable, player_dim);
 								for (var result in unique_play_results)
 								{
 									$("#result-select").append("<option value=\""+result+"\">"+result+"</option>");
