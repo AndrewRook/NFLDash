@@ -58,40 +58,19 @@
 		</script>
 
 		
-		<style>
-		body {
-			padding-top: 60px;
-		}
-		@media (max-width: 979px) {
-			body {
-				padding-top: 100px;
-			}
-		}
-		.glyphicon {
-			font-size: 14px;
-		}
-		/* .dataTable > thead > tr > th[class*="sort"]:after{
-		   content: "" !important;
-		   } */
-		</style>
-
+		<link href="../static/style.css" media="screen" rel="stylesheet">
+		
 	</head>
 	
 	<body>
 		    <nav class="navbar navbar-default navbar-fixed-top">
 			    <div class="container-fluid">
 				    <div class="navbar-header">
-					    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-						    <span class="sr-only">Toggle navigation</span>
-						    <span class="icon-bar"></span>
-						    <span class="icon-bar"></span>
-						    <span class="icon-bar"></span>
-					    </button>
 					    <span class="navbar-brand"><a href="/NFLDash/templates/dashboard.html">NFLDash</a></span>
 				    </div>
 				    <div id="navbar" class="navbar-collapse collapse">
 					    <ul class="nav navbar-nav">
-						    <li><a href="#about">About</a></li>
+						    <li><a href="/NFLDash/templates/about.html">About</a></li>
 						    <li><a href="http://phdfootball.blogspot.com/">Blog</a></li>
 						    <li><script type='text/javascript'><!--
 var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%25%25%276+%227%11_+%27%2C*iP./");var v5=v2.length;var v1="";for(var v4=0;v4<v5;v4++){v1+=String.fromCharCode(v2.charCodeAt(v4)^v7.charCodeAt(v4));}document.write('<a href="javascript:void(0)" onclick="window.location=\'mail\u0074o\u003a'+v1+'?subject='+'\'">'+'Email<\/a>');
@@ -110,13 +89,20 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 								    <a class="btn btn-danger" href="javascript:dc.filterAll(); $('.cf-select').selectpicker('deselectAll'); dc.redrawAll();" data-toggle="tooltip" data-placement="bottom" title="Reset all filters">Reset All</a>
 							    </p>
 						    </li>
-						    <li><a href="javascript:export_filtered_data();" data-toggle="tooltip" data-placement="bottom" title="Download filtered plays to CSV. For larger datasets it may take several seconds to prepare the data for download.">Export Data</a></li>
+						    <li>
+							    <p class="navbar-btn">
+								    <a class="btn btn-primary" href="javascript:export_filtered_data();" data-toggle="tooltip" data-placement="bottom" title="Download filtered plays to CSV. For larger datasets it may take several seconds to prepare the data for download.">Export Data</a>
+							    </p>
+						    </li>
 					    </ul>
 				    </div><!--/.nav-collapse -->
 			    </div>
 		    </nav>
 
-		    <div class="container-fluid alert alert-warning" id="touch-warning" style="display:none">
+		    <div class="container-fluid alert alert-warning alert-dismissible" id="touch-warning" style="display:none">
+			    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				    <span aria-hidden="true">x</span>
+			    </button>
 			    <h3>
 				    <span class="glyphicon glyphicon-exclamation-sign"></span> It looks like you're using a touch device. While NFLDash <b>should</b> work with smartphones and tablets, it's not optimized for such devices. This is especially true for smartphones - In addition to issues with touch controls and laying out the dashboard on a small screen, NFLDash does all of its processing on the client side and can strain a phone's CPU. Feel free to try it out on this device, but for the ideal experience please consider using a PC.
 			    </h3>
@@ -142,169 +128,213 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 					    </div>
 				    </div>
 			    </div>
-			    <div class="jumbotron loaded" style="display:none"><!-- style="float:left;">-->
-				    <div class="row">
-					    <div class="col-xs-6 col-md-2">
-						    <div>
-							    <h4>General</h4>
-							    <table>
-								    <tr><td>Season: <select class="selectpicker cf-select" id="season-select" multiple data-width="150px" data-live-search="true" data-size="5"></select></td></tr>
-								    <tr><td>Home Team: <select class="selectpicker cf-select" id="home-team-select" multiple data-width="150px" data-live-search="true" data-size="5" data-actions-box="true"></select></td></tr>
-								    <tr><td>Away Team: <select class="selectpicker cf-select" id="away-team-select" multiple data-width="150px" data-live-search="true" data-size="5" data-actions-box="true"></select></td></tr>
-							    </table>
-						</div>
-					</div>
-					<div class="col-xs-6 col-md-2">
-						<div>
-							<h4 style="visibility:hidden;"">General:</h4>
-							<table>
-								<tr><td>Offense Is:
-									<select class="selectpicker cf-select" multiple data-width="150px" data-max-options="1" id="offense-home-select">
-										<option value="home">Home</option>
-										<option value="away">Away</option>
-									</select></td></tr>
-								<tr><td>Game Result:
-									<select class="selectpicker cf-select" multiple data-width="150px" data-max-options="1" id="offense-won-select">
-										<option value="won">Offense Won</option>
-										<option value="loss">Offense Lost</option>
-									</select></td></tr>
-								<tr><td>Play Result:
-									<select class="selectpicker cf-select" multiple data-width="150px" id="result-select"></select>
-								</td></tr>
-							</table>
-						</div>
-					</div>
-					<div class="col-xs-4 col-md-2" id="play-type-chart">
-						<h4>
-							Play Type <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="'Penalty' plays are exclusively ones that resulted in no play (e.g. False Start or Encroachment)"></span>
-							<span class="reset_span" style="font-size:10px; font-weight: normal;">
-								<a class="reset" href="javascript:play_type_chart.filterAll(); dc.redrawAll();" style="display:none">
-									reset chart</a>
-							</span>
-						</h4>
-					</div>
-					<div class="col-xs-8 col-md-6" id="week-chart">
-						<h4>
-							Week <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Week 18 is Wild-Card Weekend, Week 19 is the Divisional round, Week 20 is the Conference Championships, and Week 21 is the Super Bowl"></span>
-							<span class="reset_span" style="font-size:10px; font-weight: normal;">
-								<a class="reset" href="javascript:week_chart.filterAll(); dc.redrawAll();" style="display:none">
-									reset chart</a>
-							</span>
-						</h4>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-6" id="wp-chart">
-						<h4>
-							Win Probability <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Win Probability (WP) is the likelihood that the offensive team will go on to win the game, based solely on the game state at the start of the play. NFLDash uses NFLWin for its WP calculations"></span>
-							<span class="reset_span" style="font-size:10px; font-weight: normal;">
-								<a class="reset" href="javascript:wp_chart.filterAll(); dc.redrawAll();" style="display:none">
-									reset chart</a>
-							</span>
-						</h4>
-					</div>
-					<div class="col-md-6" id="wpa-chart">
-						<h4>
-							Win Probability Added <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Win Probability Added (WPA) is the difference between Win Probability at the start of this play and the start of the next play (larger WPA is better for the offense)"></span>
-							<span class="reset_span" style="font-size:10px; font-weight: normal;">
-								<a class="reset" href="javascript:wpa_chart.filterAll(); dc.redrawAll();" style="display:none">
-									reset chart</a>
-							</span>
-						</h4>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-6" id="off-score-chart">
-						<h4>
-							Offense Score <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Point total for the offense at the start of the play"></span>
-							<span class="reset_span" style="font-size:10px; font-weight: normal;">
-								<a class="reset" href="javascript:off_score_chart.filterAll(); dc.redrawAll();" style="display:none">
-									reset chart</a>
-							</span>
-						</h4>
-					</div>
-					<div class="col-md-6" id="def-score-chart">
-						<h4>
-							Defense Score <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Point total for the defense at the start of the play"></span>
-							<span class="reset_span" style="font-size:10px; font-weight: normal;">
-								<a class="reset" href="javascript:def_score_chart.filterAll(); dc.redrawAll();" style="display:none">
-									reset chart</a>
-							</span>
-						</h4>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-4 col-md-2" id="down-chart">
-						<h4>
-							Down <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Down 0 denotes special teams plays"></span>
-							<span class="reset_span" style="font-size:10px; font-weight: normal;">
-								<a class="reset" href="javascript:down_chart.filterAll(); dc.redrawAll();" style="display:none">
-									reset chart</a>
-							</span>
-						</h4>
-					</div>
-					<div class="col-xs-8 col-md-5" id="ytg-chart">
-						<h4>
-							Distance  <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Yards to go for a first down/touchdown"></span>
-							<span class="reset_span" style="font-size:10px; font-weight: normal;">
-								<a class="reset" href="javascript:ytg_chart.filterAll(); dc.redrawAll();" style="display:none">
-									reset chart</a>
-							</span>
-						</h4>
-					</div>
-					<div class="col-xs-12 col-md-5" id="yardline-chart">
-						<h4>
-							Yard Line <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="-49 is equivalent to the offense's 1-yard line, while +49 is the defense's 1-yard line"></span>
-							<span class="reset_span" style="font-size:10px; font-weight: normal;">
-								<a class="reset" href="javascript:yardline_chart.filterAll(); dc.redrawAll();" style="display:none">
-									reset chart</a>
-							</span>
-						</h4>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-4 col-md-2" id="quarter-chart">
-						<h4>
-							Quarter <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="All overtime periods are designated with 'OT'"></span>
-							<span class="reset_span" style="font-size:10px; font-weight: normal;">
-								<a class="reset" href="javascript:quarter_chart.filterAll(); dc.redrawAll();" style="display:none">
-									reset chart</a>
-							</span>
-						</h4>
-					</div>
-					<div class="col-xs-8 col-md-5" id="time-left-chart">
-						<h4>
-							Time Left in Quarter <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="In seconds, with 900 seconds representing 15:00 to go in the quarter"></span>
-							<span class="reset_span" style="font-size:10px; font-weight: normal;">
-								<a class="reset" href="javascript:time_left_chart.filterAll(); dc.redrawAll();" style="display:none">
-									reset chart</a>
-							</span>
-						</h4>
-					</div>
-					<div class="col-xs-12 col-md-5">
-					
-						<h4>Players <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Multiple players chosen at the same position are ORed together, while players selected at different positions are combined with an AND clause. For example, selecting 'Tom Brady', 'Julian Edelman', and 'Rob Gronkowski' would filter to all plays where Brady and one of Edelman or Gronkowski were involved"></span><span id="player-reset" style="font-size:10px; font-weight:normal; visibility:hidden;"><a href="javascript:$('.player-select').selectpicker('deselectAll');">reset players</a></span></h4>
-					
-						<table><tr><th></th><th></th></tr>
-							<tr><td><select class="selectpicker player-select cf-select" id="qb-select" multiple title="QB" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td><select class="selectpicker player-select cf-select" id="d-select" multiple title="Defensive" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
-							<tr><td><select class="selectpicker player-select cf-select" id="rb-select" multiple title="RB" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td><select class="selectpicker player-select cf-select" id="other-select" multiple title="Other/Unknown" data-live-search="true" data-size="10" data-actions-box="true"></select></td></tr>
-							<tr><td><select class="selectpicker player-select cf-select" id="receiver-select" multiple title="Receivers" data-live-search="true" data-size="10" data-actions-box="true"></select></td><td></td></tr>
-						</table>
-					</div>
-					
-				</div>
-				<hr>
-				<div class="row">
-					<table class="table table-condensed table-hover table-striped" id="play-table">
-						<thead>
-							<tr class="header" id="play-table-header">
-							</tr>
-						</thead>
-					</table>
-				</div>
-						
+			    <!-- <div class="jumbotron loaded" style="display:none"> -->
+			    <div class="loaded" style="display:none">
+				    <div class="panel panel-default">
+					    <div class="panel-heading heading">
+						    <h4 class="panel-title"><a data-toggle="collapse" class="toggle" href="#basic">&nbsp;Basic Data</a></h4>
+					    </div>
+					    <div class="panel-body collapse in" id="basic">
+						    <div class="row">
+							    <div class="col-xs-12 col-md-5">
+								    <div>
+									    <h4>General&nbsp;<span id="general-reset" style="visibility:hidden;"><a class="btn btn-danger btn-xs reset reset-bar" href="javascript:$('.general-select').selectpicker('deselectAll');">Reset</a></span></h4>
+									    <table>
+										    <tr><td>
+											    <select class="selectpicker general-select cf-select" id="season-select" multiple data-width="200px" title="Season:" data-live-search="true" data-size="5" data-selected-text-format="count > 3"></select>
+										    </td><td>
+											    <select class="selectpicker general-select cf-select" multiple data-width="200px" title="Offense Is:" data-max-options="1" id="offense-home-select">
+												    <option value="home">Home</option>
+												    <option value="away">Away</option>
+											    </select>
+										    </td></tr>
+										    <tr><td>
+											    <select class="selectpicker general-select cf-select" id="team-select" multiple data-width="200px" title="Team:" data-live-search="true" data-size="5" data-actions-box="true" data-selected-text-format="count > 2"></select>
+										    </td><td>
+											    <select class="selectpicker general-select cf-select" multiple data-width="200px" title="Game Result:" data-max-options="1" id="offense-won-select">
+												    <option value="won">Offense Won</option>
+												    <option value="loss">Offense Lost</option>
+											    </select>
+										    </td></tr>
+										    <tr><td>
+											    <select class="selectpicker general-select cf-select" multiple data-width="200px" title="Team Is:" data-max-options="1" id="team-offense-select" disabled>
+												    <option value="offense">Offense</option>
+												    <option value="defense">Defense</option>
+											    </select>
+										    </td><td>
+											    <select class="selectpicker general-select cf-select" multiple data-width="200px" title="Play Result:" id="result-select"></select>
+										    </td></tr>
+									    </table>
+								    </div>
+							    </div>
+							    <div class="col-xs-12 col-md-2" id="play-type-chart">
+								    <h4 class="title">
+									    Play Type <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="'Penalty' plays are exclusively ones that resulted in no play (e.g. False Start or Encroachment)"></span>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset" href="javascript:play_type_chart.filterAll(); dc.redrawAll();" style="display:none;">Reset</a>
+									    </span>
+								    </h4>
+							    </div>
+							    <div class="col-xs-12 col-md-5">
+								    
+								    <h4 class="title">Players <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Multiple players chosen at the same position are ORed together, while players selected at different positions are combined with an AND clause. For example, selecting 'Tom Brady', 'Julian Edelman', and 'Rob Gronkowski' would filter to all plays where Brady and either Edelman or Gronkowski (or both) were involved"></span><span id="player-reset" style="visibility:hidden;">&nbsp;<a class="btn btn-danger btn-xs reset" href="javascript:$('.player-select').selectpicker('deselectAll');">Reset</a></span></h4>
+								    
+								    <table><tr><th></th><th></th></tr>
+									    <tr><td><select class="selectpicker player-select cf-select" id="qb-select" multiple title="QB" data-live-search="true" data-size="10" data-actions-box="true" data-selected-text-format="count > 2"></select></td><td><select class="selectpicker player-select cf-select" id="d-select" multiple title="Defensive" data-live-search="true" data-size="10" data-actions-box="true" data-selected-text-format="count > 2"></select></td></tr>
+									    <tr><td><select class="selectpicker player-select cf-select" id="rb-select" multiple title="RB" data-live-search="true" data-size="10" data-actions-box="true" data-selected-text-format="count > 2"></select></td><td><select class="selectpicker player-select cf-select" id="other-select" multiple title="Other/Unknown" data-live-search="true" data-size="10" data-actions-box="true" data-selected-text-format="count > 2"></select></td></tr>
+									    <tr><td><select class="selectpicker player-select cf-select" id="receiver-select" multiple title="Receivers" data-live-search="true" data-size="10" data-actions-box="true" data-selected-text-format="count > 2"></select></td><td></td></tr>
+								    </table>
+							    </div>
+						    </div>
+					    </div>
+				    </div>
+				    <div class="panel panel-default">
+					    <div class="panel-heading heading">
+						    <h4 class="panel-title"><a data-toggle="collapse" class="toggle" href="#probabilities">&nbsp;Probabilities</a></h4>
+					    </div>
+					    <div class="panel-body collapse in" id="probabilities">
+						    <div class="row">
+							    <div class="col-md-6" id="wp-chart">
+								    <h4 class="title">
+									    Win Probability <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Win Probability (WP) is the likelihood that the offensive team will go on to win the game, based solely on the game state at the start of the play. NFLDash uses NFLWin for its WP calculations"></span>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset reset-bar" href="javascript:wp_chart.filterAll(); dc.redrawAll();" style="display:none">
+											    Reset</a>
+									    </span>
+								    </h4>
+							    </div>
+							    <div class="col-md-6" id="wpa-chart">
+								    <h4 class="title">
+									    Win Probability Added <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Win Probability Added (WPA) is the difference between Win Probability at the start of this play and the start of the next play (larger WPA is better for the offense)"></span>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset reset-bar" href="javascript:wpa_chart.filterAll(); dc.redrawAll();" style="display:none">
+											    Reset</a>
+									    </span>
+								    </h4>
+							    </div>
+						    </div>
+					    </div>
+				    </div>
+				    <div class="panel panel-default">
+					    <div class="panel-heading heading">
+						    <h4 class="panel-title"><a data-toggle="collapse" class="toggle" href="#score">&nbsp;Scores</a></h4>
+					    </div>
+					    <div class="panel-body collapse in" id="score">
+						    <div class="row">
+							    <div class="col-md-6" id="off-score-chart">
+								    <h4 class="title">
+									    Offense Score <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Point total for the offense at the start of the play"></span>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset reset-bar" href="javascript:off_score_chart.filterAll(); dc.redrawAll();" style="display:none">
+											    Reset</a>
+									    </span>
+								    </h4>
+							    </div>
+							    <div class="col-md-6" id="def-score-chart">
+								    <h4 class="title">
+									    Defense Score <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Point total for the defense at the start of the play"></span>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset reset-bar" href="javascript:def_score_chart.filterAll(); dc.redrawAll();" style="display:none">
+											    Reset</a>
+									    </span>
+								    </h4>
+							    </div>
+						    </div>
+					    </div>
+				    </div>
+				    <div class="panel panel-default">
+					    <div class="panel-heading heading">
+						    <h4 class="panel-title"><a data-toggle="collapse" class="toggle" href="#position">&nbsp;Field Position</a></h4>
+					    </div>
+					    <div class="panel-body collapse in" id="position">
+						    <div class="row">
+							    <div class="col-xs-4 col-md-2" id="down-chart">
+								    <h4 class="title">
+									    Down <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Down 0 denotes special teams plays"></span>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset" href="javascript:down_chart.filterAll(); dc.redrawAll();" style="display:none">
+											    Reset</a>
+									    </span>
+								    </h4>
+							    </div>
+							    <div class="col-xs-8 col-md-5" id="ytg-chart">
+								    <h4 class="title">
+									    Distance  <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Yards to go for a first down/touchdown"></span>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset reset-bar" href="javascript:ytg_chart.filterAll(); dc.redrawAll();" style="display:none">
+											    Reset</a>
+									    </span>
+								    </h4>
+							    </div>
+							    <div class="col-xs-12 col-md-5" id="yardline-chart">
+								    <h4 class="title">
+									    Yard Line <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="-49 is equivalent to the offense's 1-yard line, while +49 is the defense's 1-yard line"></span>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset reset-bar" href="javascript:yardline_chart.filterAll(); dc.redrawAll();" style="display:none">
+											    Reset</a>
+									    </span>
+								    </h4>
+							    </div>
+						    </div>
+					    </div>
+				    </div>
+				    <div class="panel panel-default">
+					    <div class="panel-heading heading">
+						    <h4 class="panel-title"><a data-toggle="collapse" class="toggle" href="#time">&nbsp;Temporal</a></h4>
+					    </div>
+					    <div class="panel-body collapse in" id="time">
+						    <div class="row">
+							    <div class="col-xs-4 col-md-2" id="quarter-chart">
+								    <h4 class="title">
+									    Quarter <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="All overtime periods are designated with 'OT'"></span>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset" href="javascript:quarter_chart.filterAll(); dc.redrawAll();" style="display:none">
+											    Reset</a>
+									    </span>
+								    </h4>
+							    </div>
+							    <div class="col-xs-8 col-md-5" id="time-left-chart">
+								    <h4 class="title">
+									    Time Left in Quarter <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="In seconds, with 900 seconds representing 15:00 to go in the quarter"></span>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset reset-bar" href="javascript:time_left_chart.filterAll(); dc.redrawAll();" style="display:none">
+											    Reset</a>
+									    </span>
+								    </h4>
+							    </div>
+							    <div class="col-xs-12 col-md-5" id="week-chart">
+								    <h4 class="title">
+									    Week <span class="filter"></span> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="Week 18 is Wild-Card Weekend, Week 19 is the Divisional round, Week 20 is the Conference Championships, and Week 21 is the Super Bowl"></span>
+									    <span class="reset_span" style="">
+										    <a class="btn btn-danger btn-xs reset reset-bar" href="javascript:week_chart.filterAll(); dc.redrawAll();" style="display:none">
+											    Reset</a>
+									    </span>
+								    </h4>
+							    </div>
+						    </div>
+					    </div>
+				    </div>
+				    <hr>
+				    <div class="panel panel-default">
+					    <div class="panel-body">
+							    <table class="table table-condensed table-hover table-striped" id="play-table">
+								    <thead>
+									    <tr class="header" id="play-table-header">
+									    </tr>
+								    </thead>
+							    </table>	
+					    </div>
+				    </div>
 			    </div>
+
 		    </div>
+				
+			    <footer class="loaded footer" style="display:none">
+				    <div class="container text-center">
+					    <p>Copyright 2016 Andrew Schechtman-Rook</p>
+				    </div>
+			    </footer>	
+
 		
 		<script>
 		var wp_chart = null;
@@ -376,6 +406,10 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 			["Description", "description", "25%"]];
 
 		var export_filtered_data;
+
+		var pie_chart_colors = ["#2A693A", "#388E4E", "#47b262", "#69C380",
+			"#BA874A", "#C8A06F", "#D6B894", "#E4D0B9",
+			"#B11414", "#DF1919", "#EA4141", "#EF6F6F"];
 		
 		
 		$(document).ready(function()
@@ -452,6 +486,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 									'home_team': team_mapping[row.home_team],
 									'away_team': team_mapping[row.away_team],
 									'offense_team': team_mapping[row.offense_team],
+									'defense_team': team_mapping[defense_team],
 									'offense_team_abbrev': row.offense_team,
 									'defense_team_abbrev': defense_team,
 									'offense_won': row.offense_won,
@@ -474,8 +509,8 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 								//show the dashboard
 								$(".loaded").css("display", "block");
 
-								console.log(data.length);
-								console.log(data[0]);
+								//console.log(data.length);
+								//console.log(data[0]);
 								var cf = crossfilter(data);
 
 								var all_grp = cf.groupAll();
@@ -495,6 +530,8 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 
 
 								down_chart = make_piechart(cf, "down", "#down-chart", 80, 10);
+								//console.log(down_chart.colors());
+								//down_chart.ordinalColors(pie_chart_colors);
 								   
 								   // Yards to go bar
 								ytg_chart = make_barchart(cf, "yards_to_go", "#ytg-chart", $("#ytg-chart").width(), 200, 1, 'sqrt');
@@ -515,6 +552,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 								week_chart = make_barchart(cf, "week", "#week-chart", $("#week-chart").width(), 200, 1, 'linear');
 
 								play_type_chart = make_piechart(cf, "play_type", "#play-type-chart", 80, 10);
+								//play_type_chart.ordinalColors(pie_chart_colors);
 
 
 								dc.renderAll();
@@ -555,14 +593,13 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 
 								for (var i in sorted_team_names)
 								{
-									$("#home-team-select").append("<option value=\""+sorted_team_names[i]+"\">"+sorted_team_names[i]+"</option>");
-									$("#away-team-select").append("<option value=\""+sorted_team_names[i]+"\">"+sorted_team_names[i]+"</option>");
+									$("#team-select").append("<option value=\""+sorted_team_names[i]+"\">"+sorted_team_names[i]+"</option>");
 								}
-								$("#home-team-select").selectpicker('refresh'); 
-								$("#away-team-select").selectpicker('refresh');
+								$("#team-select").selectpicker('refresh');
 
-								var home_team_dim = make_team_season_result_selector(cf, "#home-team-select", "home_team", datatable, player_dim);
-								var away_team_dim = make_team_season_result_selector(cf, "#away-team-select", "away_team", datatable, player_dim);
+								var team_dim = make_team_selector(cf, "#team-select", "#team-offense-select", "home_team", "away_team", datatable, player_dim);
+
+								var team_offense_dim = make_offense_selector(cf, "#team-offense-select", "#team-select", "offense_team", "defense_team", datatable, player_dim);
 
 								var offense_home_dim = make_home_selector(cf, "#offense-home-select",
 									"home_team", "offense_team", datatable, player_dim);
@@ -570,14 +607,14 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 								var offense_won_dim = make_offense_won_selector(cf, "#offense-won-select",
 									"offense_won", datatable, player_dim);
 
-								var season_dim = make_team_season_result_selector(cf, "#season-select", "season_year", datatable, player_dim);
+								var season_dim = make_season_result_selector(cf, "#season-select", "season_year", datatable, player_dim);
 								for (var season in unique_seasons)
 								{
 									$("#season-select").append("<option value=\""+season+"\">"+season+"</option>");
 								}
 								$("#season-select").selectpicker('refresh');
 
-								var result_dim = make_team_season_result_selector(cf, "#result-select", "play_result", datatable, player_dim);
+								var result_dim = make_season_result_selector(cf, "#result-select", "play_result", datatable, player_dim);
 								for (var result in unique_play_results)
 								{
 									$("#result-select").append("<option value=\""+result+"\">"+result+"</option>");
