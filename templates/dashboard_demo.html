@@ -337,6 +337,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 
 		
 		<script>
+		console.log("starting");
 		var wp_chart = null;
 		var wpa_chart = null;
 		var ytg_chart = null;
@@ -411,7 +412,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 			"#BA874A", "#C8A06F", "#D6B894", "#E4D0B9",
 			"#B11414", "#DF1919", "#EA4141", "#EF6F6F"];
 		
-		
+		console.log("at document.ready");
 		$(document).ready(function()
 			{
 				$("#pleaseWaitDialog").modal('show');
@@ -423,13 +424,39 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 				var player_dict = {};
 				var unique_seasons = {};
 				var unique_play_results = {};
+
+				console.log("ready to start loading data");
+				var start_time = performance.now();
+				var curr_year = 1;
 				//d3.csv("{{ url_for('static', filename='players.csv') }}", function(row)
 				d3.csv("https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/players.csv", function(row)
 					{
 						player_dict[row.player_id] = {"name": row.full_name, "position": row.position};
+						
+						if (row["position"] == "QB")
+						{
+							$("#qb-select").append("<option value=\""+row["player_id"]+"\">"+row["full_name"]+"</option>");
+						}
+						else if (row["position"] == "RB" || row["position"] == "FB")
+						{
+							$("#rb-select").append("<option value=\""+row["player_id"]+"\">"+row["full_name"]+"</option>");
+						}
+						else if (row["position"] == "WR" || row["position"] == "TE")
+						{
+							$("#receiver-select").append("<option value=\""+row["player_id"]+"\">"+row["full_name"]+"</option>");
+						}
+						else if (row["position"] == "DE" || row["position"] == "DT" || row["position"] == "LB" || row["position"] == "CB" || row["position"] == "DB" || row["position"] == "FS" || row["position"] == "ILB" || row["position"] == "MLB" || row["position"] == "NT" || row["position"] == "OLB" || row["position"] == "SS")
+						{
+							$("#d-select").append("<option value=\""+row["player_id"]+"\">"+row["full_name"]+"</option>");
+						}
+						else
+						{
+							$("#other-select").append("<option value=\""+row["player_id"]+"\">"+row["full_name"]+"</option>");
+						}
 						return row;
 					}, function(player_data)
 					{	
+						console.log("finished loading players, took ", (performance.now()-start_time)/1000, "s");
 						//d3.csv("{{ url_for('static', filename='sample_plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
 						d3.csv("https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/plays.csv" + '?' + Math.floor(Math.random() * 10000), function(row)
 							{
@@ -468,6 +495,11 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 								unique_seasons[row.season_year] = 1;
 								unique_play_results[row.play_result] = 1;
 
+								if (+row.season_year > curr_year)
+								{
+									console.log(+row.season_year);
+									curr_year = +row.season_year;
+								}
 								output_row = {'player_ids': row.player_ids,
 									'drive_id': +row.drive_id,
 									'week': week,
@@ -498,7 +530,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 							},
 							function(data)
 							{
-								$("#pleaseWaitDialog").modal('hide');
+								console.log("started data section, took ", (performance.now()-start_time)/1000, "s");
 
 								// Check for mobile user agent
 								var mobile = (/iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase()));
@@ -517,6 +549,8 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 								dc.dataCount('.dc-data-count')
 									.dimension(cf)
 									.group(all_grp);
+								
+								console.log("set up crossfilter, took ", (performance.now()-start_time)/1000, "s");
 
 								// WP bar
 								wp_chart = make_barchart(cf, "wp", "#wp-chart", $("#wp-chart").width(), 200, 1, 'linear');
@@ -528,6 +562,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 								
 								def_score_chart = make_barchart(cf, "def_score", "#def-score-chart", $("#def-score-chart").width(), 200, 1, 'sqrt');
 
+								console.log("made first few charts, took ", (performance.now()-start_time)/1000, "s");
 
 								down_chart = make_piechart(cf, "down", "#down-chart", 80, 10);
 								//console.log(down_chart.colors());
@@ -554,8 +589,13 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 								play_type_chart = make_piechart(cf, "play_type", "#play-type-chart", 80, 10);
 								//play_type_chart.ordinalColors(pie_chart_colors);
 
+								console.log("made all charts, took ", (performance.now()-start_time)/1000, "s");
+
 
 								dc.renderAll();
+								
+								console.log("rendered dc.js, took ", (performance.now()-start_time)/1000, "s");
+								
 								
 								var player_dim = cf.dimension(function(d){ return d["player_ids"];});
 								
@@ -591,11 +631,15 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 								};
 								var datatable = $("#play-table").dataTable(play_table_options);
 
+								console.log("made datatable, took ", (performance.now()-start_time)/1000, "s");//bottleneck before this line
+
+
 								for (var i in sorted_team_names)
 								{
 									$("#team-select").append("<option value=\""+sorted_team_names[i]+"\">"+sorted_team_names[i]+"</option>");
 								}
 								$("#team-select").selectpicker('refresh');
+								console.log("made team select, took ", (performance.now()-start_time)/1000, "s");
 
 								var team_dim = make_team_selector(cf, "#team-select", "#team-offense-select", "home_team", "away_team", datatable, player_dim);
 
@@ -608,6 +652,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 									"offense_won", datatable, player_dim);
 
 								var season_dim = make_season_result_selector(cf, "#season-select", "season_year", datatable, player_dim);
+								console.log("made some dimensions, took ", (performance.now()-start_time)/1000, "s");
 								for (var season in unique_seasons)
 								{
 									$("#season-select").append("<option value=\""+season+"\">"+season+"</option>");
@@ -620,37 +665,20 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 									$("#result-select").append("<option value=\""+result+"\">"+result+"</option>");
 								}
 								$("#result-select").selectpicker('refresh');
+								
+								console.log("made a bunch of selects, took ", (performance.now()-start_time)/1000, "s"); //bottleneck before this line
+
 			
 
-								for (var i in player_data)
-								{
-									if (player_data[i]["position"] == "QB")
-									{
-										$("#qb-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
-									}
-									else if (player_data[i]["position"] == "RB" || player_data[i]["position"] == "FB")
-									{
-										$("#rb-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
-									}
-									else if (player_data[i]["position"] == "WR" || player_data[i]["position"] == "TE")
-									{
-										$("#receiver-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
-									}
-									else if (player_data[i]["position"] == "DE" || player_data[i]["position"] == "DT" || player_data[i]["position"] == "LB" || player_data[i]["position"] == "CB" || player_data[i]["position"] == "DB" || player_data[i]["position"] == "FS" || player_data[i]["position"] == "ILB" || player_data[i]["position"] == "MLB" || player_data[i]["position"] == "NT" || player_data[i]["position"] == "OLB" || player_data[i]["position"] == "SS")
-									{
-										$("#d-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
-									}
-									else
-									{
-										$("#other-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
-									}
-								}
 								$("#qb-select").selectpicker('refresh');
 								$("#rb-select").selectpicker('refresh');
 								$("#receiver-select").selectpicker('refresh');
 								$("#d-select").selectpicker('refresh');
 								$("#other-select").selectpicker('refresh');
 								make_player_selector(player_dim, ".selectpicker.player-select", datatable);
+								
+								console.log("refreshed selects, took ", (performance.now()-start_time)/1000, "s");
+
 
 
 								var curryed_refreshtable = (
@@ -699,6 +727,7 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 									})([wp_chart, wpa_chart, ytg_chart, yardline_chart, time_left_chart, week_chart, off_score_chart, def_score_chart]);
 
 								window.onresize = resize_charts;
+								$("#pleaseWaitDialog").modal('hide');
 								
 							});
 						

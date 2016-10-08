@@ -116,12 +116,13 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 						    <div class="modal-body">
 							    <h4>
 								    <span class="glyphicon glyphicon-time">
-								    </span> Loading the data. This may take a few seconds...
+								    </span>Loading the dashboard. This may take a few seconds...
 							    </h4>
+							    <h5><span id="loading-message">Initializing</span></h5>
 							    <div class="progress">
 								    <div class="progress-bar progress-bar-info
-										progress-bar-striped active"
-									    style="width: 100%">
+										progress-bar-striped active" id="loading-progress"
+									    style="width: 0%">
 								    </div>
 							    </div>
 						    </div>
@@ -426,13 +427,45 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 				//d3.csv("{{ url_for('static', filename='players.csv') }}", function(row)
 				d3.csv("https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/players.csv", function(row)
 					{
+						update_progress_bar("#loading-message", "#loading-progress", "Loading players", 5, 5);
 						player_dict[row.player_id] = {"name": row.full_name, "position": row.position};
+						
+						if (row["position"] == "QB")
+						{
+							$("#qb-select").append("<option value=\""+row["player_id"]+"\">"+row["full_name"]+"</option>");
+						}
+						else if (row["position"] == "RB" || row["position"] == "FB")
+						{
+							$("#rb-select").append("<option value=\""+row["player_id"]+"\">"+row["full_name"]+"</option>");
+						}
+						else if (row["position"] == "WR" || row["position"] == "TE")
+						{
+							$("#receiver-select").append("<option value=\""+row["player_id"]+"\">"+row["full_name"]+"</option>");
+						}
+						else if (row["position"] == "DE" || row["position"] == "DT" || row["position"] == "LB" || row["position"] == "CB" || row["position"] == "DB" || row["position"] == "FS" || row["position"] == "ILB" || row["position"] == "MLB" || row["position"] == "NT" || row["position"] == "OLB" || row["position"] == "SS")
+						{
+							$("#d-select").append("<option value=\""+row["player_id"]+"\">"+row["full_name"]+"</option>");
+						}
+						else
+						{
+							$("#other-select").append("<option value=\""+row["player_id"]+"\">"+row["full_name"]+"</option>");
+						}
 						return row;
 					}, function(player_data)
 					{	
+						update_progress_bar("#loading-message", "#loading-progress", "Downloading play data", 5, 10);
+						var curr_year = 1
 						//d3.csv("{{ url_for('static', filename='sample_plays.csv') }}" + '?' + Math.floor(Math.random() * 10000), function(row)
-						d3.csv("https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/sample_plays.csv" + '?' + Math.floor(Math.random() * 10000), function(row)
+						d3.csv("https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/plays.csv" + '?' + Math.floor(Math.random() * 10000), function(row)
 							{
+
+								if (+row.season_year > curr_year)
+								{
+									console.log(+row.season_year);
+									curr_year = +row.season_year;
+									update_progress_bar("#loading-message", "#loading-progress", "Parsing plays: " + row.season_year, 5, 40);
+								}
+								
 								//console.log(row.player_ids, row.player_ids.length);
 								row.player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
 								row.seconds_left = 900 - +row.seconds_elapsed;
@@ -621,30 +654,6 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 								}
 								$("#result-select").selectpicker('refresh');
 			
-
-								for (var i in player_data)
-								{
-									if (player_data[i]["position"] == "QB")
-									{
-										$("#qb-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
-									}
-									else if (player_data[i]["position"] == "RB" || player_data[i]["position"] == "FB")
-									{
-										$("#rb-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
-									}
-									else if (player_data[i]["position"] == "WR" || player_data[i]["position"] == "TE")
-									{
-										$("#receiver-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
-									}
-									else if (player_data[i]["position"] == "DE" || player_data[i]["position"] == "DT" || player_data[i]["position"] == "LB" || player_data[i]["position"] == "CB" || player_data[i]["position"] == "DB" || player_data[i]["position"] == "FS" || player_data[i]["position"] == "ILB" || player_data[i]["position"] == "MLB" || player_data[i]["position"] == "NT" || player_data[i]["position"] == "OLB" || player_data[i]["position"] == "SS")
-									{
-										$("#d-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
-									}
-									else
-									{
-										$("#other-select").append("<option value=\""+player_data[i]["player_id"]+"\">"+player_data[i]["full_name"]+"</option>");
-									}
-								}
 								$("#qb-select").selectpicker('refresh');
 								$("#rb-select").selectpicker('refresh');
 								$("#receiver-select").selectpicker('refresh');

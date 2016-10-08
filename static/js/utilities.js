@@ -327,3 +327,15 @@ jQuery.extend( jQuery.fn.dataTableExt.oSort, {
         return ((a < b) ? 1 : ((a > b) ? -1 : 0));
     }
 } );
+
+function update_progress_bar(title_id, bar_id, title_text, increment_amount, max_value)
+{
+    $(title_id).text(title_text);
+    var curr_value = +($(bar_id).css("width").slice(0, -1));
+    var new_value = curr_value + increment_amount;
+    if (new_value > max_value)
+    {
+	new_value = max_value;
+    }
+    $(bar_id).css("width", new_value+"%");
+}
