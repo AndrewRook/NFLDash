@@ -48,6 +48,7 @@
 		<!-- <script type="text/javascript" src="{{ url_for('static', filename='js/utilities.js') }}"></script> -->
 		<script type="text/javascript" src="../static/js/utilities.js"></script>
 		<script type="text/javascript" src="../static/js/constants.js"></script>
+		<script type="text/javascript" src="../static/js/io.js"></script>
 
 
 		<script>
@@ -107,7 +108,7 @@
 				<span aria-hidden="true">x</span>
 			</button>
 			<h3>
-				<span class="glyphicon glyphicon-exclamation-sign"></span> It looks like you're using a touch device. While NFLDash <b>should</b> work with smartphones and tablets, it's not optimized for such devices. This is especially true for smartphones - In addition to issues with touch controls and laying out the dashboard on a small screen, NFLDash does all of its processing on the client side and can strain a phone's CPU. Feel free to try it out on this device, but for the ideal experience please consider using a PC.
+				<span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;It looks like you're using a touch device. While NFLDash <b>should</b> work with smartphones and tablets, it's not optimized for such devices. This is especially true for smartphones - In addition to issues with touch controls and laying out the dashboard on a small screen, NFLDash does all of its processing on the client side and can strain a phone's CPU. Feel free to try it out on this device, but for the ideal experience please consider using a PC.
 			</h3>
 		</div>
 		<div class ="container-fluid" role="main">
@@ -119,9 +120,9 @@
 						<div class="modal-body">
 							<h4>
 								<span class="glyphicon glyphicon-time">
-								</span>Loading the dashboard. This may take a few seconds...
+								</span>&nbsp;Loading the dashboard. This may take a few seconds...
 							</h4>
-							<h5><span id="loading-message">Initializing</span></h5>
+							<h5><span id="loading-message">Loading Data</span></h5>
 							<div class="progress">
 								<div class="progress-bar progress-bar-info
 									    progress-bar-striped active" id="loading-progress"
@@ -349,74 +350,32 @@
 				});
 				
 				var start_time = performance.now();
-				var q = d3.queue();
-
-				function deferred_load(filename, callback)
+				var q = d3.queue(4);
+				var progress_url = "";
+				for (var i = 0; i < constants.seasons.length; i++)
 				{
-					d3.csv(filename)
-						.row(function(row)
-							{
-								return row;
-							})
-						.get(function(error, player_data)
-							{
-								callback(null, player_data);
-							})
-				};
-				q.defer(deferred_load,"https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/plays.csv" + '?' + Math.floor(Math.random() * 10000));
-				q.defer(deferred_load,"https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/plays.csv" + '?' + Math.floor(Math.random() * 10000));
-				q.defer(deferred_load,"https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/plays.csv" + '?' + Math.floor(Math.random() * 10000));
-				/* q.defer(deferred_load,"https://raw.githubusercontent.com/AndrewRook/data-test/master/players1.csv" + '?' + Math.floor(Math.random() * 10000));
-				   q.defer(deferred_load,"https://raw.githubusercontent.com/AndrewRook/data-test/master/players1.csv" + '?' + Math.floor(Math.random() * 10000));
-				   q.defer(deferred_load,"https://raw.githubusercontent.com/AndrewRook/data-test/master/players1.csv" + '?' + Math.floor(Math.random() * 10000)); */
-				//q.defer(test, 4);
-				
+					var url = "https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/plays_";
+					url = url + constants.seasons[i] + ".csv";
+					url = url + '?' + Math.floor(Math.random() * 10000);
+					if (i == 0)
+					{
+						progress_url = url;
+					}
+					q.defer(io.load_plays,url, progress_url, "#loading-progress");
+				}
 				q.awaitAll(function(error, results) {
-					var all_players = results[0]
+					utilities.update_progress_bar("#loading-progress", 0.3, 0.3);
+					//$("#loading-progress").width(900);
+					$("#loading-message").text("Rendering Dashboard");
+					var all_plays = results[0]
 					for (var i = 1; i < results.length; i++)
 					{
-						console.log(results[i].length);
-						all_players = all_players.concat(results[i]);
+						all_plays = all_plays.concat(results[i]);
 					}
-					console.log(all_players.length);
+					console.log(all_plays.length);
 					console.log("Parallel took ",(performance.now() - start_time)/1000.,"s");
 				});
 
-				/* 
-				   function delayedHello(name, callback) {
-				   setTimeout(function() {
-				   console.log("Hello, " + name + "!");
-				   callback(null);
-				   }, 10);
-				   }
-				   d3.queue()
-				   .defer(delayedHello, "Alice")
-				   .defer(delayedHello, "Bob")
-				   .defer(delayedHello, "Carol")
-				   .await(function(error) {
-				   if (error) throw error;
-				   console.log("Goodbye!");
-				   }); */
-					
-				
-				//console.log(constants.column_name_mapping);
-				/* d3.csv("https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/players.csv", function(row)
-				   {
-				   return row;
-				   },
-				   function(player_data)
-				   {
-				   console.log("Player Data", player_data.length);
-				   d3.csv("https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/plays.csv" + '?' + Math.floor(Math.random() * 10000), function(row)
-				   {
-				   return row;
-				   },
-				   function(data)
-				   {
-				   console.log(data.length);
-				   });
-				   });
-				 */
 			});
 		</script>
 		

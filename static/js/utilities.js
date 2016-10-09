@@ -328,14 +328,18 @@ jQuery.extend( jQuery.fn.dataTableExt.oSort, {
     }
 } );
 
-function update_progress_bar(title_id, bar_id, title_text, increment_amount, max_value)
-{
-    $(title_id).text(title_text);
-    var curr_value = +($(bar_id).css("width").slice(0, -1));
-    var new_value = curr_value + increment_amount;
-    if (new_value > max_value)
+utilities = {
+    update_progress_bar : function(progress_bar_id, increment_fraction, max_fraction)
     {
-	new_value = max_value;
+	var curr_width = $(progress_bar_id).width();
+	var max_width = $(progress_bar_id).offsetParent().width();
+	var new_width = curr_width + increment_fraction * max_width;
+	//console.log($(progress_bar_id).width());
+	if (new_width > max_fraction * max_width)
+	{
+	    new_width = max_fraction * max_width;
+	    //console.log(curr_width, new_width);
+	}
+	$(progress_bar_id).width(new_width);
     }
-    $(bar_id).css("width", new_value+"%");
-}
+};
