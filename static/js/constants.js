@@ -49,17 +49,17 @@ var constants = {
 	["Description", "description", "25%"]],
 };
 
-var sorted_team_names = [];
-var unique_team_names = {};
+var _sorted_team_names = [];
+var _unique_team_names = {};
 for (var key in constants.team_mapping)
 {
-    if (!(constants.team_mapping[key] in unique_team_names))
+    if (!(constants.team_mapping[key] in _unique_team_names))
     {
-	sorted_team_names.push(constants.team_mapping[key]);
-	unique_team_names[constants.team_mapping[key]] = 1; 
+	_sorted_team_names.push(constants.team_mapping[key]);
+	_unique_team_names[constants.team_mapping[key]] = 1; 
     }
 }
-sorted_team_names = sorted_team_names.sort();
+_sorted_team_names = _sorted_team_names.sort();
 
-constants.sorted_team_names = sorted_team_names;
-constants.unique_team_names = unique_team_names;
+constants.sorted_team_names = _sorted_team_names;
+constants.unique_team_names = _unique_team_names;
