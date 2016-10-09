@@ -35,7 +35,18 @@ var constants = {
 	"TB": "Tampa Bay Buccaneers",
 	"CAR": "Carolina Panthers"
     },
-    sorted_team_names
+    column_name_mapping : [
+	["Season", "season_year", "8%"],
+	["Week", "week", "7%"],
+	["Off", "offense_team_abbrev", "6%"],
+	["Def", "defense_team_abbrev", "6%"],
+	["Off Score", "off_score", "10%"],
+	["Def Score", "def_score", "10%"],
+	["Yardline", "yardline_text", "9%", "yardline"],
+	["Down", "down", "7%"],
+	["Dist", "yards_to_go", "6%"],
+	["Qtr", "quarter", "6%"],
+	["Description", "description", "25%"]],
 };
 
 var sorted_team_names = [];
