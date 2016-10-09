@@ -14,6 +14,8 @@
 		<!-- <script type="text/javascript" src="{{ url_for('static', filename='d3/d3.js') }}"></script> -->
 		<script type="text/javascript" src="../static/d3/d3.js"></script>
 		
+		<script type="text/javascript" src="../static/d3-queue/d3-queue.js"></script>
+		
 		<!-- <script type="text/javascript" src="{{ url_for('static', filename='crossfilter-1.4.0-alpha.06/crossfilter.js') }}"></script> -->
 		<script type="text/javascript" src="../static/crossfilter-1.4.0-alpha.06/crossfilter.js"></script>
 
@@ -338,7 +340,129 @@
 		</footer>	
 		
 		<script>
-		console.log(constants.unique_team_names);
+		$("#pleaseWaitDialog").modal('show');
+		$(document).ready(function()
+			{
+				//enable the tooltips:
+				$(function () {
+					$('[data-toggle="tooltip"]').tooltip();
+				});
+				var start_time = performance.now();
+				//d3.csv("https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/players.csv")
+					/* d3.csv("https://raw.githubusercontent.com/AndrewRook/data-test/master/players1.csv" + '?' + Math.floor(Math.random() * 10000))
+					   .row(function(row)
+					   {
+					   return(row);
+					   })
+					   .get(function(error, player_data1)
+					   {
+					   d3.csv("https://raw.githubusercontent.com/AndrewRook/data-test/master/players2.csv" + '?' + Math.floor(Math.random() * 10000))
+					   .row(function(row)
+					   {
+					   return(row);
+					   })
+					   .get(function(error, player_data3)
+					   {
+					   d3.csv("https://raw.githubusercontent.com/AndrewRook/data-test/master/players3.csv" + '?' + Math.floor(Math.random() * 10000))
+					   .row(function(row)
+					   {
+					   return(row);
+					   })
+					   .get(function(error, player_data4)
+					   {
+					   d3.csv("https://raw.githubusercontent.com/AndrewRook/data-test/master/players4.csv" + '?' + Math.floor(Math.random() * 10000))
+					   .row(function(row)
+					   {
+					   return(row);
+					   })
+					   .get(function(error, player_data5)
+					   {
+					   d3.csv("https://raw.githubusercontent.com/AndrewRook/data-test/master/players5.csv" + '?' + Math.floor(Math.random() * 10000))
+					   .row(function(row)
+					   {
+					   return(row);
+					   })
+					   .get(function(error, player_data)
+					   {
+					   d3.csv("https://raw.githubusercontent.com/AndrewRook/data-test/master/players6.csv" + '?' + Math.floor(Math.random() * 10000))
+					   .row(function(row)
+					   {
+					   return(row);
+					   })
+					   .get(function(error, player_data6)
+					   {
+					   console.log("Took ",(performance.now() - start_time)/1000.,"s");
+					   });
+					   });
+					   });
+					   });
+					   });
+					   }); */
+				var start_time = performance.now();
+				var q = d3.queue();
+
+				function deferred_load(filename, callback)
+				{
+					console.log("Hi");
+					d3.csv(filename)
+						.row(function(row)
+							{
+								return row;
+							})
+						.get(function(error, player_data)
+							{
+								console.log(player_data.length);
+								callback(null, player_data);
+							})
+				};
+				function test(num, callback)
+				{
+					callback(null, num * 2);
+				}
+				q.defer(deferred_load,"https://raw.githubusercontent.com/AndrewRook/data-test/master/players1.csv" + '?' + Math.floor(Math.random() * 10000));
+				//q.defer(test, 4);
+				
+				q.await(function(error, data1) {
+					console.log(data1);
+				});
+				console.log("test");
+
+				/* 
+				   function delayedHello(name, callback) {
+				   setTimeout(function() {
+				   console.log("Hello, " + name + "!");
+				   callback(null);
+				   }, 10);
+				   }
+				   d3.queue()
+				   .defer(delayedHello, "Alice")
+				   .defer(delayedHello, "Bob")
+				   .defer(delayedHello, "Carol")
+				   .await(function(error) {
+				   if (error) throw error;
+				   console.log("Goodbye!");
+				   }); */
+					
+				
+				//console.log(constants.column_name_mapping);
+				/* d3.csv("https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/players.csv", function(row)
+				   {
+				   return row;
+				   },
+				   function(player_data)
+				   {
+				   console.log("Player Data", player_data.length);
+				   d3.csv("https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/plays.csv" + '?' + Math.floor(Math.random() * 10000), function(row)
+				   {
+				   return row;
+				   },
+				   function(data)
+				   {
+				   console.log(data.length);
+				   });
+				   });
+				 */
+			});
 		</script>
 		
 	</body>
