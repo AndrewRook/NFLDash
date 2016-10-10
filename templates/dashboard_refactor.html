@@ -369,19 +369,31 @@
 					utilities.update_progress_bar("#loading-progress", 0.3, 0.3);
 					$("#loading-message").text("Creating Charts");
 					var cf = crossfilter(results[0]);
-					//var all_plays = results[0];
 					for (var i = 1; i < results.length-1; i++)
 					{
-						//all_plays = all_plays.concat(results[i]);
 						cf.add(results[i]);
 					}
 					var players = results[results.length-1];
 
+					// Data count
 					charts.data_count(cf, ".dc-data-count");
+					// Play type
+					play_type_chart = charts.make_piechart(cf, "play_type", "#play-type-chart", 80, 10);
 					// WP and WPA
-					console.log($("#wp-chart").width())
 					var wp_chart = charts.make_barchart(cf, "wp", "#wp-chart", $("#wp-chart").width(), 200, 1, 'linear');
 					var wpa_chart = charts.make_barchart(cf, "wpa", "#wpa-chart", $("#wpa-chart").width(), 200, 0.5, 'sqrt');
+					// Scores
+					var off_score_chart = charts.make_barchart(cf, "off_score", "#off-score-chart", $("#off-score-chart").width(), 200, 1, 'sqrt');			
+					var def_score_chart = charts.make_barchart(cf, "def_score", "#def-score-chart", $("#def-score-chart").width(), 200, 1, 'sqrt');
+					// field position
+					var down_chart = charts.make_piechart(cf, "down", "#down-chart", 80, 10);
+					ytg_chart = charts.make_barchart(cf, "yards_to_go", "#ytg-chart", $("#ytg-chart").width(), 200, 1, 'sqrt');
+					yardline_chart = charts.make_barchart(cf, "yardline", "#yardline-chart", $("#ytg-chart").width(), 200, 1, 'linear');
+					// temporal
+					quarter_chart = charts.make_piechart(cf, "quarter", "#quarter-chart", 80, 10);
+					time_left_chart = charts.make_barchart(cf, "seconds_left", "#time-left-chart", $("#time-left-chart").width(), 200, 30, 'linear');
+					week_chart = charts.make_barchart(cf, "week", "#week-chart", $("#week-chart").width(), 200, 1, 'linear');
+
 					
 					dc.renderAll();
 					

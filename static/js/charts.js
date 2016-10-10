@@ -50,3 +50,19 @@ charts.make_barchart = function(ndx, colname, div_id, width, height, bin_width, 
     }
     return chart;
 }
+
+charts.make_piechart = function(ndx, colname, div_id, outer_radius, inner_radius)
+{
+    var dim = ndx.dimension(function(d){ return d[colname];});
+    var group = dim.group();
+    var chart = dc.pieChart(div_id);
+    chart
+	.dimension(dim)
+	.group(group)
+	.width(160)
+	.height(160)
+	.radius(outer_radius)
+	.innerRadius(inner_radius);
+
+    return chart;  
+}
