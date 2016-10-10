@@ -363,16 +363,17 @@
 					}
 					q.defer(io.load_plays,url, progress_url, "#loading-progress");
 				}
+				q.defer(io.load_players, "https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/players.csv");
 				q.awaitAll(function(error, results) {
 					utilities.update_progress_bar("#loading-progress", 0.3, 0.3);
-					//$("#loading-progress").width(900);
 					$("#loading-message").text("Rendering Dashboard");
 					var all_plays = results[0]
-					for (var i = 1; i < results.length; i++)
+					for (var i = 1; i < results.length-1; i++)
 					{
 						all_plays = all_plays.concat(results[i]);
 					}
-					console.log(all_plays.length);
+					var players = results[results.length-1];
+					console.log("lengths: ", all_plays.length, players.length);
 					console.log("Parallel took ",(performance.now() - start_time)/1000.,"s");
 				});
 

@@ -27,6 +27,18 @@ var io = {
 		 {
 		     //console.log(player_data[0]['season_year'], player_data.length, count)
 		     callback(null, player_data);
+		 });
+    },
+    load_players: function(filename, callback)
+    {
+	d3.csv(filename)
+	    .row(function(row)
+		 {
+		     return row;
 		 })
+	    .get(function(error, player_data)
+		 {
+		     callback(null, player_data);
+		 });
     },
 };
