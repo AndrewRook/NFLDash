@@ -49,6 +49,7 @@
 		<script type="text/javascript" src="../static/js/utilities.js"></script>
 		<script type="text/javascript" src="../static/js/constants.js"></script>
 		<script type="text/javascript" src="../static/js/io.js"></script>
+		<script type="text/javascript" src="../static/js/charts.js"></script>
 
 
 		<script>
@@ -134,7 +135,7 @@
 				</div>
 			</div>
 			<!-- <div class="jumbotron loaded" style="display:none"> -->
-			<div class="loaded" style="display:none">
+			<div class="loaded" style="visibility:hidden">
 				<div class="panel panel-default">
 					<div class="panel-heading heading">
 						<h4 class="panel-title"><a data-toggle="collapse" class="toggle" href="#basic">&nbsp;Basic Data</a></h4>
@@ -334,7 +335,7 @@
 			
 		</div>
 		
-		<footer class="loaded footer" style="display:none">
+		<footer class="loaded footer" style="visibility:hidden">
 			<div class="container text-center">
 				<p>Copyright 2016 Andrew Schechtman-Rook</p>
 			</div>
@@ -366,15 +367,33 @@
 				q.defer(io.load_players, "https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/players.csv");
 				q.awaitAll(function(error, results) {
 					utilities.update_progress_bar("#loading-progress", 0.3, 0.3);
-					$("#loading-message").text("Rendering Dashboard");
-					var all_plays = results[0]
+					$("#loading-message").text("Creating Charts");
+					var cf = crossfilter(results[0]);
+					//var all_plays = results[0];
 					for (var i = 1; i < results.length-1; i++)
 					{
-						all_plays = all_plays.concat(results[i]);
+						//all_plays = all_plays.concat(results[i]);
+						cf.add(results[i]);
 					}
 					var players = results[results.length-1];
-					console.log("lengths: ", all_plays.length, players.length);
+
+					charts.data_count(cf, ".dc-data-count");
+					// WP and WPA
+					console.log($("#wp-chart").width())
+					var wp_chart = charts.make_barchart(cf, "wp", "#wp-chart", $("#wp-chart").width(), 200, 1, 'linear');
+					var wpa_chart = charts.make_barchart(cf, "wpa", "#wpa-chart", $("#wpa-chart").width(), 200, 0.5, 'sqrt');
+					
+					dc.renderAll();
+					
+					
+					//show the dashboard
+					$(".loaded").css("visibility", "visible");
+					
+					console.log("lengths: ", cf.size(), players.length);
 					console.log("Parallel took ",(performance.now() - start_time)/1000.,"s");
+					
+					
+					$("#pleaseWaitDialog").modal('hide');
 				});
 
 			});
