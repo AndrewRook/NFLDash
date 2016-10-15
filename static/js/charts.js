@@ -6,7 +6,7 @@ charts.data_count = function(ndx, count_class) {
     dc.dataCount(count_class)
 	.dimension(ndx)
 	.group(group);
-}
+};
 
 charts.make_barchart = function(ndx, colname, div_id, width, height, bin_width, y_axis_style) {
     var dim = ndx.dimension(function(d){ return d[colname];});
@@ -49,7 +49,7 @@ charts.make_barchart = function(ndx, colname, div_id, width, height, bin_width, 
 	chart.yAxis().tickFormat(function(v) {return v*v;});
     }
     return chart;
-}
+};
 
 charts.make_piechart = function(ndx, colname, div_id, outer_radius, inner_radius)
 {
@@ -65,4 +65,36 @@ charts.make_piechart = function(ndx, colname, div_id, outer_radius, inner_radius
 	.innerRadius(inner_radius);
 
     return chart;  
-}
+};
+
+charts.create_charts = function(cf, info_dict)
+{
+    setTimeout(function () {
+	charts.data_count(cf, ".dc-data-count");
+	// Play type
+	play_type_chart = charts.make_piechart(cf, "play_type", "#play-type-chart", 80, 10);
+	// WP and WPA
+	var wp_chart = charts.make_barchart(cf, "wp", "#wp-chart", $("#wp-chart").width(),
+					    200, 1, 'linear');
+	var wpa_chart = charts.make_barchart(cf, "wpa", "#wpa-chart", $("#wpa-chart").width(),
+					     200, 0.5, 'sqrt');
+	// Scores
+	var off_score_chart = charts.make_barchart(cf, "off_score", "#off-score-chart",
+						   $("#off-score-chart").width(), 200, 1, 'sqrt');			
+	var def_score_chart = charts.make_barchart(cf,"def_score", "#def-score-chart",
+						   $("#def-score-chart").width(), 200, 1, 'sqrt');
+	// field position
+	var down_chart = charts.make_piechart(cf, "down", "#down-chart", 80, 10);
+	var ytg_chart = charts.make_barchart(cf, "yards_to_go", "#ytg-chart",
+					     $("#ytg-chart").width(), 200, 1, 'sqrt');
+	var yardline_chart = charts.make_barchart(cf, "yardline", "#yardline-chart",
+						  $("#ytg-chart").width(), 200, 1, 'linear');
+	// temporal
+	var quarter_chart = charts.make_piechart(cf, "quarter", "#quarter-chart", 80, 10);
+	var time_left_chart = charts.make_barchart(cf, "seconds_left", "#time-left-chart",
+						   $("#time-left-chart").width(), 200, 30, 'linear');
+	var week_chart = charts.make_barchart(cf, "week", "#week-chart",
+					      $("#week-chart").width(), 200, 1, 'linear');
+	dc.renderAll();
+    }, 150);
+};

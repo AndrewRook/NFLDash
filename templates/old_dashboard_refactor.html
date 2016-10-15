@@ -51,7 +51,6 @@
 		<script type="text/javascript" src="../static/js/io.js"></script>
 		<script type="text/javascript" src="../static/js/charts.js"></script>
 		<script type="text/javascript" src="../static/js/play_table.js"></script>
-		<script type="text/javascript" src="../static/js/select.js"></script>
 
 
 		<script>
@@ -128,8 +127,8 @@
 							<h5><span id="loading-message">Loading Data</span></h5>
 							<div class="progress">
 								<div class="progress-bar progress-bar-info
-									    active" id="loading-progress"
-									style="width: 0%;transition-duration:100ms">
+									    progress-bar-striped active" id="loading-progress"
+									style="width: 0%">
 								</div>
 							</div>
 						</div>
@@ -351,9 +350,6 @@
 				$(function () {
 					$('[data-toggle="tooltip"]').tooltip();
 				});
-				var info_dict = {};
-				
-				play_table.create_table("#play-table", "#play-table-header", constants.column_name_mapping, info_dict);
 				
 				var start_time = performance.now();
 				var q = d3.queue(4);
@@ -371,21 +367,87 @@
 				}
 				q.defer(io.load_players, "https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/players.csv");
 				q.awaitAll(function(error, results) {
+					utilities.update_progress_bar("#loading-progress", 0.3, 0.3);
+					$("#loading-message").text("Creating Charts");
+					console.log("Message should read 'Creating Charts'");
 					console.log("Loading data took ",(performance.now() - start_time)/1000.,"s");
 					var cf = crossfilter(results[0]);
 					for (var i = 1; i < results.length-1; i++)
 					{
 						cf.add(results[i]);
 					}
-					utilities.update_progress_bar("#loading-progress", 0.5, 0.5);
-					$("#loading-message").text("Creating Charts");
-					charts.create_charts(cf, info_dict);
+					var players = results[results.length-1];
+					console.log("Creating crossfilter took ",(performance.now() - start_time)/1000.,"s");
 
-					var player_dim = cf.dimension(function(d){ return d["player_ids"];});
-
-					select.create_selects(cf, player_dim, info_dict);
-					$(".loaded").css("visibility", "visible");
-					$("#pleaseWaitDialog").modal('hide');
+					//Data count
+					setTimeout(function() {
+						charts.data_count(cf, ".dc-data-count");
+						dc.renderAll();
+					}, 0);
+					//charts.data_count(cf, ".dc-data-count");
+					/* charts.data_count(cf, ".dc-data-count");
+					   // Play type
+					   play_type_chart = charts.make_piechart(cf, "play_type", "#play-type-chart", 80, 10);
+					   // WP and WPA
+					   var wp_chart = charts.make_barchart(cf, "wp", "#wp-chart", $("#wp-chart").width(), 200, 1, 'linear');
+					   var wpa_chart = charts.make_barchart(cf, "wpa", "#wpa-chart", $("#wpa-chart").width(), 200, 0.5, 'sqrt');
+					   // Scores
+					   var off_score_chart = charts.make_barchart(cf, "off_score", "#off-score-chart", $("#off-score-chart").width(), 200, 1, 'sqrt');			
+					   var def_score_chart = charts.make_barchart(cf, "def_score", "#def-score-chart", $("#def-score-chart").width(), 200, 1, 'sqrt');
+					   // field position
+					   var down_chart = charts.make_piechart(cf, "down", "#down-chart", 80, 10);
+					   var ytg_chart = charts.make_barchart(cf, "yards_to_go", "#ytg-chart", $("#ytg-chart").width(), 200, 1, 'sqrt');
+					   var yardline_chart = charts.make_barchart(cf, "yardline", "#yardline-chart", $("#ytg-chart").width(), 200, 1, 'linear');
+					   // temporal
+					   var quarter_chart = charts.make_piechart(cf, "quarter", "#quarter-chart", 80, 10);
+					   var time_left_chart = charts.make_barchart(cf, "seconds_left", "#time-left-chart", $("#time-left-chart").width(), 200, 30, 'linear');
+					   var week_chart = charts.make_barchart(cf, "week", "#week-chart", $("#week-chart").width(), 200, 1, 'linear');
+					 */
+					/* function is_prime(number) {
+					   if (number < 2)
+					   {
+					   return false;
+					   }
+					   else
+					   {
+					   for (var i = 2; i < number; i++)
+					   {
+					   if (number % i == 0)
+					   {
+					   return false
+					   }
+					   }
+					   return true;
+					   }
+					   
+					   }
+					   function test_timeout(){
+					   
+					   //utilities.update_progress_bar("#loading-progress", 0.2, 0.5);
+					   for (var j = 0; j < 150000; j++)
+					   {
+					   is_prime(j);
+					   }
+					   console.log("done!");
+					   }
+					   setTimeout(test_timeout, 0); */
+					utilities.update_progress_bar("#loading-progress", 0.8, 0.8);
+					$("#loading-progress").width(0);
+					dc.renderAll();
+					
+					console.log("Rendering charts took ",(performance.now() - start_time)/1000.,"s");
+					/*
+					   var datatable = play_table.create_table("#play-table", "#play-table-header", constants.column_name_mapping);
+					   console.log("Creating datatable took ",(performance.now() - start_time)/1000.,"s");
+					   
+					   //show the dashboard
+					   $(".loaded").css("visibility", "visible");
+					   
+					   console.log("lengths: ", cf.size(), players.length); */
+					
+					$("#loading-message").text("Done!");
+					
+					//$("#pleaseWaitDialog").modal('hide');
 				});
 
 			});
