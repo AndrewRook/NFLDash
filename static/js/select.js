@@ -223,4 +223,4 @@ select.wire_player_selects = function(dim, select_class_name, datatable)
 				    dc.redrawAll();
 				    RefreshTable(datatable, dim);
 				});
-}
+};

@@ -38,6 +38,17 @@ var io = {
 		     {
 			 defense_team = row.home_team;
 		     }
+
+		     //Parse yardline into human-readable form:
+		     var yardline_text = "Opp " + (50 - +row.yardline).toString();
+		     if (+row.yardline == 0)
+		     {
+			 yardline_text = "50";
+		     }
+		     else if (+row.yardline < 0)
+		     {
+			 yardline_text = "Own " + (+row.yardline + 50).toString();
+		     }
 		     
 		     info_dict.unique_seasons[row.season_year] = 1;
 		     info_dict.unique_play_results[row.play_result] = 1;
@@ -52,6 +63,7 @@ var io = {
 			 "down": +row.down,
 			 "yards_to_go": +row.yards_to_go,
 			 "yardline": +row.yardline,
+			 "yardline_text": yardline_text,
 			 "quarter": row.quarter,
 			 "seconds_left": seconds_left,
 			 "week": week,
@@ -59,9 +71,12 @@ var io = {
 			 'away_team': constants.team_mapping[row.away_team],
 			 'offense_team': constants.team_mapping[row.offense_team],
 			 'defense_team': constants.team_mapping[defense_team],
+			 'offense_team_abbrev': row.offense_team,
+			 'defense_team_abbrev': defense_team,
 			 'offense_won': row.offense_won,
 			 'season_year': +row.season_year,
 			 'play_result': row.play_result,
+			 'description': row.description,
 		     };
 		     return parsed_row;
 		 })

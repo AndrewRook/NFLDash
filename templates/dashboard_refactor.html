@@ -420,6 +420,24 @@
 				}
 				setTimeout(create_charts, 0);
 
+				function create_data_download_functionality() {
+					if ("player_dim" in info_dict) {
+						export_filtered_data = function()
+						{
+							var output_data = $.extend(true, [], info_dict.player_dim.top(Infinity));
+							output_data.forEach(function(d) {
+								d['player_ids'] = d['player_ids'].join();
+							});
+							var blob = new Blob([d3.csv.format(output_data)],
+								{type: "text/csv;charset=utf-8"});
+							saveAs(blob, 'plays.csv');
+						}
+					} else {
+						setTimeout(create_data_download_functionality, 250);
+					}
+				}
+				setTimeout(create_data_download_functionality, 0);
+				
 				function refresh_selects() {
 					if ("select_teams_added" in info_dict
 						&& "cf" in info_dict
@@ -483,17 +501,38 @@
 				function wire_player_selects() {
 					if ("general_selects_wired" in info_dict) {
 						select.wire_player_selects(info_dict.player_dim, ".selectpicker.player-select", info_dict.datatable);
-						console.log("done!");
 						info_dict.player_selects_wired = true;
 					} else {
 						setTimeout(wire_player_selects, 250);
 					}
 				}
 				setTimeout(wire_player_selects, 0);
+
+				function wire_table_redraw() {
+					if("player_selects_wired" in info_dict) {
+						play_table.wire_table_redraw(info_dict.datatable, info_dict.player_dim);
+						info_dict.table_redraw_wired = true;
+					} else {
+						setTimeout(wire_table_redraw, 250);
+					}
+				}
+				setTimeout(wire_table_redraw, 0);
+
+				function set_resizable_charts() {
+					if ("resizable_charts" in info_dict) {
+						var resize_charts = charts.set_resizable_charts(info_dict.resizable_charts);
+						window.onresize = resize_charts;
+						info_dict.charts_resized = true;
+						console.log("done!");
+					} else {
+						setTimeout(set_resizable_charts, 250);
+					}
+				}
+				setTimeout(set_resizable_charts, 0);
 					
 				
 				function show_dashboard() {
-					if ("player_selects_wired" in info_dict) {
+					if ("table_redraw_wired" in info_dict && "charts_resized" in info_dict) {
 						$(".loaded").css("visibility", "visible");
 						$("#pleaseWaitDialog").modal('hide');
 					} else {
@@ -501,6 +540,7 @@
 					}
 				}
 				setTimeout(show_dashboard, 0);
+
 
 			});
 		</script>

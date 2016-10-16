@@ -95,5 +95,27 @@ charts.create_charts = function(info_dict)
     var week_chart = charts.make_barchart(info_dict.cf, "week", "#week-chart",
 					  $("#week-chart").width(), 200, 1, 'linear');
     dc.renderAll();
-  
+
+    info_dict.resizable_charts = [wp_chart, wpa_chart,
+				  off_score_chart, def_score_chart,
+				  ytg_chart, yardline_chart,
+				  time_left_chart, week_chart];
+};
+
+charts.set_resizable_charts = function(chart_list) {
+    return function()
+    {
+	for (var i = 0; i < chart_list.length; i++)
+	{
+	    var width = 100;
+	    if ($("#"+chart_list[i].anchorName()).width() > 100)
+	    {
+		width = $("#"+chart_list[i].anchorName()).width();
+	    }
+	    chart_list[i]
+		.width(width)
+		.rescale()
+		.redraw();
+	}
+    }
 };

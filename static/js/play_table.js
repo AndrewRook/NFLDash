@@ -36,3 +36,18 @@ play_table.create_table = function(table_id, table_header_id, column_name_mappin
 	info_dict.datatable = datatable;
     }, 50);
 };
+
+play_table.wire_table_redraw = function(datatable, player_dim) {
+    var curryed_refreshtable = (
+	function(datatable, player_dim)
+	{
+	    return function()
+	    {
+		return RefreshTable(datatable, player_dim);
+	    }
+	})(datatable, player_dim);
+    for (var i = 0; i < dc.chartRegistry.list().length; i++) {
+	var chartI = dc.chartRegistry.list()[i];
+	chartI.on("filtered", curryed_refreshtable);
+    }
+};
