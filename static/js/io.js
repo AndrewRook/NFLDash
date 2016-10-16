@@ -1,13 +1,18 @@
 var io = {
-    load_plays: function(filename, progress_url, progress_bar_id, callback)
+    load_plays: function(filename, progress_url, progress_bar_id, info_dict, callback)
     {
 	var max_progress_fraction = 0.30;
 	var progress_increment = 0.05;
+	info_dict.unique_seasons = {};
+	info_dict.unique_play_results = {};
 	//var count = 0;
 	d3.csv(filename)
 	    .row(function(row)
 		 {
 
+		     //Parsing player ids:
+		     player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
+		     
 		     //Converting to offense/defense score:
 		     var off_score = +row.curr_home_score;
 		     var def_score = +row.curr_away_score;
@@ -26,8 +31,19 @@ var io = {
 
 		     //Convert seconds elapsed to time remaining:
 		     var seconds_left = 900 - +row.seconds_elapsed;
+
+		     //Find defense:
+		     var defense_team = row.away_team;
+		     if (row.offense_team == row.away_team)
+		     {
+			 defense_team = row.home_team;
+		     }
+		     
+		     info_dict.unique_seasons[row.season_year] = 1;
+		     info_dict.unique_play_results[row.play_result] = 1;
 		     
 		     parsed_row = {
+			 'player_ids': player_ids,
 			 'play_type': row.play_type,
 			 "wp": +row.wp*100.,
 			 "wpa": +row.wpa*100.,
@@ -39,6 +55,13 @@ var io = {
 			 "quarter": row.quarter,
 			 "seconds_left": seconds_left,
 			 "week": week,
+			 'home_team': constants.team_mapping[row.home_team],
+			 'away_team': constants.team_mapping[row.away_team],
+			 'offense_team': constants.team_mapping[row.offense_team],
+			 'defense_team': constants.team_mapping[defense_team],
+			 'offense_won': row.offense_won,
+			 'season_year': +row.season_year,
+			 'play_result': row.play_result,
 		     };
 		     return parsed_row;
 		 })
@@ -54,11 +77,33 @@ var io = {
 		     callback(null, player_data);
 		 });
     },
-    load_players: function(filename, callback)
+    load_players: function(filename, info_dict, callback)
     {
+	info_dict.player_dict = {};
 	d3.csv(filename)
 	    .row(function(row)
 		 {
+		     info_dict.player_dict[row.player_id] = {"name": row.full_name, "position": row.position};
+		     if (row["position"] == "QB")
+		     {
+		     	 $("#qb-select").append("<option value=\""+row["player_id"]+"\">"+row["full_name"]+"</option>");
+		     }
+		     else if (row["position"] == "RB" || row["position"] == "FB")
+		     {
+		     	 $("#rb-select").append("<option value=\""+row["player_id"]+"\">"+row["full_name"]+"</option>");
+		     }
+		     else if (row["position"] == "WR" || row["position"] == "TE")
+		     {
+		     	 $("#receiver-select").append("<option value=\""+row["player_id"]+"\">"+row["full_name"]+"</option>");
+		     }
+		     else if (row["position"] == "DE" || row["position"] == "DT" || row["position"] == "LB" || row["position"] == "CB" || row["position"] == "DB" || row["position"] == "FS" || row["position"] == "ILB" || row["position"] == "MLB" || row["position"] == "NT" || row["position"] == "OLB" || row["position"] == "SS")
+		     {
+		     	 $("#d-select").append("<option value=\""+row["player_id"]+"\">"+row["full_name"]+"</option>");
+		     }
+		     else
+		     {
+		     	 $("#other-select").append("<option value=\""+row["player_id"]+"\">"+row["full_name"]+"</option>");
+		     }
 		     return row;
 		 })
 	    .get(function(error, player_data)

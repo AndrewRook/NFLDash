@@ -645,23 +645,25 @@ var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%2
 								{
 									$("#season-select").append("<option value=\""+season+"\">"+season+"</option>");
 								}
-								$("#season-select").selectpicker('refresh');
 
 								var result_dim = make_season_result_selector(cf, "#result-select", "play_result", datatable, player_dim);
 								for (var result in unique_play_results)
 								{
 									$("#result-select").append("<option value=\""+result+"\">"+result+"</option>");
 								}
-								$("#result-select").selectpicker('refresh');
 			
+								$("#team-select").selectpicker('refresh');
+								$("#season-select").selectpicker('refresh');
+								$("#result-select").selectpicker('refresh');
 								$("#qb-select").selectpicker('refresh');
 								$("#rb-select").selectpicker('refresh');
 								$("#receiver-select").selectpicker('refresh');
 								$("#d-select").selectpicker('refresh');
 								$("#other-select").selectpicker('refresh');
+								
 								make_player_selector(player_dim, ".selectpicker.player-select", datatable);
 
-
+								//at this point.
 								var curryed_refreshtable = (
 									function(datatable, player_dim)
 									{

@@ -353,8 +353,6 @@
 				});
 				var info_dict = {};
 				
-				play_table.create_table("#play-table", "#play-table-header", constants.column_name_mapping, info_dict);
-				
 				var start_time = performance.now();
 				var q = d3.queue(4);
 				var progress_url = "";
@@ -367,26 +365,142 @@
 					{
 						progress_url = url;
 					}
-					q.defer(io.load_plays,url, progress_url, "#loading-progress");
+					q.defer(io.load_plays,url, progress_url, "#loading-progress", info_dict);
 				}
-				q.defer(io.load_players, "https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/players.csv");
+				q.defer(io.load_players,
+					"https://raw.githubusercontent.com/AndrewRook/NFLDash-data/master/players.csv",
+					info_dict);
 				q.awaitAll(function(error, results) {
-					console.log("Loading data took ",(performance.now() - start_time)/1000.,"s");
 					var cf = crossfilter(results[0]);
-					for (var i = 1; i < results.length-1; i++)
+					for (var i = 1; i < results.length - 1; i++)
 					{
 						cf.add(results[i]);
 					}
-					utilities.update_progress_bar("#loading-progress", 0.5, 0.5);
-					$("#loading-message").text("Creating Charts");
-					charts.create_charts(cf, info_dict);
+					info_dict.cf = cf;
+					info_dict.players = results[results.length - 1];
 
-					var player_dim = cf.dimension(function(d){ return d["player_ids"];});
+					setTimeout(function () {
+						utilities.update_progress_bar("#loading-progress", 0.3, 0.3);
+						$("#loading-message").text("Creating Charts");}, 0);
+					
 
-					select.create_selects(cf, player_dim, info_dict);
-					$(".loaded").css("visibility", "visible");
-					$("#pleaseWaitDialog").modal('hide');
 				});
+
+				function create_table() {
+					var start = performance.now();
+					play_table.create_table("#play-table", "#play-table-header",
+						constants.column_name_mapping, info_dict);
+					console.log("create_table took ", (performance.now() - start) / 1000., "s");
+				}
+				setTimeout(create_table, 0);
+
+				function add_teams_to_select() {
+					var start = performance.now();
+					for (var i in constants.sorted_team_names)
+					{
+						$("#team-select").append(
+							"<option value=\""+constants.sorted_team_names[i]+"\">"+constants.sorted_team_names[i]+"</option>");
+					}
+					info_dict.select_teams_added = true;
+					console.log("add_teams_to_select took ", (performance.now() - start) / 1000., "s");
+				}
+				setTimeout(add_teams_to_select, 0);
+
+				function create_charts() {
+					if ("cf" in info_dict) {
+						var start = performance.now();
+						charts.create_charts(info_dict);
+						
+						info_dict.player_dim = info_dict.cf.dimension(function(d){ return d["player_ids"];});
+						info_dict.charts_created = true;
+						console.log("create_charts took ", (performance.now() - start) / 1000., "s");
+					} else {
+						setTimeout(create_charts, 250);
+					}
+				}
+				setTimeout(create_charts, 0);
+
+				function refresh_selects() {
+					if ("select_teams_added" in info_dict
+						&& "cf" in info_dict
+						&& "season_select_created" in info_dict
+						&& "play_result_select_created" in info_dict) {
+						$("#team-select").selectpicker('refresh');
+						$("#season-select").selectpicker('refresh');
+						$("#result-select").selectpicker('refresh');
+						$("#qb-select").selectpicker('refresh');
+						$("#rb-select").selectpicker('refresh');
+						$("#receiver-select").selectpicker('refresh');
+						$("#d-select").selectpicker('refresh');
+						$("#other-select").selectpicker('refresh');
+					} else {
+						setTimeout(refresh_selects, 250);
+					}
+				}
+				setTimeout(refresh_selects, 0);
+
+				function create_season_select() {
+					//cf needs to exist because unique_seasons exists while
+					//data is still loading.
+					if ("unique_seasons" in info_dict && "cf" in info_dict) {
+						for (var season in info_dict.unique_seasons)
+						{
+							$("#season-select").append("<option value=\""+season+"\">"+season+"</option>");
+						}
+						info_dict.season_select_created = true;
+					} else {
+						setTimeout(create_season_select, 250);
+					}	
+				}
+				setTimeout(create_season_select, 0);
+
+				function create_play_result_select() {
+					//cf needs to exist because unique_seasons exists while
+					//data is still loading.
+					if ("unique_play_results" in info_dict && "cf" in info_dict) {						
+						for (var result in info_dict.unique_play_results)
+						{
+							$("#result-select").append("<option value=\""+result+"\">"+result+"</option>");
+						}
+						info_dict.play_result_select_created = true;
+					} else {
+						setTimeout(create_play_result_select, 250);
+					}	
+				}
+				setTimeout(create_play_result_select, 0);
+
+				function wire_general_selects() {
+					if ("charts_created" in info_dict && "datatable" in info_dict)
+					{
+						select.wire_general_selects(info_dict.cf, info_dict.datatable, info_dict.player_dim);
+						info_dict.general_selects_wired = true;
+					} else {
+						setTimeout(wire_general_selects, 250);
+					}
+				}
+				setTimeout(wire_general_selects, 0);
+
+				function wire_player_selects() {
+					if ("general_selects_wired" in info_dict) {
+						select.wire_player_selects(info_dict.player_dim, ".selectpicker.player-select", info_dict.datatable);
+						console.log("done!");
+						info_dict.player_selects_wired = true;
+					} else {
+						setTimeout(wire_player_selects, 250);
+					}
+				}
+				setTimeout(wire_player_selects, 0);
+					
+				
+				function show_dashboard() {
+					if ("player_selects_wired" in info_dict) {
+						$(".loaded").css("visibility", "visible");
+						$("#pleaseWaitDialog").modal('hide');
+					} else {
+						setTimeout(show_dashboard, 250);
+					}
+				}
+				setTimeout(show_dashboard, 0);
 
 			});
 		</script>

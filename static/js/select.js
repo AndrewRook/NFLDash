@@ -152,83 +152,75 @@ select.make_season_result_selector = function(ndx, select_name, column_name, dat
     return dim;
 };
 
-select.create_selects = function(cf, player_dim, info_dict) {
-    if ("datatable" in info_dict) {
-	for (var i in constants.sorted_team_names)
-	{
-	    $("#team-select").append("<option value=\""+constants.sorted_team_names[i]+"\">"+constants.sorted_team_names[i]+"</option>");
-	}
-	$("#team-select").selectpicker('refresh');
-	
-	var team_dim = select.make_team_selector(cf, "#team-select", "#team-offense-select", "home_team",
-					  "away_team", info_dict.datatable, player_dim);
-	
-	var team_offense_dim = select.make_offense_selector(cf, "#team-offense-select", "#team-select",
-						     "offense_team", "defense_team", info_dict.datatable, player_dim);
-	
-	var offense_home_dim = select.make_home_selector(cf, "#offense-home-select",
-						  "home_team", "offense_team", info_dict.datatable, player_dim);
-	
-	var offense_won_dim = select.make_offense_won_selector(cf, "#offense-won-select",
-							"offense_won", info_dict.datatable, player_dim);
-	
-	var season_dim = select.make_season_result_selector(cf, "#season-select", "season_year", info_dict.datatable, player_dim);
-	for (var season in constants.unique_seasons)
-	{
-	    $("#season-select").append("<option value=\""+season+"\">"+season+"</option>");
-	}
-	$("#season-select").selectpicker('refresh');
-	
-	var result_dim = select.make_season_result_selector(cf, "#result-select", "play_result", datatable, player_dim);
-	for (var result in constants.unique_play_results)
-	{
-	    $("#result-select").append("<option value=\""+result+"\">"+result+"</option>");
-	}
-	$("#result-select").selectpicker('refresh');
-	
-	$("#qb-select").selectpicker('refresh');
-	$("#rb-select").selectpicker('refresh');
-	$("#receiver-select").selectpicker('refresh');
-	$("#d-select").selectpicker('refresh');
-	$("#other-select").selectpicker('refresh');
-	// make_player_selector(player_dim, ".selectpicker.player-select", datatable);
-	// for (var i in sorted_team_names)
-	// {
-	//     $("#team-select").append("<option value=\""+sorted_team_names[i]+"\">"+sorted_team_names[i]+"</option>");
-	// }
-	// $("#team-select").selectpicker('refresh');
-	
-	// var team_dim = make_team_selector(cf, "#team-select", "#team-offense-select", "home_team", "away_team", datatable, player_dim);
-	
-	// var team_offense_dim = make_offense_selector(cf, "#team-offense-select", "#team-select", "offense_team", "defense_team", datatable, player_dim);
-	
-	// var offense_home_dim = make_home_selector(cf, "#offense-home-select",
-	// 					  "home_team", "offense_team", datatable, player_dim);
-	
-	// var offense_won_dim = make_offense_won_selector(cf, "#offense-won-select",
-	// 						"offense_won", datatable, player_dim);
-	
-	// var season_dim = make_season_result_selector(cf, "#season-select", "season_year", datatable, player_dim);
-	// for (var season in unique_seasons)
-	// {
-	//     $("#season-select").append("<option value=\""+season+"\">"+season+"</option>");
-	// }
-	// $("#season-select").selectpicker('refresh');
-	
-	// var result_dim = make_season_result_selector(cf, "#result-select", "play_result", datatable, player_dim);
-	// for (var result in unique_play_results)
-	// {
-	//     $("#result-select").append("<option value=\""+result+"\">"+result+"</option>");
-	// }
-	// $("#result-select").selectpicker('refresh');
-	
-	// $("#qb-select").selectpicker('refresh');
-	// $("#rb-select").selectpicker('refresh');
-	// $("#receiver-select").selectpicker('refresh');
-	// $("#d-select").selectpicker('refresh');
-	// $("#other-select").selectpicker('refresh');
-	// make_player_selector(player_dim, ".selectpicker.player-select", datatable);
-    } else {
-	setTimeout(select.create_selects(cf, info_dict), 250);
-    }
-    };
+select.wire_general_selects = function(cf, datatable, player_dim) {
+    var team_dim = select.make_team_selector(cf, "#team-select", "#team-offense-select", "home_team", "away_team",
+				      datatable, player_dim);
+    
+    var team_offense_dim = select.make_offense_selector(cf, "#team-offense-select", "#team-select",
+    						 "offense_team", "defense_team",
+    						 datatable, player_dim);
+    
+    var offense_home_dim = select.make_home_selector(cf, "#offense-home-select",
+    					      "home_team", "offense_team",
+    					      datatable, player_dim);
+    
+    var offense_won_dim = select.make_offense_won_selector(cf, "#offense-won-select",
+    						    "offense_won", datatable, player_dim);
+    
+    var season_dim = select.make_season_result_selector(cf, "#season-select", "season_year",
+    						 datatable, player_dim);
+    
+    var result_dim = select.make_season_result_selector(cf, "#result-select", "play_result",
+    						 datatable, player_dim);
+
+};
+
+select.wire_player_selects = function(dim, select_class_name, datatable)
+{
+    $(select_class_name).change(function()
+				{
+				    var player_dicts = [];
+				    $(select_class_name).each(function()
+							      {
+								  $(this).siblings("button").css("background", "rgb(255, 255, 255) linear-gradient(rgb(255, 255, 255) 0px, rgb(224, 224, 224) 100%) ").css("color", "black").css("text-shadow", "0 1px 0 #fff");
+								  var players = $(this).val();
+								  if (players.length > 0)
+								  {
+								      $(this).siblings("button").css("background", "#3182BD").css("color", "white").css("text-shadow", "0px 0px 0px #fff");
+								      var player_dict = {};
+								      for (var i in players)
+								      {
+									  player_dict[players[i]] = 1;
+								      }
+								      player_dicts.push(player_dict);
+								  }
+							      });
+				    dim.filterAll();
+				    $('#player-reset').css('visibility','hidden');
+				    if (player_dicts.length > 0)
+				    {
+					$('#player-reset').css('visibility','visible');
+					dim.filter(function(d) {
+					    for (var i in player_dicts)
+					    {
+						var found = false;
+						for (var j in d)
+						{
+						    if (player_dicts[i][d[j]] != null)
+						    {
+							found = true;
+							break;
+						    }
+						}
+						if (found === false)
+						{
+						    return false;
+						}
+					    }
+					    return true;
+					});
+				    }
+				    dc.redrawAll();
+				    RefreshTable(datatable, dim);
+				});
+}
