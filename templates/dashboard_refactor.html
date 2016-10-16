@@ -352,8 +352,8 @@
 					$('[data-toggle="tooltip"]').tooltip();
 				});
 				var info_dict = {};
+				info_dict.start = performance.now();
 				
-				var start_time = performance.now();
 				var q = d3.queue(4);
 				var progress_url = "";
 				for (var i = 0; i < constants.seasons.length; i++)
@@ -378,7 +378,8 @@
 					}
 					info_dict.cf = cf;
 					info_dict.players = results[results.length - 1];
-
+					
+					console.log("awaitAll took ", (performance.now() - info_dict.start) / 1000., "s");
 					setTimeout(function () {
 						utilities.update_progress_bar("#loading-progress", 0.3, 0.3);
 						$("#loading-message").text("Creating Charts");}, 0);
@@ -443,14 +444,16 @@
 						&& "cf" in info_dict
 						&& "season_select_created" in info_dict
 						&& "play_result_select_created" in info_dict) {
-						$("#team-select").selectpicker('refresh');
-						$("#season-select").selectpicker('refresh');
-						$("#result-select").selectpicker('refresh');
-						$("#qb-select").selectpicker('refresh');
-						$("#rb-select").selectpicker('refresh');
-						$("#receiver-select").selectpicker('refresh');
-						$("#d-select").selectpicker('refresh');
-						$("#other-select").selectpicker('refresh');
+							var start = performance.now();
+							$("#team-select").selectpicker('refresh');
+							$("#season-select").selectpicker('refresh');
+							$("#result-select").selectpicker('refresh');
+							$("#qb-select").selectpicker('refresh');
+							$("#rb-select").selectpicker('refresh');
+							$("#receiver-select").selectpicker('refresh');
+							$("#d-select").selectpicker('refresh');
+							$("#other-select").selectpicker('refresh');
+							console.log("refresh_selects took ", (performance.now() - start) / 1000., "s");
 					} else {
 						setTimeout(refresh_selects, 250);
 					}
@@ -461,11 +464,13 @@
 					//cf needs to exist because unique_seasons exists while
 					//data is still loading.
 					if ("unique_seasons" in info_dict && "cf" in info_dict) {
+						var start = performance.now();
 						for (var season in info_dict.unique_seasons)
 						{
 							$("#season-select").append("<option value=\""+season+"\">"+season+"</option>");
 						}
 						info_dict.season_select_created = true;
+						console.log("create_season_select took ", (performance.now() - start) / 1000., "s");
 					} else {
 						setTimeout(create_season_select, 250);
 					}	
@@ -476,11 +481,13 @@
 					//cf needs to exist because unique_seasons exists while
 					//data is still loading.
 					if ("unique_play_results" in info_dict && "cf" in info_dict) {						
+						var start = performance.now();
 						for (var result in info_dict.unique_play_results)
 						{
 							$("#result-select").append("<option value=\""+result+"\">"+result+"</option>");
 						}
 						info_dict.play_result_select_created = true;
+						console.log("create_play_result_select took ", (performance.now() - start) / 1000., "s");
 					} else {
 						setTimeout(create_play_result_select, 250);
 					}	
@@ -490,8 +497,10 @@
 				function wire_general_selects() {
 					if ("charts_created" in info_dict && "datatable" in info_dict)
 					{
+						var start = performance.now();
 						select.wire_general_selects(info_dict.cf, info_dict.datatable, info_dict.player_dim);
 						info_dict.general_selects_wired = true;
+						console.log("wire_general_selects took ", (performance.now() - start) / 1000., "s");
 					} else {
 						setTimeout(wire_general_selects, 250);
 					}
@@ -500,8 +509,10 @@
 
 				function wire_player_selects() {
 					if ("general_selects_wired" in info_dict) {
+						var start = performance.now();
 						select.wire_player_selects(info_dict.player_dim, ".selectpicker.player-select", info_dict.datatable);
 						info_dict.player_selects_wired = true;
+						console.log("wire_player_selects took ", (performance.now() - start) / 1000., "s");
 					} else {
 						setTimeout(wire_player_selects, 250);
 					}
@@ -510,8 +521,10 @@
 
 				function wire_table_redraw() {
 					if("player_selects_wired" in info_dict) {
+						var start = performance.now();
 						play_table.wire_table_redraw(info_dict.datatable, info_dict.player_dim);
 						info_dict.table_redraw_wired = true;
+						console.log("wire_table_redraw took ", (performance.now() - start) / 1000., "s");
 					} else {
 						setTimeout(wire_table_redraw, 250);
 					}
@@ -520,10 +533,11 @@
 
 				function set_resizable_charts() {
 					if ("resizable_charts" in info_dict) {
+						var start = performance.now();
 						var resize_charts = charts.set_resizable_charts(info_dict.resizable_charts);
 						window.onresize = resize_charts;
 						info_dict.charts_resized = true;
-						console.log("done!");
+						console.log("set_resizable_charts took ", (performance.now() - start) / 1000., "s");
 					} else {
 						setTimeout(set_resizable_charts, 250);
 					}
@@ -535,6 +549,7 @@
 					if ("table_redraw_wired" in info_dict && "charts_resized" in info_dict) {
 						$(".loaded").css("visibility", "visible");
 						$("#pleaseWaitDialog").modal('hide');
+						console.log("Entire loading process took ", (performance.now() - info_dict.start)/1000., "s");
 					} else {
 						setTimeout(show_dashboard, 250);
 					}

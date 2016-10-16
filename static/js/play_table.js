@@ -43,7 +43,7 @@ play_table.wire_table_redraw = function(datatable, player_dim) {
 	{
 	    return function()
 	    {
-		return RefreshTable(datatable, player_dim);
+		return play_table.RefreshTable(datatable, player_dim);
 	    }
 	})(datatable, player_dim);
     for (var i = 0; i < dc.chartRegistry.list().length; i++) {
@@ -51,3 +51,25 @@ play_table.wire_table_redraw = function(datatable, player_dim) {
 	chartI.on("filtered", curryed_refreshtable);
     }
 };
+
+play_table.RefreshTable = function(datatable, player_dim)
+{
+    dc.events.trigger(function () {
+	//console.log("test", player_dim.top(1000).length);
+	if (player_dim.top(1001).length < 1001)
+	{
+	    datatable.fnSettings().oLanguage.sEmptyTable = "All plays filtered";
+	    datatable.api()
+		.clear()
+		.rows.add( player_dim.top(Infinity) )
+		.draw();
+	}
+	else
+	{
+	    datatable.fnSettings().oLanguage.sEmptyTable = "Too many plays to display (> 1000)";
+	    datatable.api()
+		.clear()
+		.draw();
+	}
+    });
+}

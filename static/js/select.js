@@ -8,7 +8,7 @@ select.make_team_selector = function(ndx, select_name, offense_select_name, home
 			  {
 			      $(this).siblings("button").css("background", "rgb(255, 255, 255) linear-gradient(rgb(255, 255, 255) 0px, rgb(224, 224, 224) 100%) ").css("color", "black").css("text-shadow", "0 1px 0 #fff");
 			      $(offense_select_name).prop("disabled", false);
-			      show_hide_general_reset();
+			      utilities.show_hide_general_reset();
 			      dim.filterAll();
 			      var values = $(this).val();
 			      if (values.length > 0)
@@ -23,7 +23,7 @@ select.make_team_selector = function(ndx, select_name, offense_select_name, home
 				  $(offense_select_name).prop("disabled", true);
 			      }
 			      dc.redrawAll();
-			      RefreshTable(datatable, player_dim);
+			      play_table.RefreshTable(datatable, player_dim);
 			      $(offense_select_name).trigger("change");
 			      $(offense_select_name).selectpicker("refresh");
 			      
@@ -37,7 +37,7 @@ select.make_offense_selector = function(ndx, select_name, team_select_name, offe
     $(select_name).change(function()
 			  {
 			      $(this).siblings("button").css("background", "rgb(255, 255, 255) linear-gradient(rgb(255, 255, 255) 0px, rgb(224, 224, 224) 100%) ").css("color", "black").css("text-shadow", "0 1px 0 #fff");
-			      show_hide_general_reset();
+			      utilities.show_hide_general_reset();
 			      dim.filterAll();
 			      var values = $(this).val();
 			      var selected_teams = $(team_select_name).val();
@@ -62,7 +62,7 @@ select.make_offense_selector = function(ndx, select_name, team_select_name, offe
 				  }
 			      } 
 			      dc.redrawAll();
-			      RefreshTable(datatable, player_dim);
+			      play_table.RefreshTable(datatable, player_dim);
 			  });
 }
 
@@ -72,7 +72,7 @@ select.make_home_selector = function(ndx, select_name, home_column, offense_colu
     $(select_name).change(function()
 			  {
 			      $(this).siblings("button").css("background", "rgb(255, 255, 255) linear-gradient(rgb(255, 255, 255) 0px, rgb(224, 224, 224) 100%) ").css("color", "black").css("text-shadow", "0 1px 0 #fff");
-			      show_hide_general_reset();
+			      utilities.show_hide_general_reset();
 			      dim.filterAll();
 			      var values = $(this).val();
 			      if (values.length != 0)
@@ -92,7 +92,7 @@ select.make_home_selector = function(ndx, select_name, home_column, offense_colu
 				  });
 			      }
 			      dc.redrawAll();
-			      RefreshTable(datatable, player_dim);
+			      play_table.RefreshTable(datatable, player_dim);
 			  });
     
     return dim;
@@ -105,7 +105,7 @@ select.make_offense_won_selector = function(ndx, select_name, offense_won_column
     $(select_name).change(function()
 			  {
 			      $(this).siblings("button").css("background", "rgb(255, 255, 255) linear-gradient(rgb(255, 255, 255) 0px, rgb(224, 224, 224) 100%) ").css("color", "black").css("text-shadow", "0 1px 0 #fff");
-			      show_hide_general_reset();
+			      utilities.show_hide_general_reset();
 			      dim.filterAll()
 			      var values = $(this).val();
 			      if (values.length != 0)
@@ -124,7 +124,7 @@ select.make_offense_won_selector = function(ndx, select_name, offense_won_column
 				  });
 			      }
 			      dc.redrawAll();
-			      RefreshTable(datatable, player_dim);
+			      play_table.RefreshTable(datatable, player_dim);
 			  });
     return dim;
 };
@@ -136,7 +136,7 @@ select.make_season_result_selector = function(ndx, select_name, column_name, dat
     $(select_name).change(function()
 			  {
 			      $(this).siblings("button").css("background", "rgb(255, 255, 255) linear-gradient(rgb(255, 255, 255) 0px, rgb(224, 224, 224) 100%) ").css("color", "black").css("text-shadow", "0 1px 0 #fff");
-			      show_hide_general_reset();
+			      utilities.show_hide_general_reset();
 			      dim.filterAll();
 			      var values = $(this).val();
 			      if (values.length > 0)
@@ -147,7 +147,7 @@ select.make_season_result_selector = function(ndx, select_name, column_name, dat
 				  });
 			      }
 			      dc.redrawAll();
-			      RefreshTable(datatable, player_dim);
+			      play_table.RefreshTable(datatable, player_dim);
 			  });
     return dim;
 };
@@ -221,6 +221,6 @@ select.wire_player_selects = function(dim, select_class_name, datatable)
 					});
 				    }
 				    dc.redrawAll();
-				    RefreshTable(datatable, dim);
+				    play_table.RefreshTable(datatable, dim);
 				});
 };
