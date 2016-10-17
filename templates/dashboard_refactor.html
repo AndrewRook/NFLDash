@@ -388,22 +388,18 @@
 				});
 
 				function create_table() {
-					var start = performance.now();
 					play_table.create_table("#play-table", "#play-table-header",
 						constants.column_name_mapping, info_dict);
-					console.log("create_table took ", (performance.now() - start) / 1000., "s");
 				}
 				setTimeout(create_table, 0);
 
 				function add_teams_to_select() {
-					var start = performance.now();
 					for (var i in constants.sorted_team_names)
 					{
 						$("#team-select").append(
 							"<option value=\""+constants.sorted_team_names[i]+"\">"+constants.sorted_team_names[i]+"</option>");
 					}
 					info_dict.select_teams_added = true;
-					console.log("add_teams_to_select took ", (performance.now() - start) / 1000., "s");
 				}
 				setTimeout(add_teams_to_select, 0);
 
@@ -445,7 +441,6 @@
 						&& "cf" in info_dict
 						&& "season_select_created" in info_dict
 						&& "play_result_select_created" in info_dict) {
-							var start = performance.now();
 							$("#team-select").selectpicker('refresh');
 							$("#season-select").selectpicker('refresh');
 							$("#result-select").selectpicker('refresh');
@@ -454,7 +449,6 @@
 							$("#receiver-select").selectpicker('refresh');
 							$("#d-select").selectpicker('refresh');
 							$("#other-select").selectpicker('refresh');
-							console.log("refresh_selects took ", (performance.now() - start) / 1000., "s");
 					} else {
 						setTimeout(refresh_selects, 250);
 					}
@@ -465,13 +459,11 @@
 					//cf needs to exist because unique_seasons exists while
 					//data is still loading.
 					if ("unique_seasons" in info_dict && "cf" in info_dict) {
-						var start = performance.now();
 						for (var season in info_dict.unique_seasons)
 						{
 							$("#season-select").append("<option value=\""+season+"\">"+season+"</option>");
 						}
 						info_dict.season_select_created = true;
-						console.log("create_season_select took ", (performance.now() - start) / 1000., "s");
 					} else {
 						setTimeout(create_season_select, 250);
 					}	
@@ -481,14 +473,12 @@
 				function create_play_result_select() {
 					//cf needs to exist because unique_seasons exists while
 					//data is still loading.
-					if ("unique_play_results" in info_dict && "cf" in info_dict) {						
-						var start = performance.now();
+					if ("unique_play_results" in info_dict && "cf" in info_dict) {	
 						for (var result in info_dict.unique_play_results)
 						{
 							$("#result-select").append("<option value=\""+result+"\">"+result+"</option>");
 						}
 						info_dict.play_result_select_created = true;
-						console.log("create_play_result_select took ", (performance.now() - start) / 1000., "s");
 					} else {
 						setTimeout(create_play_result_select, 250);
 					}	
@@ -510,10 +500,8 @@
 
 				function wire_player_selects() {
 					if ("general_selects_wired" in info_dict) {
-						var start = performance.now();
 						select.wire_player_selects(info_dict.player_dim, ".selectpicker.player-select", info_dict.datatable);
 						info_dict.player_selects_wired = true;
-						console.log("wire_player_selects took ", (performance.now() - start) / 1000., "s");
 					} else {
 						setTimeout(wire_player_selects, 250);
 					}
@@ -522,10 +510,8 @@
 
 				function wire_table_redraw() {
 					if("player_selects_wired" in info_dict) {
-						var start = performance.now();
 						play_table.wire_table_redraw(info_dict.datatable, info_dict.player_dim);
 						info_dict.table_redraw_wired = true;
-						console.log("wire_table_redraw took ", (performance.now() - start) / 1000., "s");
 					} else {
 						setTimeout(wire_table_redraw, 250);
 					}
@@ -534,11 +520,9 @@
 
 				function set_resizable_charts() {
 					if ("resizable_charts" in info_dict) {
-						var start = performance.now();
 						var resize_charts = charts.set_resizable_charts(info_dict.resizable_charts);
 						window.onresize = resize_charts;
 						info_dict.charts_resized = true;
-						console.log("set_resizable_charts took ", (performance.now() - start) / 1000., "s");
 					} else {
 						setTimeout(set_resizable_charts, 250);
 					}
