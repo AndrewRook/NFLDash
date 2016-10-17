@@ -11,6 +11,7 @@ var io = {
 		 {
 
 		     //Parsing player ids:
+		     //player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').replace("-","").split(",").map(Number);
 		     player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
 		     
 		     //Converting to offense/defense score:
@@ -98,6 +99,8 @@ var io = {
 	d3.csv(filename)
 	    .row(function(row)
 		 {
+		     //row.player_id = row.player_id.replace("-","");
+		     //row.player_id = +row.player_id;
 		     info_dict.player_dict[row.player_id] = {"name": row.full_name, "position": row.position};
 		     if (row["position"] == "QB")
 		     {
