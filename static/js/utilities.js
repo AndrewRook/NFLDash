@@ -32,11 +32,9 @@ utilities = {
 	var curr_width = $(progress_bar_id).width();
 	var max_width = $(progress_bar_id).offsetParent().width();
 	var new_width = curr_width + increment_fraction * max_width;
-	//console.log($(progress_bar_id).width());
 	if (new_width > max_fraction * max_width)
 	{
 	    new_width = max_fraction * max_width;
-	    //console.log(curr_width, new_width);
 	}
 	$(progress_bar_id).width(new_width);
     }

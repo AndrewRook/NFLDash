@@ -129,7 +129,7 @@
 							<div class="progress">
 								<div class="progress-bar progress-bar-info
 									    active" id="loading-progress"
-									style="width: 0%;transition-duration:100ms">
+									style="width: 0%">
 								</div>
 							</div>
 						</div>
@@ -380,18 +380,18 @@
 					info_dict.players = results[results.length - 1];
 					
 					console.log("awaitAll took ", (performance.now() - info_dict.start) / 1000., "s");
-					setTimeout(function () {
-						utilities.update_progress_bar("#loading-progress", 0.3, 0.3);
-						$("#loading-message").text("Creating Charts");}, 0);
-					
+					$("#loading-message").text("Creating Charts");
+					utilities.update_progress_bar("#loading-progress", 0.33, 0.33);
+
+					setTimeout(create_table, 250);
 
 				});
 
 				function create_table() {
 					play_table.create_table("#play-table", "#play-table-header",
 						constants.column_name_mapping, info_dict);
+					setTimeout(add_teams_to_select, 0);
 				}
-				setTimeout(create_table, 0);
 
 				function add_teams_to_select() {
 					for (var i in constants.sorted_team_names)
@@ -400,8 +400,8 @@
 							"<option value=\""+constants.sorted_team_names[i]+"\">"+constants.sorted_team_names[i]+"</option>");
 					}
 					info_dict.select_teams_added = true;
+					setTimeout(create_charts, 0);
 				}
-				setTimeout(add_teams_to_select, 0);
 
 				function create_charts() {
 					if ("cf" in info_dict) {
@@ -412,11 +412,15 @@
 						//info_dict.player_dim = null;
 						info_dict.charts_created = true;
 						console.log("create_charts took ", (performance.now() - start) / 1000., "s");
+						$("#loading-message").text("Wiring Filters");
+						utilities.update_progress_bar("#loading-progress", 0.67, 0.67);
+						setTimeout(create_data_download_functionality, 250);
+						
+						
 					} else {
 						setTimeout(create_charts, 250);
 					}
 				}
-				setTimeout(create_charts, 0);
 
 				function create_data_download_functionality() {
 					if ("player_dim" in info_dict) {
@@ -430,11 +434,41 @@
 								{type: "text/csv;charset=utf-8"});
 							saveAs(blob, 'plays.csv');
 						}
+						setTimeout(create_season_select, 0);
 					} else {
 						setTimeout(create_data_download_functionality, 250);
 					}
 				}
-				setTimeout(create_data_download_functionality, 0);
+
+				function create_season_select() {
+					//cf needs to exist because unique_seasons exists while
+					//data is still loading.
+					if ("unique_seasons" in info_dict && "cf" in info_dict) {
+						for (var season in info_dict.unique_seasons)
+						{
+							$("#season-select").append("<option value=\""+season+"\">"+season+"</option>");
+						}
+						info_dict.season_select_created = true;
+						setTimeout(create_play_result_select, 0);
+					} else {
+						setTimeout(create_season_select, 250);
+					}	
+				}
+
+				function create_play_result_select() {
+					//cf needs to exist because unique_seasons exists while
+					//data is still loading.
+					if ("unique_play_results" in info_dict && "cf" in info_dict) {	
+						for (var result in info_dict.unique_play_results)
+						{
+							$("#result-select").append("<option value=\""+result+"\">"+result+"</option>");
+						}
+						info_dict.play_result_select_created = true;
+						setTimeout(refresh_selects, 0);
+					} else {
+						setTimeout(create_play_result_select, 250);
+					}	
+				}
 				
 				function refresh_selects() {
 					if ("select_teams_added" in info_dict
@@ -449,41 +483,11 @@
 							$("#receiver-select").selectpicker('refresh');
 							$("#d-select").selectpicker('refresh');
 							$("#other-select").selectpicker('refresh');
+							setTimeout(wire_general_selects, 250);
 					} else {
 						setTimeout(refresh_selects, 250);
 					}
 				}
-				setTimeout(refresh_selects, 0);
-
-				function create_season_select() {
-					//cf needs to exist because unique_seasons exists while
-					//data is still loading.
-					if ("unique_seasons" in info_dict && "cf" in info_dict) {
-						for (var season in info_dict.unique_seasons)
-						{
-							$("#season-select").append("<option value=\""+season+"\">"+season+"</option>");
-						}
-						info_dict.season_select_created = true;
-					} else {
-						setTimeout(create_season_select, 250);
-					}	
-				}
-				setTimeout(create_season_select, 0);
-
-				function create_play_result_select() {
-					//cf needs to exist because unique_seasons exists while
-					//data is still loading.
-					if ("unique_play_results" in info_dict && "cf" in info_dict) {	
-						for (var result in info_dict.unique_play_results)
-						{
-							$("#result-select").append("<option value=\""+result+"\">"+result+"</option>");
-						}
-						info_dict.play_result_select_created = true;
-					} else {
-						setTimeout(create_play_result_select, 250);
-					}	
-				}
-				setTimeout(create_play_result_select, 0);
 
 				function wire_general_selects() {
 					if ("charts_created" in info_dict && "datatable" in info_dict)
@@ -492,42 +496,44 @@
 						select.wire_general_selects(info_dict.cf, info_dict.datatable, info_dict.player_dim);
 						info_dict.general_selects_wired = true;
 						console.log("wire_general_selects took ", (performance.now() - start) / 1000., "s");
+						$("#loading-message").text("Finishing Up");
+						utilities.update_progress_bar("#loading-progress", 1., 1.);
+						setTimeout(wire_player_selects, 250);
 					} else {
 						setTimeout(wire_general_selects, 250);
 					}
 				}
-				setTimeout(wire_general_selects, 0);
 
 				function wire_player_selects() {
 					if ("general_selects_wired" in info_dict) {
 						select.wire_player_selects(info_dict.player_dim, ".selectpicker.player-select", info_dict.datatable);
 						info_dict.player_selects_wired = true;
+						setTimeout(wire_table_redraw, 0);
 					} else {
 						setTimeout(wire_player_selects, 250);
 					}
 				}
-				setTimeout(wire_player_selects, 0);
 
 				function wire_table_redraw() {
 					if("player_selects_wired" in info_dict) {
 						play_table.wire_table_redraw(info_dict.datatable, info_dict.player_dim);
 						info_dict.table_redraw_wired = true;
+						setTimeout(set_resizable_charts, 0);
 					} else {
 						setTimeout(wire_table_redraw, 250);
 					}
 				}
-				setTimeout(wire_table_redraw, 0);
 
 				function set_resizable_charts() {
 					if ("resizable_charts" in info_dict) {
 						var resize_charts = charts.set_resizable_charts(info_dict.resizable_charts);
 						window.onresize = resize_charts;
 						info_dict.charts_resized = true;
+						setTimeout(show_dashboard, 0);
 					} else {
 						setTimeout(set_resizable_charts, 250);
 					}
 				}
-				setTimeout(set_resizable_charts, 0);
 					
 				
 				function show_dashboard() {
@@ -539,7 +545,6 @@
 						setTimeout(show_dashboard, 250);
 					}
 				}
-				setTimeout(show_dashboard, 0);
 
 
 			});
