@@ -12,7 +12,7 @@ var io = {
 
 		     //Parsing player ids:
 		     //player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').replace("-","").split(",").map(Number);
-		     player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
+		     //player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
 		     player_ids_string = row.player_ids.replace(/[ \'u\[\]]/g, '');
 		     //console.log(player_ids_string);
 		     
@@ -57,7 +57,7 @@ var io = {
 		     info_dict.unique_play_results[row.play_result] = 1;
 		     
 		     parsed_row = {
-			 'player_ids': player_ids,
+			 //'player_ids': player_ids,
 			 'play_type': row.play_type,
 			 "wp": +row.wp*100.,
 			 "wpa": +row.wpa*100.,

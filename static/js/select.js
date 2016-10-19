@@ -201,16 +201,12 @@ select.wire_player_selects = function(dim, select_class_name, datatable)
 				    {
 					$('#player-reset').css('visibility','visible');
 					dim.filter(function(d) {
-					    //console.log("DEBUG", player_dicts, d);
 					    for (var i = 0; i < player_dicts.length; i++)
 					    {
-						//console.log("DEBUG", i, player_dicts, d);
 						var found = false;
-						//for (var j in d)
 						for (var j = 0; j < d.length; j += 10)
 						{
 						    var curr_id = d.substring(j, j + 10);
-						    //if (player_dicts[i][d[j]] != null)
 						    if (player_dicts[i][curr_id] != null)
 						    {
 							found = true;
