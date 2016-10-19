@@ -407,8 +407,14 @@
 					if ("cf" in info_dict) {
 						var start = performance.now();
 						charts.create_charts(info_dict);
+
+						//var start_player_dim = performance.now();
+						//info_dict.player_dim = info_dict.cf.dimension(function(d){ return d["player_ids"];});
+						//console.log("making player_dim took ", (performance.now() - start_player_dim) / 1000., "s");
+						//var start_player_string_dim = performance.now();
+						info_dict.player_string_dim = info_dict.cf.dimension(function(d){ return d["player_ids_string"];});
+						//console.log("making player_dim string took ", (performance.now() - start_player_string_dim) / 1000., "s");
 						
-						info_dict.player_dim = info_dict.cf.dimension(function(d){ return d["player_ids"];});
 						//info_dict.player_dim = null;
 						info_dict.charts_created = true;
 						console.log("create_charts took ", (performance.now() - start) / 1000., "s");
@@ -423,10 +429,10 @@
 				}
 
 				function create_data_download_functionality() {
-					if ("player_dim" in info_dict) {
+					if ("player_string_dim" in info_dict) {
 						export_filtered_data = function()
 						{
-							var output_data = $.extend(true, [], info_dict.player_dim.top(Infinity));
+							var output_data = $.extend(true, [], info_dict.player_string_dim.top(Infinity));
 							output_data.forEach(function(d) {
 								d['player_ids'] = d['player_ids'].join();
 							});
@@ -493,7 +499,7 @@
 					if ("charts_created" in info_dict && "datatable" in info_dict)
 					{
 						var start = performance.now();
-						select.wire_general_selects(info_dict.cf, info_dict.datatable, info_dict.player_dim);
+						select.wire_general_selects(info_dict.cf, info_dict.datatable, info_dict.player_string_dim);
 						info_dict.general_selects_wired = true;
 						console.log("wire_general_selects took ", (performance.now() - start) / 1000., "s");
 						$("#loading-message").text("Finishing Up");
@@ -506,7 +512,7 @@
 
 				function wire_player_selects() {
 					if ("general_selects_wired" in info_dict) {
-						select.wire_player_selects(info_dict.player_dim, ".selectpicker.player-select", info_dict.datatable);
+						select.wire_player_selects(info_dict.player_string_dim, ".selectpicker.player-select", info_dict.datatable);
 						info_dict.player_selects_wired = true;
 						setTimeout(wire_table_redraw, 0);
 					} else {
@@ -516,7 +522,7 @@
 
 				function wire_table_redraw() {
 					if("player_selects_wired" in info_dict) {
-						play_table.wire_table_redraw(info_dict.datatable, info_dict.player_dim);
+						play_table.wire_table_redraw(info_dict.datatable, info_dict.player_string_dim);
 						info_dict.table_redraw_wired = true;
 						setTimeout(set_resizable_charts, 0);
 					} else {

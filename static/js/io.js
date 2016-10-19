@@ -13,6 +13,8 @@ var io = {
 		     //Parsing player ids:
 		     //player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').replace("-","").split(",").map(Number);
 		     player_ids = row.player_ids.replace(/[ \'u\[\]]/g, '').split(",");
+		     player_ids_string = row.player_ids.replace(/[ \'u\[\]]/g, '');
+		     //console.log(player_ids_string);
 		     
 		     //Converting to offense/defense score:
 		     var off_score = +row.curr_home_score;
@@ -78,6 +80,7 @@ var io = {
 			 'season_year': +row.season_year,
 			 'play_result': row.play_result,
 			 'description': row.description,
+			 'player_ids_string': player_ids_string,
 		     };
 		     return parsed_row;
 		 })
