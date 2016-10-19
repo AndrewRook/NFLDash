@@ -408,14 +408,7 @@
 						var start = performance.now();
 						charts.create_charts(info_dict);
 
-						//var start_player_dim = performance.now();
-						//info_dict.player_dim = info_dict.cf.dimension(function(d){ return d["player_ids"];});
-						//console.log("making player_dim took ", (performance.now() - start_player_dim) / 1000., "s");
-						//var start_player_string_dim = performance.now();
 						info_dict.player_string_dim = info_dict.cf.dimension(function(d){ return d["player_ids_string"];});
-						//console.log("making player_dim string took ", (performance.now() - start_player_string_dim) / 1000., "s");
-						
-						//info_dict.player_dim = null;
 						info_dict.charts_created = true;
 						console.log("create_charts took ", (performance.now() - start) / 1000., "s");
 						$("#loading-message").text("Wiring Filters");
