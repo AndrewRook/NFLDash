@@ -1,8 +1,8 @@
 var io = {
     load_plays: function(filename, progress_url, progress_bar_id, info_dict, callback)
     {
-	var max_progress_fraction = 0.30;
-	var progress_increment = 0.05;
+	var max_progress_fraction = 0.60;
+	var progress_increment = 0.10;
 	info_dict.unique_seasons = {};
 	info_dict.unique_play_results = {};
 	//var count = 0;
