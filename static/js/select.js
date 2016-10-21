@@ -40,7 +40,8 @@ select.make_team_selector = function(ndx, select_name, offense_select_name, home
 
 select.make_offense_selector = function(ndx, select_name, team_select_name, offense_column, defense_column, datatable, player_dim)
 {
-    var dim = ndx.dimension(function(d){ return [d[offense_column], d[defense_column]];});
+    //var dim = ndx.dimension(function(d){ return [d[offense_column], d[defense_column]];});
+    var dim = ndx.dimension(function(d){ return "offense-" + d[offense_column] + "_defense-" + d[defense_column];});
     $(select_name).change(function()
 			  {
 			      $(this).siblings("button").css("background", "rgb(255, 255, 255) linear-gradient(rgb(255, 255, 255) 0px, rgb(224, 224, 224) 100%) ").css("color", "black").css("text-shadow", "0 1px 0 #fff");
@@ -57,14 +58,20 @@ select.make_offense_selector = function(ndx, select_name, team_select_name, offe
 				      
 				      var value = values[0];
 				      dim.filter(function(d) {
-					  if ((value == "offense" && String(selected_teams).indexOf(d[0]) != -1) || (value == "defense" && String(selected_teams).indexOf(d[1]) != -1))
-					  {
-					      return true;
+					  for (var i = 0; i < selected_teams.length; i++) {
+					      if (d.indexOf(value + "-" + selected_teams[i]) != -1) {
+						  return true;
+					      }
 					  }
-					  else
-					  {
-					      return false;
-					  }
+					  return false;
+					  // if ((value == "offense" && String(selected_teams).indexOf(d[0]) != -1) || (value == "defense" && String(selected_teams).indexOf(d[1]) != -1))
+					  // {
+					  //     return true;
+					  // }
+					  // else
+					  // {
+					  //     return false;
+					  // }
 				      });
 				  }
 			      } 
