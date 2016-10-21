@@ -3,7 +3,7 @@ var select = {};
 select.make_team_selector = function(ndx, select_name, offense_select_name, home_column, away_column, datatable, player_dim)
 {
     
-    var dim = ndx.dimension(function(d){ return [d[home_column], d[away_column]];});
+    var dim = ndx.dimension(function(d){ return d[home_column] + "_" + d[away_column];}); 
     $(select_name).change(function()
 			  {
 			      $(this).siblings("button").css("background", "rgb(255, 255, 255) linear-gradient(rgb(255, 255, 255) 0px, rgb(224, 224, 224) 100%) ").css("color", "black").css("text-shadow", "0 1px 0 #fff");
@@ -15,7 +15,14 @@ select.make_team_selector = function(ndx, select_name, offense_select_name, home
 			      {
 				  $(this).siblings("button").css("background", "#3182BD").css("color", "white").css("text-shadow", "0px 0px 0px #fff");
 				  dim.filter(function(d) {
-				      return values.indexOf(String(d[0])) != -1 || values.indexOf(String(d[1])) != -1;
+				      for (var i = 0; i < values.length; i++)
+				      {
+					  if (d.indexOf(values[i]) != -1)
+					  {
+					      return true;
+					  }
+				      }
+				      return false;
 				  });
 			      }
 			      else
@@ -153,25 +160,32 @@ select.make_season_result_selector = function(ndx, select_name, column_name, dat
 };
 
 select.wire_general_selects = function(cf, datatable, player_dim) {
+    var start = performance.now();
     var team_dim = select.make_team_selector(cf, "#team-select", "#team-offense-select", "home_team", "away_team",
-				      datatable, player_dim);
+					     datatable, player_dim);
+    console.log("  team_dim: ",(performance.now() - start)/1000.,"s");
     
     var team_offense_dim = select.make_offense_selector(cf, "#team-offense-select", "#team-select",
     						 "offense_team", "defense_team",
     						 datatable, player_dim);
+    console.log("  team_offense_dim: ",(performance.now() - start)/1000.,"s");
     
     var offense_home_dim = select.make_home_selector(cf, "#offense-home-select",
     					      "home_team", "offense_team",
     					      datatable, player_dim);
+    console.log("  offense_home_dim: ",(performance.now() - start)/1000.,"s");
     
     var offense_won_dim = select.make_offense_won_selector(cf, "#offense-won-select",
     						    "offense_won", datatable, player_dim);
+    console.log("  offense_won_dim: ",(performance.now() - start)/1000.,"s");
     
     var season_dim = select.make_season_result_selector(cf, "#season-select", "season_year",
     						 datatable, player_dim);
+    console.log("  season_dim: ",(performance.now() - start)/1000.,"s");
     
     var result_dim = select.make_season_result_selector(cf, "#result-select", "play_result",
     						 datatable, player_dim);
+    console.log("  result_dim: ",(performance.now() - start)/1000.,"s");
 
 };
 
