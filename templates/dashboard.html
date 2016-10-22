@@ -444,9 +444,10 @@
 				function create_season_select() {
 					//cf needs to exist because unique_seasons exists while
 					//data is still loading.
-					if ("unique_seasons" in info_dict && "cf" in info_dict) {
-						for (var season in info_dict.unique_seasons)
+					if ("cf" in info_dict) {
+						for (var i=0; i < constants.seasons.length; i++)
 						{
+							var season = constants.seasons[i];
 							$("#season-select").append("<option value=\""+season+"\">"+season+"</option>");
 						}
 						info_dict.season_select_created = true;

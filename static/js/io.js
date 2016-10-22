@@ -3,7 +3,6 @@ var io = {
     {
 	var max_progress_fraction = 0.60;
 	var progress_increment = 0.10;
-	info_dict.unique_seasons = {};
 	info_dict.unique_play_results = {};
 	//var count = 0;
 	d3.csv(filename)
@@ -50,7 +49,6 @@ var io = {
 			 yardline_text = "Own " + (+row.yardline + 50).toString();
 		     }
 		     
-		     info_dict.unique_seasons[row.season_year] = 1;
 		     info_dict.unique_play_results[row.play_result] = 1;
 		     
 		     parsed_row = {
