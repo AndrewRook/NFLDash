@@ -105,14 +105,17 @@
 				</div><!--/.nav-collapse -->
 			</div>
 		</nav>
+
 		
-		<div class="container-fluid alert alert-warning alert-dismissible" id="touch-warning" style="display:none">
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">x</span>
-			</button>
-			<h3>
-				<span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;It looks like you're using a touch device. While NFLDash <b>should</b> work with smartphones and tablets, it's not optimized for such devices. This is especially true for smartphones - In addition to issues with touch controls and laying out the dashboard on a small screen, NFLDash does all of its processing on the client side and can strain a phone's CPU. Feel free to try it out on this device, but for the ideal experience please consider using a PC.
-			</h3>
+		<div class="container-fluid" id="touch-warning" style="display:none">
+			<div class="panel panel-default alert alert-warning alert-dismissible">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">x</span>
+				</button>
+				<h3>
+					<span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;It looks like you're using a touch device. While NFLDash <b>should</b> work with smartphones and tablets, it's not optimized for such devices. This is especially true for smartphones - In addition to issues with touch controls and laying out the dashboard on a small screen, NFLDash does all of its processing on the client side and can strain a phone's CPU. Feel free to try it out on this device, but for the ideal experience please consider using a PC.
+				</h3>
+			</div>
 		</div>
 		<div class ="container-fluid" role="main">
 			
@@ -346,6 +349,7 @@
 		<script>
 		$("#pleaseWaitDialog").modal('show');
 		var info_dict = {};
+		var export_filtered_data = null;
 		$(document).ready(function()
 			{
 				//enable the tooltips:
@@ -426,9 +430,7 @@
 						export_filtered_data = function()
 						{
 							var output_data = $.extend(true, [], info_dict.player_string_dim.top(Infinity));
-							output_data.forEach(function(d) {
-								d['player_ids'] = d['player_ids'].join();
-							});
+							
 							var blob = new Blob([d3.csv.format(output_data)],
 								{type: "text/csv;charset=utf-8"});
 							saveAs(blob, 'plays.csv');
@@ -537,6 +539,11 @@
 				
 				function show_dashboard() {
 					if ("table_redraw_wired" in info_dict && "charts_resized" in info_dict) {
+						// Check for mobile user agent
+						var mobile = (/iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase()));
+						if (mobile) {
+							$("#touch-warning").css("display", "block");         
+						}
 						$(".loaded").css("visibility", "visible");
 						$("#pleaseWaitDialog").modal('hide');
 						console.log("Entire loading process took ", (performance.now() - info_dict.start)/1000., "s");

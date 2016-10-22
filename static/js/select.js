@@ -210,7 +210,7 @@ select.wire_player_selects = function(dim, select_class_name, datatable)
 					    for (var i = 0; i < player_dicts.length; i++)
 					    {
 						var found = false;
-						for (var j = 0; j < d.length; j += 10)
+						for (var j = 0; j < d.length; j += 11)//11 to deal with commas
 						{
 						    var curr_id = d.substring(j, j + 10);
 						    if (player_dicts[i][curr_id] != null)
