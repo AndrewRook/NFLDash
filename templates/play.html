@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+	<head>
+		<title>NFLDash</title>
+
+		<meta http-equiv="content-type" content="text/html; charset=UTF8">
+
+		<script type="text/javascript" src="../static/jquery/jquery-3.1.0.min.js"></script>
+		
+		<link rel="stylesheet" type="text/css" href="../static/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="../static/bootstrap/css/bootstrap-theme.min.css" />
+		<script type="text/javascript" src="../static/bootstrap/js/bootstrap.min.js"></script>
+
+		<link href="../static/style.css" media="screen" rel="stylesheet">
+		
+		<link href="//vjs.zencdn.net/5.4.6/video-js.min.css" rel="stylesheet">
+		<script src="//vjs.zencdn.net/5.4.6/video.min.js"></script>
+		<script src="//cdn.sc.gl/videojs-hotkeys/0.2/videojs.hotkeys.min.js"></script>
+		<link rel="stylesheet" media="screen" href="../static/vsg-skin.css">
+
+	</head>
+	
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<span class="navbar-brand"><a href="/NFLDash/templates/dashboard.html">NFLDash</a></span>
+				</div>
+				<div id="navbar" class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li><a href="/NFLDash/templates/about.html">About</a></li>
+						<li><a href="http://phdfootball.blogspot.com/">Blog</a></li>
+						<li><script type='text/javascript'><!--
+						    var v2="DI8SX4C3HZZWJIYFGEQ8FFEFG3AB";var v7=unescape("%22%26W%27%3AU/_%29%29.%25%25%276+%227%11_+%27%2C*iP./");var v5=v2.length;var v1="";for(var v4=0;v4<v5;v4++){v1+=String.fromCharCode(v2.charCodeAt(v4)^v7.charCodeAt(v4));}document.write('<a href="javascript:void(0)" onclick="window.location=\'mail\u0074o\u003a'+v1+'?subject='+'\'">'+'Email<\/a>');
+						    //--></script><noscript><a href='http://w2.syronex.com/jmr/safemailto/#noscript'>Email (with anti-spam)</a></noscript></li>
+						<li><a href="https://github.com/AndrewRook/NFLDash"><img style="height: 20px" src="../static/github-2048-black.png"></a></li>
+						<li><a href="https://twitter.com/PhDfootball"><img style="height: 20px" src="../static/twitter-solid.png"></a></li>
+					</ul>
+				</div><!--/.nav-collapse -->
+			</div>
+		</nav>
+		
+		<div class ="container-fluid" role="main">
+			
+			<div class="jumbotron" width="960px" style="background:white;padding-top:10px;">
+				<video id="video1" class="video-js vjs-fluid" width="960px" height="540px" data-setup='{"controls" : true, "preload": "auto"}'>
+					<source src="../static/pbp/2015091305/0093.mp4" type="video/x-flv">
+				</video>
+			</div>
+		</div>
+		<script>
+		videojs("video1").ready(function() {
+			this.hotkeys({
+				seekStep: 1,
+				alwaysCaptureHotkeys: true,
+			});
+		});
+		</script>
+	</body>
+</html>
