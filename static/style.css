@@ -1,0 +1,111 @@
+
+@import 'https://fonts.googleapis.com/css?family=Lato|Roboto:900';
+
+body {
+    font-family: 'Lato', sans-serif;
+    padding-top: 80px;
+    background: #D6B894;
+}
+@media (max-width: 979px) {
+    body {
+	font-family: 'Lato', sans-serif;
+	padding-top: 100px;
+	background: #D6B894;
+    }
+}
+.glyphicon {
+    font-size: 14px;
+}
+
+.heading .toggle:after {
+    /* symbol for "opening" panels */
+    font-family: 'Glyphicons Halflings';  /* essential for enabling glyphicon */
+    content: "\e114";    /* adjust as needed, taken from bootstrap.css */
+    float: left;        /* adjust as needed */
+    color: white;         /* adjust as needed */
+}
+.heading .toggle.collapsed:after {
+    /* symbol for "collapsed" panels */
+    content: "\e080";    /* adjust as needed, taken from bootstrap.css */
+}
+
+.panel {
+    margin-bottom: 10px;
+    border: 0px;
+}
+
+.panel-heading.heading {
+    background: #47B262;
+    color: white;
+    border-bottom: 0px;
+}
+
+.panel-body {
+    color: black;
+    /*background: #ECD078;*/
+}
+
+h4 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+h2 {
+    font-weight: bold;
+}
+
+h4.panel-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.navbar-brand a {
+    font-family: 'Roboto', sans-serif;
+    font-size: 26px;
+    font-weight: 900;
+    color: #2A693A;
+}
+
+.navbar-nav li a {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.footer {
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.dc-data-count {
+    color: black;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.navbar-btn a.btn {
+    margin-left: 2px;
+    margin-right: 2px;
+    font-size: 14px;
+}
+
+.btn-danger {
+    background: #ea4141;
+}
+
+.btn-primary {
+    background:  #47B262;
+}
+
+.reset {
+    margin-bottom: 2%;
+    font-weight: bold;
+}
+
+.reset-bar {
+    margin-bottom: 1%;
+}
+
+h4.title {
+    height: 30px;
+}
