@@ -48,10 +48,18 @@ var io = {
 		     {
 			 yardline_text = "Own " + (+row.yardline + 50).toString();
 		     }
+
+		     //Prepend zeros to play_id (if necessary):
+		     var play_id = row.play_id;
+		     while (play_id.length < 4) {
+			 play_id = "0" + play_id;
+		     }
 		     
 		     info_dict.unique_play_results[row.play_result] = 1;
 		     
 		     parsed_row = {
+			 'gsis_id': row.gsis_id,
+			 'play_id': play_id,
 			 'play_type': row.play_type,
 			 "wp": +row.wp*100.,
 			 "wpa": +row.wpa*100.,

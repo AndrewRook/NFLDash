@@ -50,12 +50,39 @@
 			
 			<div class="jumbotron" width="960px" style="background:white;padding-top:10px;">
 				<video id="video1" class="video-js vjs-fluid" width="960px" height="540px" data-setup='{"controls" : true, "preload": "auto"}'>
-					<source src="../static/pbp/2015091305/0093.mp4" type="video/x-flv">
+					<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+</video>
+					<!-- <source src="../static/pbp/2015091305/0093.mp4" type="video/x-flv"> -->
 				</video>
 			</div>
 		</div>
 		<script>
+		function getJsonFromUrl() {
+			var query = location.search.substr(1);
+			var result = {};
+			query.split("&").forEach(function(part) {
+				var item = part.split("=");
+				result[item[0]] = decodeURIComponent(item[1]);
+			});
+			return result;
+		}
+		
+		function constructUrl() {
+			var parameters = getJsonFromUrl();
+			if ("gsis_id" in parameters && "play_id" in parameters) {
+				return "../static/pbp/" + parameters["gsis_id"] + "/" + parameters["play_id"] + ".mp4";
+			} else {
+				console.log("Could not find query parameters!");
+				return "";
+			}	
+		}
+		
+		console.log(constructUrl());
+		
 		videojs("video1").ready(function() {
+			this.src([
+				{ type: "video/x-flv", src: constructUrl()}
+				]);
 			this.hotkeys({
 				seekStep: 0.25,
 				enableVolumeScroll: false,

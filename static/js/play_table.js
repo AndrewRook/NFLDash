@@ -12,12 +12,17 @@ play_table.create_table = function(table_id, table_header_id, column_name_mappin
 		{
 		    return function(d)
 		    {
-			return d[column_name_mapping[i][1]];
+			//return d[column_name_mapping[i][1]];
+			//console.log(d);
+			return '<a href="../templates/play.html?gsis_id=' + d["gsis_id"] + '&play_id=' + d["play_id"] + '">' + d[column_name_mapping[i][1]] + "</a>";
 		    }
 		} )(i);
 	    var param_dict = {
 		targets: i,
 		width: column_name_mapping[i][2],
+		//render: function(data, type, row) {
+		//    return '<a href="../static/pbp/2015091305/0093.mp4"
+		//},
 		data: tempfunc
 	    };
 	    if (column_name_mapping[i].length > 3)
