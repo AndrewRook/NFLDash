@@ -57,7 +57,8 @@
 		<script>
 		videojs("video1").ready(function() {
 			this.hotkeys({
-				seekStep: 1,
+				seekStep: 0.25,
+				enableVolumeScroll: false,
 				alwaysCaptureHotkeys: true,
 			});
 		});
