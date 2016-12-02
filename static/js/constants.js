@@ -1,6 +1,6 @@
 var constants = {
     //seasons : [2009, 2010],//, 2011, 2012, 2013, 2014, 2015],
-    seasons : [2009, 2010, 2011, 2012, 2013, 2014, 2015],
+    seasons : [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016],
     team_mapping : {
 	"NYJ": "New York Jets",
 	"BUF": "Buffalo Bills",
