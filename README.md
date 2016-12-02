@@ -1,4 +1,4 @@
 # NFLDash
 
 A responsive dashboard for quick filtering of NFL play-by-play
-data. Work In Progress (IE it doesn't work yet :smiley:). 
+data. Written in Javascript using [dc.js](https://dc-js.github.io/dc.js/). To go to the dashboard, click [here](https://andrewrook.github.io/NFLDash/templates/dashboard.html).
